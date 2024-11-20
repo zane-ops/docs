@@ -3,83 +3,82 @@ import { defineConfig } from "astro/config";
 
 import tailwind from "@astrojs/tailwind";
 
+import react from "@astrojs/react";
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://zaneops.dev",
   devToolbar: {
     enabled: false
   },
-  integrations: [
-    starlight({
-      title: "ZaneOps documentation",
-      logo: {
-        light: "./src/assets/ZaneOps-SYMBOL-BLACK.svg",
-        dark: "./src/assets/ZaneOps-SYMBOL-WHITE.svg",
-        replacesTitle: true
+  integrations: [starlight({
+    title: "ZaneOps documentation",
+    logo: {
+      light: "./src/assets/ZaneOps-SYMBOL-BLACK.svg",
+      dark: "./src/assets/ZaneOps-SYMBOL-WHITE.svg",
+      replacesTitle: true
+    },
+    editLink: {
+      baseUrl: "https://github.com/zane-ops/zane-ops/edit/main/docs/"
+    },
+    customCss: [
+      "./src/tailwind.css",
+      "./src/assets/theme.css",
+      "./src/assets/fonts/font-face.css"
+    ],
+    social: {
+      github: "https://github.com/zane-ops/zane-ops",
+      twitter: "https://twitter.com/zaneopsdev"
+    },
+    components: {
+      Footer: "./src/components/Footer.astro"
+    },
+    sidebar: [
+      {
+        label: "Start here",
+        items: [
+          {
+            label: "Installation and Setup",
+            slug: "get-started"
+          },
+          {
+            label: "Screenshots",
+            slug: "screenshots"
+          }
+        ]
       },
-      editLink: {
-        baseUrl: "https://github.com/zane-ops/zane-ops/edit/main/docs/"
+      {
+        label: "Development",
+        items: [
+          {
+            label: "Development",
+            slug: "development/development"
+          }
+          // {
+          //   label: "Architecture",
+          //   slug: "development/architecture"
+          // }
+        ]
       },
-      customCss: [
-        "./src/tailwind.css",
-        "./src/assets/theme.css",
-        "./src/assets/fonts/font-face.css"
-      ],
-      social: {
-        github: "https://github.com/zane-ops/zane-ops",
-        twitter: "https://twitter.com/zaneopsdev"
-      },
-      components: {
-        Footer: "./src/components/Footer.astro"
-      },
-      sidebar: [
-        {
-          label: "Start here",
-          items: [
-            {
-              label: "Installation and Setup",
-              slug: "get-started"
-            },
-            {
-              label: "Screenshots",
-              slug: "screenshots"
-            }
-          ]
-        },
-        {
-          label: "Development",
-          items: [
-            {
-              label: "Development",
-              slug: "development/development"
-            }
-            // {
-            //   label: "Architecture",
-            //   slug: "development/architecture"
-            // }
-          ]
-        },
-        {
-          label: "API Reference",
-          items: [
-            {
-              label: "Introduction",
-              slug: "api-reference/introduction"
-            },
-            {
-              label: "Authentication",
-              slug: "api-reference/authentication"
-            },
-            {
-              label: "OpenAPI reference ↗",
-              link: "/api-reference/openapi"
-            }
-          ]
-        }
-      ]
-    }),
-    tailwind({
-      applyBaseStyles: false
-    })
-  ]
+      {
+        label: "API Reference",
+        items: [
+          {
+            label: "Introduction",
+            slug: "api-reference/introduction"
+          },
+          {
+            label: "Authentication",
+            slug: "api-reference/authentication"
+          },
+          {
+            label: "OpenAPI reference ↗",
+            link: "/api-reference/openapi"
+          }
+        ]
+      }
+    ]
+  }), tailwind({
+    applyBaseStyles: false
+  }), react()]
 });
