@@ -19,7 +19,6 @@ lerna-debug.log*
 .astro/
 
 node_modules
-dist
 dist-ssr
 *.local
 
