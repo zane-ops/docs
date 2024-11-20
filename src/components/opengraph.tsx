@@ -20,6 +20,9 @@ export function OpenGraph({
         "flex flex-col items-start text-white pl-10 py-20 pr-20 justify-center h-full w-full [font-family:GeistMono]",
         "border-l-[2rem] bg-[#1B1E27] border-[#84E1C8]"
       )}
+      style={{
+        background: `linear-gradient(171deg, #030706 0%, #1b1e27 100%);`
+      }}
     >
       <div tw="flex justify-start w-full">
         <svg
