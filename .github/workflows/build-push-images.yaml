@@ -51,7 +51,7 @@ jobs:
                   file: Dockerfile
                   push: true
                   platforms: linux/amd64,linux/arm64
-                  tags: ghcr.io/zane-ops/docs:canary,ghcr.io/zane-ops/docs:${{ github.sha }}
+                  tags: ghcr.io/zane-ops/docs:latest,ghcr.io/zane-ops/docs:${{ github.sha }}
                   cache-from: |
-                      type=registry,ref=ghcr.io/zane-ops/docs:canary
+                      type=registry,ref=ghcr.io/zane-ops/docs:latest
                   cache-to: type=inline
