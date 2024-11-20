@@ -55,3 +55,14 @@ jobs:
                   cache-from: |
                       type=registry,ref=ghcr.io/zane-ops/docs:latest
                   cache-to: type=inline
+            
+            - name: Deploy to Zaneops
+              uses: zane-ops/auto-deploy-action@v0.3
+              with:
+                  username: ${{ secrets.ZANE_USERNAME }}
+                  password: ${{ secrets.ZANE_PASSWORD }}
+                  project-slug: docs
+                  service-slug: zane-docs
+                  service-new-image: ghcr.io/zane-ops/docs:${{ github.sha }}
+                  base-url: ${{ secrets.ZANE_DASHBOARD_URL }}
+                  commit-message: ${{ github.event.head_commit.message }}
