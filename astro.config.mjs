@@ -5,7 +5,9 @@ import { defineConfig } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
-  site: import.meta.env.PROD ? "https://zaneops.dev" : "http://localhost:3000",
+  site: import.meta.env.PROD
+    ? "https://zaneops.dev"
+    : "https://local.zaneops.dev",
   devToolbar: {
     enabled: false
   },

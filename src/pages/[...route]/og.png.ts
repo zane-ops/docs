@@ -54,7 +54,16 @@ export const GET: APIRoute = async function get({ props }) {
 export async function getStaticPaths() {
   const docs = await getCollection("docs");
 
-  return docs.map((doc) => {
+  return [
+    ...docs,
+    {
+      slug: "api-reference/openapi",
+      data: {
+        title: "API Reference",
+        description: "full open api reference for zaneops."
+      }
+    }
+  ].map((doc) => {
     if (doc.slug === "index") {
       return {
         params: { route: undefined },
