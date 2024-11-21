@@ -1,7 +1,8 @@
+import { getCollection } from "astro:content";
 import { Resvg } from "@resvg/resvg-js";
 import type { APIRoute } from "astro";
 import satori from "satori";
-import { OpenGraph, type OpenGraphProps } from "../components/opengraph";
+import { OpenGraph, type OpenGraphProps } from "../../components/opengraph";
 
 async function SVG(props: OpenGraphProps) {
   const fontWeights = [400, 500, 600] as const;
@@ -27,11 +28,11 @@ async function SVG(props: OpenGraphProps) {
   });
 }
 
-export const GET: APIRoute = async function get() {
+export const GET: APIRoute = async function get({ props }) {
   const resvg = new Resvg(
     await SVG({
-      title: "Zaneops documentation",
-      description: "zaneops.dev"
+      title: props.title ?? "Zaneops documentation",
+      description: props.description ?? "zaneops.dev"
     }),
     {
       background: "rgba(255, 255, 255, 1)",
@@ -49,3 +50,24 @@ export const GET: APIRoute = async function get() {
     }
   });
 };
+
+export async function getStaticPaths() {
+  const docs = await getCollection("docs");
+
+  return docs.map((doc) => {
+    if (doc.slug === "index") {
+      return {
+        params: { route: undefined },
+        props: {
+          title: "Zaneops",
+          description:
+            "A self-hosted platform for deploying web apps, databases, CRONS, and more..."
+        }
+      };
+    }
+    return {
+      params: { route: doc.slug },
+      props: { title: doc.data.title, description: doc.data.description }
+    };
+  });
+}

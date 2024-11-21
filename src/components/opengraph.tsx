@@ -11,8 +11,8 @@ function cn(...classes: string[]) {
 }
 
 export function OpenGraph({
-  title = "ZaneOps",
-  description = "documentation"
+  title = "Zaneops documentation",
+  description = "zaneops.dev"
 }: OpenGraphProps) {
   return (
     <div
@@ -36,7 +36,7 @@ export function OpenGraph({
           />
         </svg>
       </div>
-      <div tw="flex flex-col justify-center flex-1 gap-1">
+      <div tw="flex flex-col justify-center flex-1">
         <div tw="text-white text-[5rem] font-semibold">{title}</div>
         <div tw="font-medium text-[#8a8b90] text-[3rem]">{description}</div>
       </div>
