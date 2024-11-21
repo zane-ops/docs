@@ -20,7 +20,7 @@ export default defineConfig({
         replacesTitle: true
       },
       editLink: {
-        baseUrl: "https://github.com/zane-ops/zane-ops/edit/main/docs/"
+        baseUrl: "https://github.com/zane-ops/docs/edit/main/"
       },
       customCss: [
         "./src/tailwind.css",
