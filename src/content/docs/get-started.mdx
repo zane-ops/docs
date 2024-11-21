@@ -71,6 +71,7 @@ ZaneOps is currently in **alpha** and is not stable for production use. However,
     but you can modify the contents to better suit your needs (see here for [how to customize](#environment-variables-explained)):
     
     ```shell
+    # /var/www/zaneops/.env
     # Example configuration - Modify before production use
     IMAGE_VERSION=canary # ZaneOps version to install
     ZANE_APP_DIRECTORY="/var/www/zaneops" # Installation directory for ZaneOps
@@ -129,6 +130,7 @@ However if you use the `canary` version, you will automatically be updated to th
 To update the version, change the version in `.env` : 
 
 ```shell
+# /var/www/zaneops/.env
 IMAGE_VERSION="v2"
 # ... other env variables
 ```
@@ -143,9 +145,26 @@ make deploy
 
 ZaneOps can be installed locally with minimal configuration changes. 
 To do this :
-- keep the `ZANE_APP_DOMAIN` and `ROOT_DOMAIN` environment variables set to http://127-0-0-1.sslip.io.
-- add the `__DANGEROUS_ALLOW_HTTP_SESSION` environment variable to `.env` and set its value to `true`
-- run the deploy command
+- keep the `ZANE_APP_DOMAIN` and `ROOT_DOMAIN` environment variables set to http://127-0-0-1.sslip.io :
+
+  ```shell
+  # /var/www/zaneops/.env
+  # ... other env variables
+  ZANE_APP_DOMAIN="127-0-0-1.sslip.io"
+  ROOT_DOMAIN="127-0-0-1.sslip.io"
+  ```
+- add the `__DANGEROUS_ALLOW_HTTP_SESSION` environment variable :
+
+  ```shell
+  # /var/www/zaneops/.env
+  # ... other env variables
+  __DANGEROUS_ALLOW_HTTP_SESSION="true"
+  ```
+- run the `deploy` command : 
+  
+  ```shell
+  make deploy
+  ```
 
 <Aside type="caution" title="Important">
 You can enable the `__DANGEROUS_ALLOW_HTTP_SESSION` environment variable in production to access your ZaneOps instance over HTTP.
