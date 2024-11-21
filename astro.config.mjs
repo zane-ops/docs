@@ -1,11 +1,13 @@
+import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
-import { defineConfig } from "astro/config";
-
 import tailwind from "@astrojs/tailwind";
+import { defineConfig } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://zaneops.dev",
+  site: import.meta.env.PROD
+    ? "https://zaneops.dev"
+    : "https://local.zaneops.dev",
   devToolbar: {
     enabled: false
   },
@@ -30,7 +32,8 @@ export default defineConfig({
         twitter: "https://twitter.com/zaneopsdev"
       },
       components: {
-        Footer: "./src/components/Footer.astro"
+        Footer: "./src/components/Footer.astro",
+        Head: "./src/components/Head.astro"
       },
       sidebar: [
         {
@@ -53,10 +56,6 @@ export default defineConfig({
               label: "Development",
               slug: "development/development"
             }
-            // {
-            //   label: "Architecture",
-            //   slug: "development/architecture"
-            // }
           ]
         },
         {
@@ -80,6 +79,7 @@ export default defineConfig({
     }),
     tailwind({
       applyBaseStyles: false
-    })
+    }),
+    react()
   ]
 });
