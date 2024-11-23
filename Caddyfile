@@ -2,6 +2,8 @@
 	# Set the root directory for static files
 	root * /var/www/html
 	file_server
+
+	log
 	
 	@assets {
 		path_regexp assets \.(css|js|png|jpg|jpeg|gif|svg|woff|woff2|eot|ttf|otf)$
