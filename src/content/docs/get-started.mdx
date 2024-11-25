@@ -79,9 +79,8 @@ ZaneOps is currently in **alpha** and is not stable for production use. However,
     ZANE_DB_PASSWORD= # Generate with: "$(openssl rand -base64 32)"
     DJANGO_SECRET_KEY= # Generate with: "$(openssl rand -base64 64)"
 
-    # ⚠️ Update if ZaneOps is not hosted locally ⚠️
-    ROOT_DOMAIN="127-0-0-1.sslip.io" # Root domain for generating app domains
-    ZANE_APP_DOMAIN="127-0-0-1.sslip.io" # Domain for ZaneOps dashboard
+    ROOT_DOMAIN="<YOUR-IP>.sslip.io" # Root domain for generating app domains
+    ZANE_APP_DOMAIN="<YOUR-IP>.sslip.io" # Domain for ZaneOps dashboard
     ```
 
 5. Deploy ZaneOps :
@@ -96,7 +95,12 @@ ZaneOps is currently in **alpha** and is not stable for production use. However,
     make create-user
     ```
 
-7. Log in to the dashboard by connecting to the domain specified in `ZANE_APP_DOMAIN`. If hosted locally ([see instructions below](#installing-locally)), you can use http://127-0-0-1.sslip.io.
+7. Log in to the dashboard by connecting to the domain specified in `ZANE_APP_DOMAIN`, if you are on Linux, you should have a log with the domain for zaneops : 
+   
+   ```shell
+   Once everything is ok, zaneops will be accessible at https://198-19-249-134.sslip.io
+   ```
+   If hosted locally ([see instructions below](#installing-locally)), you can use http://127-0-0-1.sslip.io.
 </Steps>
 
 
@@ -125,9 +129,9 @@ make delete-resources
 ### Updating zaneops 
 
 zaneops is updated automatically to the version specified in the `.env` file in `IMAGE_VERSION`. 
-However if you use the `canary` version, you will automatically be updated to the latest version on the `main` branch version.
+However if you use the `canary` version, you will automatically be updated to the latest version on the `main` branch.
 
-To update the version, change the version in `.env` : 
+To update the version, change it in `.env` : 
 
 ```shell
 # /var/www/zaneops/.env
@@ -160,11 +164,12 @@ To do this :
   # ... other env variables
   __DANGEROUS_ALLOW_HTTP_SESSION="true"
   ```
-- run the `deploy` command : 
+- run the `deploy` command but with http enabled : 
   
   ```shell
-  make deploy
+  make deploy-with-http
   ```
+- You can now access zaneops dashboard at http://127-0-0-1.sslip.io
 
 <Aside type="caution" title="Important">
 You can enable the `__DANGEROUS_ALLOW_HTTP_SESSION` environment variable in production to access your ZaneOps instance over HTTP.
