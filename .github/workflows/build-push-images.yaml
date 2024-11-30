@@ -57,7 +57,7 @@ jobs:
                   cache-to: type=inline
             
             - name: Deploy to Zaneops
-              uses: zane-ops/auto-deploy-action@v1.1
+              uses: zane-ops/auto-deploy-action@v1.2
               with:
                   username: ${{ secrets.ZANE_USERNAME }}
                   password: ${{ secrets.ZANE_PASSWORD }}
@@ -66,3 +66,4 @@ jobs:
                   service-new-image: ghcr.io/zane-ops/docs:${{ github.sha }}
                   base-url: ${{ secrets.ZANE_DASHBOARD_URL }}
                   commit-message: ${{ github.event.head_commit.message }}
+                  extra-headers: '{"CF-Access-Client-Id": "${{ secrets.CF_CLIENT_ID }}", "CF-Access-Client-Secret": "${{ secrets.CF_CLIENT_SECRET }}"}'
