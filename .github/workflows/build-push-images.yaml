@@ -57,7 +57,7 @@ jobs:
                   cache-to: type=inline
             
             - name: Deploy to Zaneops
-              uses: zane-ops/auto-deploy-action@v1.3
+              uses: zane-ops/auto-deploy-action@v1.4
               with:
                   username: ${{ secrets.ZANE_USERNAME }}
                   password: ${{ secrets.ZANE_PASSWORD }}
