@@ -50,6 +50,7 @@ if (deploymentResponse.status === 200) {
       : await deploymentResponse.text();
   console.log("Received response from zaneops API : ");
   console.dir(response);
+  throw new Error();
 }
 
 export {};
