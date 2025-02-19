@@ -17,7 +17,7 @@ const colors = {
 
 const serviceImage = process.env.SERVICE_IMAGE!;
 const commitMessage = process.env.COMMIT_MESSAGE!;
-const webhookUrl = process.env.ZANE_WEBHOOK_URL!;
+const webhookUrl = process.env.DEPLOY_WEBHOOK_URL!;
 
 console.log(`Deploying the service...`);
 const deploymentResponse = await fetch(webhookUrl, {
@@ -29,7 +29,7 @@ const deploymentResponse = await fetch(webhookUrl, {
   },
   body: JSON.stringify({
     commit_message: commitMessage,
-    new_image: serviceImage
+    new_image: "latest"
   })
 });
 
