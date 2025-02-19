@@ -59,6 +59,15 @@ export default defineConfig({
           ]
         },
         {
+          label: "Changelog",
+          items: [
+            {
+              label: "Announcing v1 of zaneops",
+              slug: "changelog/announcing-v1"
+            }
+          ]
+        },
+        {
           label: "API Reference",
           items: [
             {

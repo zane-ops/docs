@@ -21,6 +21,7 @@ ZaneOps is designed to operate on a variety of environments. For optimal perform
     - **RAM:** 8 GB
     - **Disk:** 80 GB
 
+
 ## Prerequesites
 
 - Ensure you have [Docker](https://docs.docker.com/engine/install/) installed and are using a Unix-based machine. It's recommended to use the latest version of Docker to avoid compatibility issues.
@@ -68,18 +69,16 @@ ZaneOps is designed to operate on a variety of environments. For optimal perform
 
     - zaneops
         - .fluentd/
-        - temporalio
-            - config
-                - development.yaml
-            - entrypoint.sh
+        - temporalio/
         - docker-stack.prod-http.yaml
         - docker-stack.prod.yaml
         - .env
+        - fluent.conf
         - Makefile
 
     </FileTree>
 
-4. Update environment variables in `.env` :
+4. **Update environment variables in `.env`** :
     The setup process will generate sane defaults for environment variables, 
     but you can modify the contents to better suit your needs (see here for [how to customize](#environment-variables-explained)):
     
@@ -130,22 +129,14 @@ ZaneOps is designed to operate on a variety of environments. For optimal perform
 7. `MODE` : the mode in which to deploy your zaneops instance, should be either `https` or  `http`, if you change this to `http`, it enables the port `80` on your instance, beware as it can be source of security vulnerabilities.
 8. `__DANGEROUS_ALLOW_HTTP_SESSION` : allow for authenticating to zaneops using a domain on `http://`
 
-### Additional Commands
+### Upgrading zaneops 
 
-Use these commands for managing your ZaneOps installation:
-
-```shell
-# Shut down ZaneOps
-make stop
-
-# Delete ZaneOps and all its associated resources
-make delete-resources
-```
-
-### Updating zaneops 
+<Aside type="note">
+While zaneops is being upgraded, all your services will still be available, including the zaneops dashboard. 
+</Aside>
 
 zaneops is updated automatically to the version specified in the `.env` file in `IMAGE_VERSION`. 
-However if you use the `canary` version, you will automatically be updated to the latest version on the `main` branch.
+However if you use the `canary` version, you will automatically be updated to the latest version on the `main` branch, **which can contain breaking changes ⚠️**.
 
 To update the version, change it in `.env` : 
 
@@ -155,11 +146,13 @@ IMAGE_VERSION="v2"
 # ... other env variables
 ```
 
-Then deploy again : 
+Then deploy again with : 
 
 ```shell
+make setup # re-download configuration files to run zaneops 
 make deploy
 ```
+
 
 ### Installing Locally 
 
@@ -198,3 +191,23 @@ To do this :
 You can enable the `__DANGEROUS_ALLOW_HTTP_SESSION` environment variable in production to access your ZaneOps instance over HTTP.
 However, this is strongly discouraged, as it exposes your application to potential security vulnerabilities, including man-in-the-middle attacks.
 </Aside>
+
+
+### Stopping zaneops 
+
+This process will stop zaneops and scale down all services managed by zaneops to `0`, effectively removing all the running containers.
+You can always restart everything using `make deploy`.
+
+```shell
+# Shut down ZaneOps and all managed services
+make stop
+```
+
+### Uninstalling zaneops 
+
+This process will stop and delete all services managed by zaneops including zaneops itself, and run a docker system prune at the end. 
+
+```shell
+# Delete ZaneOps and all managed services
+make delete-resources
+```

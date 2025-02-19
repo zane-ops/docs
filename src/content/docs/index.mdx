@@ -21,17 +21,18 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 ## Features
 
 <CardGrid stagger>
-	<Card title="Deploy services" icon="seti:docker">
+	<Card title="Based on docker swarm" icon="seti:docker">
+		with rollbacks, healthchecks and zero-downtime deploys automatically handled for you. 
+	</Card>
+	<Card title="Deploy services" icon="rocket">
 		Writen in any language, whether it is starting a REDIS instance, creating a database, a wordpress instance, and more.
 	</Card>
 
-	<Card title="Deploy application from github" icon="github">
-		Link your repositories and automatically build and deploy apps from GitHub on push, or pull requests.
+	<Card title="Deploy your web applications" icon="github">
+		Written in your favorite language, wether a simple static website, a fullstack web app, an API we support it all.
 	</Card>
-	<Card title="Preview Deployments & Environments" icon="setting">
-		Easily manage app versions, roll back to any version at any time, and control storage duration—whether indefinitely or temporarily post-merge.
-	</Card>
-	<Card title="Deploy CRONS" icon="seti:clock">
-		Create scheduled jobs for tasks such as backing up your databases, reporting legal informations or anything you want.
+
+	<Card title="Monitor your applications" icon="seti:clock">
+		With tools like metrics, healthchecks, runtime logs and http logs.
 	</Card>
 </CardGrid>
