@@ -7,11 +7,19 @@ import {FileTree, Steps, Aside} from '@astrojs/starlight/components';
 
 ZaneOps is a deployment platform that simplifies the process of managing and deploying web applications. This guide will walk you through the steps to install ZaneOps either locally or on a remote server with minimal configuration.
 
-<Aside type="caution" title="Important">
-ZaneOps is currently in **alpha** and is not stable for production use. However, we encourage you to contribute by testing the platform locally, reporting bugs, and providing feedback to help improve it.
-</Aside>
 
+## System requirements
 
+ZaneOps is designed to operate on a variety of environments. For optimal performance, we recommend the following specifications :
+
+- **Minimum Requirements** (Shared vCPU)
+    - **vCPUs:** 2 (x86 or Arm64)
+    - **RAM:** 4 GB
+    - **Disk:** 40 GB
+- **Recommended Requirements** (Dedicated vCPU)
+    - **vCPUs:** 4 (x86 or Arm64)
+    - **RAM:** 8 GB
+    - **Disk:** 80 GB
 
 ## Prerequesites
 
@@ -40,8 +48,13 @@ ZaneOps is currently in **alpha** and is not stable for production use. However,
 2. Download the makefile for the project :
 
     ```shell
-    curl https://raw.githubusercontent.com/zane-ops/zane-ops/main/deploy.mk > Makefile
+    curl https://cdn.zaneops.dev/makefile > Makefile
     ```
+    
+    <Aside type="note">
+    The source code for this file is available [on github](https://github.com/zane-ops/zane-ops/blob/main/deploy.mk).
+    </Aside>
+
 
 3. Launch the setup process :
 
@@ -73,7 +86,7 @@ ZaneOps is currently in **alpha** and is not stable for production use. However,
     ```shell
     # /var/www/zaneops/.env
     # Example configuration - Modify before production use
-    IMAGE_VERSION=canary # ZaneOps version to install
+    IMAGE_VERSION=latest # ZaneOps version to install
     ZANE_APP_DIRECTORY="/var/www/zaneops" # Installation directory for ZaneOps
     ZANE_DB_USER= # Generate with: "curl -s https://randomuser.me/api/ | jq -r '.results[0].login.username'"
     ZANE_DB_PASSWORD= # Generate with: "$(openssl rand -base64 32)"
@@ -81,6 +94,7 @@ ZaneOps is currently in **alpha** and is not stable for production use. However,
 
     ROOT_DOMAIN="<YOUR-IP>.sslip.io" # Root domain for generating app domains
     ZANE_APP_DOMAIN="<YOUR-IP>.sslip.io" # Domain for ZaneOps dashboard
+    MODE=https # or http
     ```
 
 5. Deploy ZaneOps :
@@ -113,6 +127,8 @@ ZaneOps is currently in **alpha** and is not stable for production use. However,
 4. `DJANGO_SECRET_KEY`: Used by the API for various security functions, such as hashing user session tokens. Generate a secure key with at least 64 characters using a tool like [openssl](https://github.com/openssl/openssl) (e.g., `openssl rand -base64 64`).
 5. `ROOT_DOMAIN`: Used to generate subdomains for deployed web apps, e.g., `my-web-app.127-0-0-1.sslip.io`. The root domain itself can also host the dashboard if desired.
 6. `ZANE_APP_DOMAIN`: The domain where the ZaneOps dashboard will be accessible after deployment. It can be the same as `ROOT_DOMAIN`
+7. `MODE` : the mode in which to deploy your zaneops instance, should be either `https` or  `http`, if you change this to `http`, it enables the port `80` on your instance, beware as it can be source of security vulnerabilities.
+8. `__DANGEROUS_ALLOW_HTTP_SESSION` : allow for authenticating to zaneops using a domain on `http://`
 
 ### Additional Commands
 
@@ -157,17 +173,24 @@ To do this :
   ZANE_APP_DOMAIN="127-0-0-1.sslip.io"
   ROOT_DOMAIN="127-0-0-1.sslip.io"
   ```
-- add the `__DANGEROUS_ALLOW_HTTP_SESSION` environment variable :
+- add the `__DANGEROUS_ALLOW_HTTP_SESSION` environment variable, and update the `MODE` variable to open the port `80` :
 
   ```shell
   # /var/www/zaneops/.env
   # ... other env variables
+  MODE=http
   __DANGEROUS_ALLOW_HTTP_SESSION="true"
   ```
-- run the `deploy` command but with http enabled : 
+- be sure to top zaneops first :
+
+    ```shell
+    make stop
+    ``` 
+
+- run the `deploy` command : 
   
   ```shell
-  make deploy-with-http
+  make deploy
   ```
 - You can now access zaneops dashboard at http://127-0-0-1.sslip.io
 
