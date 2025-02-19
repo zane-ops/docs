@@ -38,3 +38,4 @@ dist-ssr
 .env
 .env.production
 
+/index.ts

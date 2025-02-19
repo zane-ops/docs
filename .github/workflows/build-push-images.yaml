@@ -56,13 +56,26 @@ jobs:
                       type=registry,ref=ghcr.io/zane-ops/docs:latest
                   cache-to: type=inline
             
+            - name: setup bun
+              uses: oven-sh/setup-bun@v2
+              with:
+                bun-version: latest
+            
             - name: Deploy to Zaneops
-              run: |
-                curl -f -X PUT "${{ secrets.DEPLOY_WEBHOOK_URL }}" \
-                  -H "CF-Access-Client-Id: ${{ secrets.CF_CLIENT_ID }}" \
-                  -H "CF-Access-Client-Secret: ${{ secrets.CF_CLIENT_SECRET }}" \
-                  -H "Content-Type: application/json" \
-                  -d '{
-                        "commit_message": "${{ github.event.head_commit.message }}",
-                        "new_image": "ghcr.io/zane-ops/docs:${{ github.sha }}"
-                      }'
+              run: bun run index.ts 
+              env:
+                  DEPLOY_WEBHOOK_URL: ${{ secrets.DEPLOY_WEBHOOK_URL }}
+                  CF_CLIENT_ID: ${{ secrets.CF_CLIENT_ID }}
+                  CF_CLIENT_SECRET: ${{ secrets.CF_CLIENT_SECRET }}
+                  COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+                  SERVICE_IMAGE: ghcr.io/zane-ops/docs:${{ github.sha }}
+
+              # run: |
+              #   curl -f -X PUT "${{ secrets.DEPLOY_WEBHOOK_URL }}" \
+              #     -H "CF-Access-Client-Id: ${{ secrets.CF_CLIENT_ID }}" \
+              #     -H "CF-Access-Client-Secret: ${{ secrets.CF_CLIENT_SECRET }}" \
+              #     -H "Content-Type: application/json" \
+              #     -d '{
+              #           "commit_message": "${{ github.event.head_commit.message }}",
+              #           "new_image": "ghcr.io/zane-ops/docs:${{ github.sha }}"
+              #         }'
