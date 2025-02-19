@@ -58,7 +58,7 @@ jobs:
             
             - name: Deploy to Zaneops
               run: |
-                curl -X PUT "${{ secrets.DEPLOY_WEBHOOK_URL }}" \
+                curl -f -X PUT "${{ secrets.DEPLOY_WEBHOOK_URL }}" \
                   -H "CF-Access-Client-Id: ${{ secrets.CF_CLIENT_ID }}" \
                   -H "CF-Access-Client-Secret: ${{ secrets.CF_CLIENT_SECRET }}" \
                   -H "Content-Type: application/json" \
