@@ -68,7 +68,8 @@ jobs:
                   CF_CLIENT_ID: ${{ secrets.CF_CLIENT_ID }}
                   CF_CLIENT_SECRET: ${{ secrets.CF_CLIENT_SECRET }}
                   COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
-                  SERVICE_IMAGE: ghcr.io/zane-ops/docs:${{ github.sha }}
+                  SERVICE_IMAGE: ghcr.io/zane-ops/docs:latest 
+                  #${{ github.sha }}
 
               # run: |
               #   curl -f -X PUT "${{ secrets.DEPLOY_WEBHOOK_URL }}" \

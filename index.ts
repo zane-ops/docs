@@ -29,7 +29,7 @@ const deploymentResponse = await fetch(webhookUrl, {
   },
   body: JSON.stringify({
     commit_message: commitMessage,
-    new_image: "latest"
+    new_image: serviceImage
   })
 });
 
