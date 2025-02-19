@@ -66,8 +66,4 @@ jobs:
                 curl -f -X PUT "${{ secrets.DEPLOY_WEBHOOK_URL }}" \
                   -H "CF-Access-Client-Id: ${{ secrets.CF_CLIENT_ID }}" \
                   -H "CF-Access-Client-Secret: ${{ secrets.CF_CLIENT_SECRET }}" \
-                  -H "Content-Type: application/json" \
-                  -d '{
-                    "commit_message": "${{ github.event.head_commit.message }}",
-                    "new_image": "ghcr.io/zane-ops/docs:latest"
-                    }'
+                  -H "Content-Type: application/json"
