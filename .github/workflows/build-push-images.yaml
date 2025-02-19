@@ -19,51 +19,53 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v4
-            # - uses: actions/setup-node@v4
-            #   with:
-            #       node-version: 20
-            # - name: Cache pnpm dependencies
-            #   uses: actions/cache@v3
-            #   with:
-            #       path: ~/.pnpm-store
-            #       key: ${{ runner.OS }}-pnpm-cache-${{ hashFiles('pnpm-lock.yaml') }}
-            #       restore-keys: |
-            #           ${{ runner.OS }}-pnpm-cache-
-            # - name: Build docs with node
-            #   run: |
-            #       npm install -g pnpm@8
-            #       pnpm install --frozen-lockfile
-            #       FORCE_COLOR=true pnpm run build
-            # - name: Set up QEMU
-            #   uses: docker/setup-qemu-action@v2
-            # - name: Set up Docker Buildx
-            #   uses: docker/setup-buildx-action@v2
-            # - name: Log in to the Container registry
-            #   uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
-            #   with:
-            #       registry: ghcr.io
-            #       username: ${{ github.actor }}
-            #       password: ${{ secrets.CONTAINER_REGISTRY_PAT }}
-            # - name: Build and push
-            #   uses: docker/build-push-action@v3
-            #   with:
-            #       context: .
-            #       file: Dockerfile
-            #       push: true
-            #       platforms: linux/amd64,linux/arm64
-            #       tags: ghcr.io/zane-ops/docs:latest,ghcr.io/zane-ops/docs:${{ github.sha }}
-            #       cache-from: |
-            #           type=registry,ref=ghcr.io/zane-ops/docs:latest
-            #       cache-to: type=inline
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+            - name: Cache pnpm dependencies
+              uses: actions/cache@v3
+              with:
+                  path: ~/.pnpm-store
+                  key: ${{ runner.OS }}-pnpm-cache-${{ hashFiles('pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.OS }}-pnpm-cache-
+            - name: Build docs with node
+              run: |
+                  npm install -g pnpm@8
+                  pnpm install --frozen-lockfile
+                  FORCE_COLOR=true pnpm run build
+            - name: Set up QEMU
+              uses: docker/setup-qemu-action@v2
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v2
+            - name: Log in to the Container registry
+              uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.CONTAINER_REGISTRY_PAT }}
+            - name: Build and push
+              uses: docker/build-push-action@v3
+              with:
+                  context: .
+                  file: Dockerfile
+                  push: true
+                  platforms: linux/amd64,linux/arm64
+                  tags: ghcr.io/zane-ops/docs:latest,ghcr.io/zane-ops/docs:${{ github.sha }}
+                  cache-from: |
+                      type=registry,ref=ghcr.io/zane-ops/docs:latest
+                  cache-to: type=inline
             
-            # - name: setup bun
-            #   uses: oven-sh/setup-bun@v2
-            #   with:
-            #     bun-version: latest
+            - name: setup bun
+              uses: oven-sh/setup-bun@v2
+              with:
+                bun-version: latest
             
             - name: Deploy to Zaneops
-              run: |
-                curl -f -X PUT "${{ secrets.DEPLOY_WEBHOOK_URL }}" \
-                  -H "CF-Access-Client-Id: ${{ secrets.CF_CLIENT_ID }}" \
-                  -H "CF-Access-Client-Secret: ${{ secrets.CF_CLIENT_SECRET }}" \
-                  -H "Content-Type: application/json"
+              run: bun run deploy-to-zaneops.ts 
+              env:
+                  DEPLOY_WEBHOOK_URL: ${{ secrets.DEPLOY_WEBHOOK_URL }}
+                  CF_CLIENT_ID: ${{ secrets.CF_CLIENT_ID }}
+                  CF_CLIENT_SECRET: ${{ secrets.CF_CLIENT_SECRET }}
+                  COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+                  SERVICE_IMAGE: ghcr.io/zane-ops/docs:${{ github.sha }} 

@@ -37,8 +37,8 @@ if (deploymentResponse.status === 200) {
   console.log(`Deployment queued succesfully ✅`);
   console.log(`inspect in your dashboard`);
 } else {
-  console.log(colors.red("❌ Failed to queue deployment ❌"));
-  console.log(
+  console.error(colors.red("❌ Failed to queue deployment ❌"));
+  console.error(
     `Received status code from zaneops API : ${colors.red(
       deploymentResponse.status
     )}`
@@ -48,7 +48,7 @@ if (deploymentResponse.status === 200) {
     deploymentResponse.headers.get("content-type") === "application/json"
       ? await deploymentResponse.json()
       : await deploymentResponse.text();
-  console.log("Received response from zaneops API : ");
+  console.error("Received response from zaneops API : ");
   console.dir(response);
   throw new Error();
 }
