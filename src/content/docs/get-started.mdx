@@ -10,17 +10,30 @@ ZaneOps is a deployment platform that simplifies the process of managing and dep
 
 ## System requirements
 
-ZaneOps is designed to operate on a variety of environments. For optimal performance, we recommend the following specifications :
+ZaneOps is designed to operate on a variety of environments. For optimal performance, we recommend these Minimum requirements for running zaneops and your services :
 
-- **Minimum Requirements** (Shared vCPU)
-    - **vCPUs:** 2 (x86 or Arm64)
-    - **RAM:** 4 GB
-    - **Disk:** 40 GB
-- **Recommended Requirements** (Dedicated vCPU)
-    - **vCPUs:** 4 (x86 or Arm64)
-    - **RAM:** 8 GB
-    - **Disk:** 80 GB
+- **CPUs:** 4 cores 
+- **Memory (RAM):** At least 8 GB
+- **Disk:** At least 80 GB of free space
 
+<Aside type="note" title="Information">
+On [hetzner](https://www.hetzner.com/cloud/) this cost around 7€/month.
+</Aside>
+
+ZaneOps may work properly on servers with lower specs than those mentioned above, but we recommend slightly higher minimum requirements.
+Keep in mind that this depends mainly on the resource requirements for your services, if you are running a lot of services that are resource intensive, 
+you might need a bigger server, if you want to host static sites though, the minimum requirements might totally be enough.
+
+## Supported OS and architectures
+
+As of now ZaneOps has been tested on these platforms : 
+
+- Debian-based Linux distributions (e.g., Debian, Ubuntu)
+- Raspberry Pi OS 64-bit (Raspbian) using ARM architecture
+- MacOs Mx series
+
+We can't assure you that zaneops will work on other platforms, but if you try and succeed, we are more than happy to add 
+it to our supported OS.
 
 ## Prerequesites
 

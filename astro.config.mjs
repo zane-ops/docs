@@ -62,7 +62,7 @@ export default defineConfig({
           label: "Changelog",
           items: [
             {
-              label: "Announcing v1 of zaneops",
+              label: "ZaneOps v1.0",
               slug: "changelog/announcing-v1"
             }
           ]
