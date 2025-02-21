@@ -70,7 +70,7 @@ export async function getStaticPaths() {
         props: {
           title: "Zaneops",
           description:
-            "A self-hosted platform for deploying web apps, databases, CRONS, and more..."
+            "A self-hosted platform for deploying web apps, databases, workers, CRONS, and more..."
         }
       };
     }

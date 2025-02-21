@@ -1,0 +1,95 @@
+---
+title: Configuring DNS Records for ZaneOps
+description: 'Guide to Configuring DNS records for zaneops'
+---
+
+import {Aside} from '@astrojs/starlight/components';
+
+ZaneOps requires specific DNS records to be set up for your domains. The primary environment variables related to domains are:
+
+- [`ROOT_DOMAIN`](#root_domain): Used to generate subdomains for deployed web apps.
+- [`ZANE_APP_DOMAIN`](#zane_app_domain): The domain where the ZaneOps dashboard will be accessible after deployment. It can be the same as `ROOT_DOMAIN`.
+
+### Required DNS Records
+
+You need to add the following records in your DNS provider:
+
+```txt
+@     IN  A    <your-server-ip>       # ROOT_DOMAIN
+*     IN  A    <your-server-ip>       # Wildcard Subdomain (`*.<ROOT_DOMAIN>`, to support subdomains dynamically)
+app   IN  A    <your-server-ip>       # ZANE_APP_DOMAIN
+```
+
+On [cloudflare](//cloudflare.com), it looks like this : 
+
+![example DNS records on cloudflare](/images/dns-records.png)
+
+### Verifying DNS Records
+
+Ensure that these records are correctly propagated by checking them with a DNS lookup tool such as `dig` or `nslookup` : 
+
+```shell
+# Using `dig`
+dig +short zane.app A
+
+# Using `nslookup`
+nslookup zane.app
+```
+
+
+#### **`ROOT_DOMAIN`**
+
+This variable is used for generating subdomains for your services. 
+
+for example if your root domain is [zaneops.dev](https://zaneops.dev), urls for your services will be generated 
+as [project-service-randomid.zaneops.dev](//project-service-randomid.zaneops.dev). This variable is also used for generating unique urls for your deployments.
+
+In the dashboard, this is what is used when you leave the `domain` field empty when you add urls for your service : 
+
+<img className="block dark:hidden" src="/images/custom-urls-light.png" alt="service settings page on the custom urls section" />
+<img className="!hidden dark:!block" src="/images/custom-urls-dark.png" alt="service settings page on the custom urls section" />
+
+<Aside type='note'>
+By default the setup script of zaneops generate a [sslip.io](https://sslip.io) domain based on the IP of your server (ex: https://198-19-249-134.sslip.io),
+and you can change this at any moment. 
+</Aside>
+
+
+
+#### **`ZANE_APP_DOMAIN`**
+
+This variable corresponds to the domain where the zaneops dashboard will be accessible. 
+You can safely set this variable to the same value as the `ROOT_DOMAIN`, the domain itself is not used for anything else.
+
+
+## Disabling SSL 
+
+By default zaneops, will only expose the port `443` to the public, with all services served over https. 
+But in some cases where you have another proxy on top on your server (ex: [Cloudflare tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/), [Cloudflare proxy](https://developers.cloudflare.com/dns/proxy-status/)),
+ which handle SSL for you, you might want to disable SSL on your server. 
+
+- To enable HTTP, you can modify the `.env` file and update the `MODE` variable to `http` :
+
+    ```shell
+    # /var/www/zaneops/.env
+    # ... other env variables
+    MODE=http
+    ```
+
+- You will need to restart your zaneops instance :
+
+    ```shell
+    make stop # stop zaneops and all the services managed by it
+    make deploy # start zaneops again
+    ``` 
+
+
+## Using Cloudflare tunnel
+
+[Cloudflare tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) is a popular way to host applications without needing 
+to expose your server IP to the internet. 
+
+For hosting zaneops behing cloudflare tunnel, you will need to : 
+1. [Disable ssl](#disabling-ssl)
+2. Add the records on the public hostname tab on your tunnel instance, all forwarded to http://127.0.0.1:80 :  
+   ![Cloudflare tunnel public hostnames](/images/cf-tunnel.png)

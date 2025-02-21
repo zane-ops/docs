@@ -44,6 +44,10 @@ export default defineConfig({
               slug: "get-started"
             },
             {
+              label: "DNS configuration",
+              slug: "configuring-zaneops"
+            },
+            {
               label: "Screenshots",
               slug: "screenshots"
             }
@@ -64,6 +68,15 @@ export default defineConfig({
             {
               label: "ZaneOps v1.0",
               slug: "changelog/announcing-v1"
+            }
+          ]
+        },
+        {
+          label: "Tutorials",
+          items: [
+            {
+              label: "Deploying a documenso app to ZaneOps",
+              slug: "tutorials/deploying-a-documenso-app"
             }
           ]
         },
