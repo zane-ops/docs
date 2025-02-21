@@ -70,7 +70,7 @@ to ZaneOps whenever a commit is pushed to a specified branch.
                 # You can also do this 
                 #- name: Deploy using curl
                 #  run: |
-                #    curl -X PUT "${{ secrets.DEPLOY_WEBHOOK_URL }}" \
+                #    curl -f -X PUT "${{ secrets.DEPLOY_WEBHOOK_URL }}" \
                 #       -H "Content-Type: application/json" \
                 #       -d '{
                 #           "new_image": "ghcr.io/zane-ops/docs:${{ github.sha }}",
