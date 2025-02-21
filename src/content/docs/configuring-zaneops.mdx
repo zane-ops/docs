@@ -85,7 +85,17 @@ But in some cases where you have another proxy on top on your server (ex: [Cloud
     make stop # stop zaneops and all the services managed by it
     make deploy # start zaneops again
     ``` 
+ 
+<Aside type="note" title="Server without a public IP">
+In some cases, you might want to disable secure connection to your server, if you are testing on a non production server
+which doesn't have a public IP (meaning you can only access your server with `http://`).
 
+For that you will need to modify the `__DANGEROUS_ALLOW_HTTP_SESSION` environment variable in your `.env` file to `"true"`.
+However, this is strongly discouraged to use in production, 
+as it allows for connecting to your dashboard using non secure cookies.
+
+This can be perfectly OK though, for use-cases like using ZaneOps to host apps on a local network not accessible from the internet. 
+</Aside>
 
 ## Using Cloudflare tunnel
 
