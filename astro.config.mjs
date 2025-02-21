@@ -45,7 +45,7 @@ export default defineConfig({
             },
             {
               label: "Installation and Setup",
-              slug: "get-started"
+              slug: "installation"
             },
             {
               label: "DNS configuration",
