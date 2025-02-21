@@ -1,0 +1,34 @@
+---
+title: Automated jobs
+description: All automated jobs run by zaneops
+---
+
+import {Aside} from '@astrojs/starlight/components';
+
+ZaneOps runs regularly automated jobs such as :
+
+- A log collection job every 5s
+- One metrics collection job for each service every 5s
+- An automated docker system cleanup every 4h
+- A log and metrics cleanup job every day at midnight
+
+## Log & metrics retention policy
+
+To optimize the storage on your server, the logs and metrics cleanup job deletes logs that are older than **2 weeks** (14 days) and deletes metrics that are older than **30 days**.
+
+Only application logs are deleted, HTTP logs are not deleted.
+
+## Automated docker system cleanup 
+
+The automated system cleanup runs every 4h and executes these steps in order : 
+
+1. Cleanup all unused images
+2. Cleanup all unused containers
+3. Cleanup all unused volumes except the ones managed by zaneops
+4. Cleanup all unused networks
+
+You can find the source code of the system cleanup job [here](https://github.com/zane-ops/zane-ops/blob/ee40dc332427b332d7179d3f22f5bd43e5021299/backend/zane_api/temporal/workflows.py#L666-L705).
+
+<Aside type='tip' title='Good to know'>
+This job is only executed when there is no current deployment running.
+</Aside>
