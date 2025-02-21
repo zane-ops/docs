@@ -58,13 +58,12 @@ export default defineConfig({
           ]
         },
         {
+          label: "Knowledge base",
+          autogenerate: { directory: "knowledge-base" }
+        },
+        {
           label: "Tutorials",
-          items: [
-            {
-              label: "Deploying a documenso app to ZaneOps",
-              slug: "tutorials/deploying-a-documenso-app"
-            }
-          ]
+          autogenerate: { directory: "tutorials" }
         },
         {
           label: "Changelog",
