@@ -1,34 +1,38 @@
 ---
 title: Automated jobs
-description: All automated jobs run by zaneops
+description: Overview of automated jobs run by ZaneOps
 ---
 
 import {Aside} from '@astrojs/starlight/components';
 
-ZaneOps runs regularly automated jobs such as :
+ZaneOps regularly runs the following automated jobs:
 
-- A log collection job every 5s
-- One metrics collection job for each service every 5s
-- An automated docker system cleanup every 4h
-- A log and metrics cleanup job every day at midnight
+- Log collection every **5 seconds**
+- Metrics collection for each service every **5 seconds**
+- Automated Docker system cleanup every **4 hours**
+- Log and metrics cleanup every **day at midnight**
 
 ## Log & metrics retention policy
 
-To optimize the storage on your server, the logs and metrics cleanup job deletes logs that are older than **2 weeks** (14 days) and deletes metrics that are older than **30 days**.
+To optimize storage on your server, the log and metrics cleanup job:
 
-Only application logs are deleted, HTTP logs are not deleted.
+- Deletes logs older than **14 days** (2 weeks)
+- Deletes metrics older than **30 days**
 
-## Automated docker system cleanup 
+Only **application logs** are deleted; **HTTP logs** are retained.
 
-The automated system cleanup runs every 4h and executes these steps in order : 
 
-1. Cleanup all unused images
-2. Cleanup all unused containers
-3. Cleanup all unused volumes except the ones managed by zaneops
-4. Cleanup all unused networks
+## Automated Docker System Cleanup
 
-You can find the source code of the system cleanup job [here](https://github.com/zane-ops/zane-ops/blob/ee40dc332427b332d7179d3f22f5bd43e5021299/backend/zane_api/temporal/workflows.py#L666-L705).
+The automated system cleanup runs every **4 hours** and performs the following steps in order:
 
-<Aside type='tip' title='Good to know'>
-This job is only executed when there is no current deployment running.
+1. Remove all unused images
+2. Remove all unused containers
+3. Remove all unused volumes (except those managed by ZaneOps)
+4. Remove all unused networks
+
+You can find the source code for the system cleanup job [here](https://github.com/zane-ops/zane-ops/blob/ee40dc332427b332d7179d3f22f5bd43e5021299/backend/zane_api/temporal/workflows.py#L666-L705).
+
+<Aside type="tip" title="Good to Know">
+This job runs **only** when no deployments are in progress.
 </Aside>
