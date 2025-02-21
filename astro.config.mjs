@@ -48,26 +48,12 @@ export default defineConfig({
               slug: "configuring-zaneops"
             },
             {
+              label: "Deploying using github actions",
+              slug: "deploying-with-github-actions"
+            },
+            {
               label: "Screenshots",
               slug: "screenshots"
-            }
-          ]
-        },
-        {
-          label: "Development",
-          items: [
-            {
-              label: "Development",
-              slug: "development/development"
-            }
-          ]
-        },
-        {
-          label: "Changelog",
-          items: [
-            {
-              label: "ZaneOps v1.0",
-              slug: "changelog/announcing-v1"
             }
           ]
         },
@@ -77,6 +63,15 @@ export default defineConfig({
             {
               label: "Deploying a documenso app to ZaneOps",
               slug: "tutorials/deploying-a-documenso-app"
+            }
+          ]
+        },
+        {
+          label: "Changelog",
+          items: [
+            {
+              label: "ZaneOps v1.0",
+              slug: "changelog/announcing-v1"
             }
           ]
         },
@@ -94,6 +89,15 @@ export default defineConfig({
             {
               label: "OpenAPI reference ↗",
               link: "/api-reference/openapi"
+            }
+          ]
+        },
+        {
+          label: "Development",
+          items: [
+            {
+              label: "Development",
+              slug: "development/development"
             }
           ]
         }

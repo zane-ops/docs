@@ -1,0 +1,85 @@
+---
+title: Deploying your applications using GitHub actions
+description: Guide for deploying your applications using Github actions
+---
+
+import {Steps, Aside} from '@astrojs/starlight/components';
+
+
+This guide explains how to set up a GitHub Action that automatically triggers a deployment 
+to ZaneOps whenever a commit is pushed to a specified branch.
+
+## Prerequisites
+
+- A GitHub repository where you want to set up the action.
+
+- A service created on your zaneops instance
+
+- Permissions to create GitHub Actions and manage repository secrets.
+
+## Process
+
+<Steps>
+1. **Go to your service settings and copy the webhook URL**:
+    ![webhook url](/images/screenshot-webhook-url.png)
+2. **Add it to your repository secrets**:
+    ![repository secrets](/images/github-repository-secret.png)
+3. **Create your github action workflow**: we recommend using [zane-ops/auto-deploy-action](https://github.com/zane-ops/auto-deploy-action) like this :
+    ```yaml
+    # .github/workflows/auto-deploy.yaml
+    name: ci
+    on:
+        push:
+            branches: [main] # Change this if needed
+    jobs:
+        build-push-to-docker:
+            name: Build and Push image to container registry
+            runs-on: ubuntu-latest
+            permissions:
+                packages: write
+                contents: read
+                attestations: write
+                id-token: write
+            steps:
+                - name: Checkout
+                  uses: actions/checkout@v4
+                - name: Set up Docker Buildx
+                  uses: docker/setup-buildx-action@v2
+                - name: Log in to the Container registry
+                  uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+                      with:
+                          registry: ghcr.io
+                          username: ${{ github.actor }}
+                          password: ${{ secrets.CONTAINER_REGISTRY_PAT }}
+                - name: Build and push
+                  uses: docker/build-push-action@v3
+                  with:
+                      context: ./
+                      file: ./
+                      push: true
+                      tags: ghcr.io/zane-ops/docs:latest,ghcr.io/zane-ops/docs:${{ github.sha }}
+                      cache-from: type=registry,ref=ghcr.io/zane-ops/docs:latest
+                      cache-to: type=inline
+        deploy-app:
+            needs: build-push-to-docker
+            steps:
+                - name: Deploy to Zaneops
+                  uses: zane-ops/auto-deploy-action@v4
+                  with:
+                      SERVICE_IMAGE: ghcr.io/zane-ops/docs:${{ github.sha }}
+                      DEPLOY_WEBHOOK_URL: ${{ secrets.DEPLOY_WEBHOOK_URL }}
+                      COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+                # You can also do this 
+                #- name: Deploy using curl
+                #  run: |
+                #    curl -X PUT "${{ secrets.DEPLOY_WEBHOOK_URL }}" \
+                #       -H "Content-Type: application/json" \
+                #       -d '{
+                #           "new_image": "ghcr.io/zane-ops/docs:${{ github.sha }}",
+                #           "commit_message": "${{ github.event.head_commit.message }}",
+                #           }'
+    ```
+4. You can check in your dashboard and see the new deployment: 
+    ![new deployment starting](/images/new-deployment.png)
+
+</Steps>

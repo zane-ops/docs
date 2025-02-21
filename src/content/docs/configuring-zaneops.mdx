@@ -49,7 +49,7 @@ In the dashboard, this is what is used when you leave the `domain` field empty w
 <img className="block dark:hidden" src="/images/custom-urls-light.png" alt="service settings page on the custom urls section" />
 <img className="!hidden dark:!block" src="/images/custom-urls-dark.png" alt="service settings page on the custom urls section" />
 
-<Aside type='note'>
+<Aside type='note' title='Default value'>
 By default the setup script of zaneops generate a [sslip.io](https://sslip.io) domain based on the IP of your server (ex: https://198-19-249-134.sslip.io),
 and you can change this at any moment. 
 </Aside>
@@ -61,12 +61,15 @@ and you can change this at any moment.
 This variable corresponds to the domain where the zaneops dashboard will be accessible. 
 You can safely set this variable to the same value as the `ROOT_DOMAIN`, the domain itself is not used for anything else.
 
+<Aside type='note' title='Default value'>
+By default, the setup script of ZaneOps will generate this with the same value as `ROOT_DOMAIN`.
+</Aside>
 
 ## Disabling SSL 
 
 By default zaneops, will only expose the port `443` to the public, with all services served over https. 
 But in some cases where you have another proxy on top on your server (ex: [Cloudflare tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/), [Cloudflare proxy](https://developers.cloudflare.com/dns/proxy-status/)),
- which handle SSL for you, you might want to disable SSL on your server. 
+ which handles SSL for you, you might want to disable SSL on your server. 
 
 - To enable HTTP, you can modify the `.env` file and update the `MODE` variable to `http` :
 
