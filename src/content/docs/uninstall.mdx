@@ -1,0 +1,19 @@
+---
+title: Uninstalling ZaneOps
+description: Guide to uninstall zaneops
+---
+
+
+import {Aside} from '@astrojs/starlight/components';
+
+
+This process will stop and delete all services managed by zaneops including zaneops itself : 
+
+```shell
+# Delete ZaneOps and all managed services
+make delete-resources
+```
+
+<Aside type="note" title="Information">
+This will run `docker system prune -f --volumes` at the end. 
+</Aside>
