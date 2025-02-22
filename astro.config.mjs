@@ -48,6 +48,18 @@ export default defineConfig({
               slug: "installation"
             },
             {
+              label: "Reset user password",
+              slug: "reset-password"
+            },
+            {
+              label: "Uninstalling ZaneOps",
+              slug: "uninstall"
+            },
+            {
+              label: "Stopping ZaneOps",
+              slug: "stopping-zaneops"
+            },
+            {
               label: "DNS configuration",
               slug: "configuring-zaneops"
             },
