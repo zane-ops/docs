@@ -52,4 +52,17 @@ jobs:
                       type=registry,ref=ghcr.io/zane-ops/docs:pr-${{ github.event.pull_request.number }}
                       type=registry,ref=ghcr.io/zane-ops/docs:latest
                   cache-to: type=inline
-            
+    deploy:
+        runs-on: ubuntu-latest
+        name: Deploy
+        needs: build-push-docs
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v4
+          - name: Deploy to Zaneops
+            uses: zane-ops/auto-deploy-action@v4
+            with:
+              SERVICE_IMAGE: ghcr.io/zane-ops/docs:${{ github.sha }}
+              DEPLOY_WEBHOOK_URL: ${{ secrets.STAGING_DEPLOY_WEBHOOK_URL }}
+              COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+              EXTRA_HEADERS: '{ "CF-Access-Client-Id": "${{ secrets.CF_CLIENT_ID }}", "CF-Access-Client-Secret": "${{ secrets.CF_CLIENT_SECRET }}" }'
