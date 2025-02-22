@@ -3,19 +3,19 @@ title: Welcome to ZaneOps
 description: why use zaneops ?
 ---
 
-import {Aside} from '@astrojs/starlight/components';
+import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
 
 ## What is Zaneops ?
 
-ZaneOps is a beautiful, self-hosted, open source platform for hosting static sites, web apps, databases, services (like Supabase, Wordpress, Ghost), Workers or anything you need whether you start a startup or Enterprise.
+ZaneOps is a **beautiful, self-hosted, open-source** platform for hosting static sites, web apps, databases, services (like Supabase, WordPress, Ghost), workers, or anything else you need—whether you're launching a startup or managing an enterprise.  
 
-It is an free and open-source alternative to platforms like Heroku, Railway and Render, leveraging the scalability of [Docker swarm](https://docs.docker.com/engine/swarm/) and the flexibility of [Caddy](https://caddyserver.com/).
+It is a **free** and **open-source** alternative to platforms like **Heroku, Railway, and Render**, leveraging the **scalability** of [Docker Swarm](https://docs.docker.com/engine/swarm/) and the **flexibility** of [Caddy](https://caddyserver.com/).  
 
 ## Why Zaneops ?
 
-### Exhibit A : It looks beautiful 
+### Exhibit A: It Looks Beautiful
 
-I mean, have you seen a more beautiful looking open source project ? 👀
+Who said that open source projects had to look bad ? 👀
 
 <img className="block dark:hidden" src="/images/login-light.png" alt="Login page" />
 <img className="!hidden dark:!block" src="/images/login-dark.png" alt="Login page" />
@@ -33,14 +33,69 @@ more screenshots [here](/screenshots)
 
 
 
-### Exhibit B : It is blazingly fast !
+### Exhibit B: It Is Blazingly Fast!  
 
-> Yes this is the app on production !
+> Yes, this is the app running in production!
 
 <video src="/videos/zaneops-is-fast.mp4" alt="" muted controls />
 
-### Exhibit C : We have a ton of features 
+### Exhibit C: Packed with Features  
 
-ZaneOps is packed with Features : 
+ZaneOps is loaded with powerful features:
 
-> TODO
+
+<CardGrid>
+    <Card title="No Vendor Lock-In">
+        ZaneOps is **completely free**, self-hosted, and open-source.
+        Your data stays on your server.
+    </Card>
+    <Card title="Simple Deployment">
+        ZaneOps is deployed as a simple **Docker stack**, allowing you to inspect 
+        and modify it as needed.
+    </Card>
+    <Card title="Zero-Downtime Deployments">
+        Deploying a new version doesn’t require stopping the old one,
+        ensuring uninterrupted uptime.
+    </Card>
+    <Card title="Free SSL Certificates">
+        Every domain—custom or auto-generated—gets a free SSL certificate that is automatically renewed on expiration.
+    </Card>
+    <Card title="Docker Swarm">
+        Every service managed by ZaneOps corresponds **one-to-one** with a Docker Swarm service,
+        enabling features like automatic rollbacks, multi-cluster support (coming soon),
+        and automatic restarts if your application crashes.
+    </Card>
+    <Card title="Built-in Monitoring"> 
+        Automatic **health checks**, detailed **metrics**, and real-time **logs**
+        for each service and deployment.
+    </Card>
+    <Card title="Advanced URL Support"> 
+        Supports **wildcard URLs**, multiple services sharing the same domain
+        (e.g., frontend on `domain.com/` and API on `domain.com/api`),
+        **URL redirections** (permanent, temporary), and multiple URLs per service.
+    </Card>
+    <Card title="HTTP Logs"> 
+        You can [view and analyze](/screenshots#http-logs-page)
+        all HTTP requests made to your service over time.
+    </Card>
+    <Card title="Git-Like Configuration System"> 
+        [Review and validate](/screenshots#changes-modal) changes before deploying new versions.
+    </Card>
+    <Card title="Deployment Webhooks"> 
+        Easily set up [CI/CD workflows](/deploying-with-github-actions).
+    </Card>
+    <Card title="Resource Limits"> 
+        Set **maximum memory (RAM) and CPU usage** per service.
+    </Card>
+    <Card title="Flexible Volume Management"> 
+        Attach as many volumes as needed and/or bind them to local paths.
+    </Card>
+    <Card title="Magic File Mounts"> 
+        Override the content of any file inside your services using
+        [configuration files](/screenshots#configuration-files).
+    </Card>
+    <Card title="Easy Environment Variable Management"> 
+        Manage your [environment variables](/screenshots#service-environment-variables-page),
+        export them as a `.env` file, or import them easily.
+    </Card>
+</CardGrid>
