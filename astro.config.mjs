@@ -63,11 +63,6 @@ export default defineConfig({
               label: "Stopping ZaneOps",
               slug: "stopping-zaneops"
             },
-
-            {
-              label: "Deploying using github actions",
-              slug: "deploying-with-github-actions"
-            },
             {
               label: "Screenshots",
               slug: "screenshots"
