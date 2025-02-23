@@ -6,7 +6,7 @@ description: 'ZaneOps v1.0 is here'
 
 ZaneOps v1.0 is finally here!
 
-ZaneOps is a beautiful, self-hosted, open-source platform for hosting static sites, web apps, databases, services (like Supabase, WordPress, Ghost), workers, or anything else you need—whether you’re launching a startup or managing an enterprise.
+ZaneOps is a beautiful, self-hosted, open-source platform for hosting static sites, web apps, databases, services (like **Umami**, **WordPress**, **Supabase**), workers, or anything else you need—whether you’re launching a startup or managing an enterprise.
 
 Today, ZaneOps is stable and production-ready.
 
@@ -33,95 +33,97 @@ make deploy
 The goal of ZaneOps is to bring together the best features we could ~~steal~~ take inspiration from popular platforms like 
 **Vercel**, **Railway**, and **Render**, while giving you full ownership of your data and complete control over your server costs.
 
+## Features  
 
-## Features
+### Deploying Services from Docker Images  
 
-### Deploying services from docker images
+<video src="/videos/deploy-using-docker.mp4" alt="Deploy using Docker" controls />  
 
-<video src="/videos/deploy-using-docker.mp4" alt="" controls />
+### Environment Variables Management  
 
-### env variables management 
+Supports adding single variables:  
 
-With support for adding single variables:
+<video src="/videos/add-env-variables.mp4" alt="Add environment variables" controls />  
 
-<video src="/videos/add-env-variables.mp4" alt="" controls />
+And importing variables from `.env` files:  
 
-And adding variables from `.env` files:
+<video src="/videos/add-from-dotenv.mp4" alt="Import from .env files" controls />  
 
-<video src="/videos/add-from-dotenv.mp4" alt="" controls />
+### Advanced URL Management  
 
-### Advanced URLs managements
+Supports wildcard domains:  
 
-With support for wildcard domains:
+<video src="/videos/wildcard-support.mp4" alt="Wildcard domain support" controls />  
 
-<video src="/videos/wildcard-support.mp4" alt="" controls />
+Generates default URLs for services:  
 
-Generating default urls for services:
+<video src="/videos/generate-url.mp4" alt="Generate default URLs" controls />  
 
-<video src="/videos/generate-url.mp4" alt="" controls />
+Allows multiple services to share the same domain:  
 
-With the ability for serivces to share the same domain :
+![Multiple services sharing the same domain](/images/same-domain-services.png)  
 
-![Multiple services sharing the same domain](/images/same-domain-services.png)
+### Persistent Logs  
 
+Application logs are persisted per deployment:  
 
-### Persistent logs 
+<video src="/videos/application-logs.mp4" alt="Application logs per deployment" controls />  
 
-With application logs persisted per deployment :
+HTTP logs are persisted per deployment and per service:  
 
-<video src="/videos/application-logs.mp4" alt="" controls />
+<video src="/videos/http-logs.mp4" alt="HTTP logs per service" controls />  
 
-And HTTP logs persisted per deployment & per service :
+### Monitoring  
 
-<video src="/videos/http-logs.mp4" alt="" controls />
+Provides metrics per service and deployment:  
 
-### Monitoring 
+<video src="/videos/metrics.mp4" alt="Service and deployment metrics" controls />  
 
-With metrics per service and deployment :
+### Git-Like Configuration Changes  
 
-<video src="/videos/metrics.mp4" alt="" controls />
+Allows you to review changes before deploying:  
 
-### Git-like configuration changes 
+<video src="/videos/changes-modal.mp4" alt="Review changes before deployment" controls />  
 
-Allowing you to review changes before deploying them :
+### Resource Limits  
 
-<video src="/videos/changes-modal.mp4" alt="" controls />
+<video src="/videos/resource-limits.mp4" alt="Set resource limits" controls />  
 
-### Resource limits
+### Magic File Mounts  
 
-<video src="/videos/resource-limits.mp4" alt="" controls />
+Override the content of any file within your services or add new files required for configuration:  
 
+<video src="/videos/config-files.mp4" alt="Magic file mounts for configuration" controls />  
 
-### Magic file mounts 
+### Deployment Webhook URLs  
 
-Allowing you to override the content of any file within your services or add any new file required to configure your service :
+Easily set up a [CI/CD workflow](/deploying-with-github-actions):  
 
-<video src="/videos/config-files.mp4" alt="" controls />
+<video src="/videos/deploy-webhook-url.mp4" alt="Deployment webhook URL" controls />  
 
-### Deployment webhooks URLs
+## OK, I Like What I See 😍  
 
-Allowing you to easily setup an easy [CI/CD configuration](/deploying-with-github-actions) : 
+If you'd like to start using ZaneOps today, follow the [installation steps](/installation).  
 
-<video src="/videos/deploy-webhook-url.mp4" alt="" controls />
+You can also check out our example tutorials on deploying applications with ZaneOps:  
 
-## OK, I like what I see 😍
+- [How to deploy Umami on ZaneOps](/tutorials/umami)  
+- [How to deploy Documenso on ZaneOps](/tutorials/documenso)  
 
-If you'd like to start using ZaneOps today, you can follow the [installation steps](/installation).
+## Acknowledgements  
 
-Alternatively, you can see our example tutorials for deploying an application on ZaneOps : 
-- [how to deploy umami on ZaneOps](/tutorials/umami) 
-- [how to deploy documenso on ZaneOps](/tutorials/documenso) 
+Thanks to our main contributors [@mo-cherif](//github.com/mo-cherif) and [@fredkiss3](//github.com/frekdiss3) for making v1 possible.  
 
-## Acknowledgements
+We also want to thank these projects for their inspiration:  
 
-Thanks to our main contributors [@mo-cherif](//github.com/mo-cherif) and [@fredkiss3](//github.com/frekdiss3) for
-making v1 possible. 
+- [Coolify](//coolify.io)  
+- [Render](//render.com)  
+- [Railway](//railway.com)  
 
-We would also like to thanks these projects which we took a lot of inspiration from : 
-- [Coolify](//coolify.io)
-- [Render](//render.com)
-- [Railway](//railway.com)
+## One More Thing...  
 
-## One more thing...
+If you’ve made it this far, we have a small favor to ask: 
+Please, [give us a star on GitHub!](https://github.com/zane-ops/zane-ops) ⭐ 
+It's one of the easiest ways to support the project. You can also help by resharing this post and spreading the word about ZaneOps.  
 
-If you’ve made it this far, we have a favor to ask: Please, [give us a star on GitHub!](https://github.com/zane-ops/zane-ops) It’s one of the easiest ways to support the project. You can also help by resharing this post, and spreading the word about ZaneOps. Thank you!
+**Thank you!** 🫶
