@@ -4,17 +4,15 @@ description: 'ZaneOps v1.0 is here'
 # template: 'splash'
 ---
 
-> TODO : video demo here
-
 ZaneOps v1.0 is finally here!
 
 ZaneOps is a beautiful, self-hosted, open-source platform for hosting static sites, web apps, databases, services (like Supabase, WordPress, Ghost), workers, or anything else you need—whether you’re launching a startup or managing an enterprise.
 
 Today, ZaneOps is stable and production-ready.
 
-### Install ZaneOps
+## Install ZaneOps
 
-Installation steps are detailled on the [installation page](/installation), but here is the TLDR :
+Installation steps are detailled on the [installation page](/installation), but here is the TLDR:
 
 ```shell
 # create directory to install zaneops
@@ -30,9 +28,100 @@ make setup
 make deploy 
 ```
 
-### Why ZaneOps exists ?
+## Why ZaneOps exists ?
 
-The goal of ZaneOps is to compile many of the best features we could ~~steal~~ inspire ourselves from popular platforms as 
-services while allowing us to owning our data and having total control over server costs.
+The goal of ZaneOps is to bring together the best features we could ~~steal~~ take inspiration from popular platforms like 
+**Vercel**, **Railway**, and **Render**, while giving you full ownership of your data and complete control over your server costs.
 
-As well as the...
+
+## Features
+
+### Deploying services from docker images
+
+<video src="/videos/deploy-using-docker.mp4" alt="" controls />
+
+### env variables management 
+
+With support for adding single variables:
+
+<video src="/videos/add-env-variables.mp4" alt="" controls />
+
+And adding variables from `.env` files:
+
+<video src="/videos/add-from-dotenv.mp4" alt="" controls />
+
+### Advanced URLs managements
+
+With support for wildcard domains:
+
+<video src="/videos/wildcard-support.mp4" alt="" controls />
+
+Generating default urls for services:
+
+<video src="/videos/generate-url.mp4" alt="" controls />
+
+With the ability for serivces to share the same domain :
+
+![Multiple services sharing the same domain](/images/same-domain-services.png)
+
+
+### Persistent logs 
+
+With application logs persisted per deployment :
+
+<video src="/videos/application-logs.mp4" alt="" controls />
+
+And HTTP logs persisted per deployment & per service :
+
+<video src="/videos/http-logs.mp4" alt="" controls />
+
+### Monitoring 
+
+With metrics per service and deployment :
+
+<video src="/videos/metrics.mp4" alt="" controls />
+
+### Git-like configuration changes 
+
+Allowing you to review changes before deploying them :
+
+<video src="/videos/changes-modal.mp4" alt="" controls />
+
+### Resource limits
+
+<video src="/videos/resource-limits.mp4" alt="" controls />
+
+
+### Magic file mounts 
+
+Allowing you to override the content of any file within your services or add any new file required to configure your service :
+
+<video src="/videos/config-files.mp4" alt="" controls />
+
+### Deployment webhooks URLs
+
+Allowing you to easily setup an easy [CI/CD configuration](/deploying-with-github-actions) : 
+
+<video src="/videos/deploy-webhook-url.mp4" alt="" controls />
+
+## OK, I like what I see 😍
+
+If you'd like to start using ZaneOps today, you can follow the [installation steps](/installation).
+
+Alternatively, you can see our example tutorials for deploying an application on ZaneOps : 
+- [how to deploy umami on ZaneOps](/tutorials/umami) 
+- [how to deploy documenso on ZaneOps](/tutorials/documenso) 
+
+## Acknowledgements
+
+Thanks to our main contributors [@mo-cherif](//github.com/mo-cherif) and [@fredkiss3](//github.com/frekdiss3) for
+making v1 possible. 
+
+We would also like to thanks these projects which we took a lot of inspiration from : 
+- [Coolify](//coolify.io)
+- [Render](//render.com)
+- [Railway](//railway.com)
+
+## One more thing...
+
+If you’ve made it this far, we have a favor to ask: Please, [give us a star on GitHub!](https://github.com/zane-ops/zane-ops) It’s one of the easiest ways to support the project. You can also help by resharing this post, and spreading the word about ZaneOps. Thank you!
