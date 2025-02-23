@@ -50,7 +50,20 @@ it to our supported OS.
 ## Process
 
 <Steps>
-1. **Create the installation directory**:
+1. **Initialize Docker Swarm**:
+
+    ```shell
+    docker swarm init --advertise-addr <MANAGER_IP>
+    ```
+
+    <Aside type="note">
+    `MANAGER_IP` is the IP address of your server:
+    - You can use your server's public IP.
+    - If you have private networking, use the private IP (e.g., **10.0.0.x**).
+    - If you are [installing locally](#installing-locally), use **127.0.0.1**.
+    </Aside>
+
+2. **Create the installation directory**:
 
     Choose a directory for ZaneOps. This guide uses `/var/www/zaneops`:
 
@@ -59,18 +72,16 @@ it to our supported OS.
     cd /var/www/zaneops
     ```
 
-2. Download the makefile for the project :
+3. **Download the makefile for the project**:
 
     ```shell
     curl https://cdn.zaneops.dev/makefile > Makefile
     ```
-    
-    <Aside type="note">
     The source code for this file is available [on github](https://github.com/zane-ops/zane-ops/blob/main/deploy.mk).
-    </Aside>
 
 
-3. Launch the setup process :
+
+4. **Launch the setup process**:
 
     ```shell
     make setup
@@ -91,7 +102,7 @@ it to our supported OS.
 
     </FileTree>
 
-4. **Update environment variables in `.env`** :
+5. **Update environment variables in `.env`** :
     The setup process will generate sane defaults for environment variables, 
     but you can modify the contents to better suit your needs (see here for [how to customize](#environment-variables-explained)):
     
@@ -109,7 +120,7 @@ it to our supported OS.
     MODE=https # or http
     ```
 
-5. Deploy ZaneOps :
+6. **Start ZaneOps**:
 
     ```shell
     make deploy
@@ -118,13 +129,13 @@ it to our supported OS.
    except for `temporal-admin-tools` which should show `0/1 (1/1 completed)`. ZaneOps can take up to 5 minutes to start.
    ![zaneops docker services  up and running](/images/docker-stack.png)
 
-6. Create your first user to login to the dashboard :
+7. **Create your first user to login to the dashboard**:
 
     ```shell
     make create-user
     ```
 
-7. Log in to the dashboard by connecting to the domain specified in `ZANE_APP_DOMAIN`, if you are on Linux, you should have a log with the domain for zaneops : 
+8. Log in to the dashboard by connecting to the domain specified in `ZANE_APP_DOMAIN`, if you are on Linux, you should have a log with the domain for zaneops : 
    
    ```shell
    Once everything is ok, zaneops will be accessible at https://198-19-249-134.sslip.io

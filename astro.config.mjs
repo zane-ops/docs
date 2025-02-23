@@ -48,6 +48,10 @@ export default defineConfig({
               slug: "installation"
             },
             {
+              label: "DNS configuration",
+              slug: "configuring-zaneops"
+            },
+            {
               label: "Reset user password",
               slug: "reset-password"
             },
@@ -59,10 +63,7 @@ export default defineConfig({
               label: "Stopping ZaneOps",
               slug: "stopping-zaneops"
             },
-            {
-              label: "DNS configuration",
-              slug: "configuring-zaneops"
-            },
+
             {
               label: "Deploying using github actions",
               slug: "deploying-with-github-actions"
@@ -104,15 +105,6 @@ export default defineConfig({
             {
               label: "OpenAPI reference ↗",
               link: "/api-reference/openapi"
-            }
-          ]
-        },
-        {
-          label: "Development",
-          items: [
-            {
-              label: "Development",
-              slug: "development/development"
             }
           ]
         }
