@@ -74,17 +74,12 @@ export default defineConfig({
           autogenerate: { directory: "knowledge-base" }
         },
         {
-          label: "Tutorials",
-          autogenerate: { directory: "tutorials" }
+          label: "Changelog",
+          autogenerate: { directory: "changelog" }
         },
         {
-          label: "Changelog",
-          items: [
-            {
-              label: "ZaneOps v1.0",
-              slug: "changelog/announcing-v1"
-            }
-          ]
+          label: "Tutorials",
+          autogenerate: { directory: "tutorials" }
         },
         {
           label: "API Reference",

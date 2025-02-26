@@ -1,6 +1,128 @@
 ---
-title: Deploying an app on ZaneOps
+title: React Router v7 app with SSR
 description: Guide for deploying an app made with react-router v7 and node postgres 
 ---
 
-> _Coming soon ✨_
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+
+[React router v7](https://reactrouter.com) is a full stack web framework that lets you focus on the user interface and work back through web standards to deliver a fast, slick, and resilient user experience. 
+In this article, we are going to deploy a React router application to ZaneOps.
+
+## Prerequisities
+
+- A ZaneOps instance setup and working, you can look into [how to install and setup ZaneOps here](/installation)
+
+## Process
+
+### Clone the project
+
+We will be working from this repository : https://github.com/zane-ops/guestbook, so you can clone or fork the project.
+
+```shell
+git clone https://github.com/zane-ops/guestbook.git
+```
+
+The app we will work on is a guestbook app made with react router v7, with these features : 
+
+- github authentication : with sessions stored in **redis**
+- writing messages : with messages stored in a **postgres** database and using drizzle as the ORM
+- full SSR with progressive enhancement (can work without JavaScript enabled)
+
+![Guestbook](/images/guestbook-screenshot.png)
+
+### Set up GitHub OAuth
+
+<Steps>
+
+1. Go to [GitHub Developer Settings](https://github.com/settings/apps) and create some new OAuth/regular app.
+
+2. Fill in the form with the following values :
+   - Application name : `<your-app-name>`
+   - Homepage URL : `http://guestbook.127-0-0-1.sslip.io` 
+   - Callback URL : `http://guestbook.127-0-0-1.sslip.io/api/auth/callback/github`
+    <Aside type='note'>
+    If you use ZaneOps on production, please update the domain `guestbook.127-0-0-1.sslip.io` to where your app is installed.
+    </Aside>
+
+3. Once the app is created, you will be able to see the `Client ID` and `Client Secret`. Coppy these values to the `.env` file :
+
+    ```shell
+    GITHUB_CLIENT_ID="<your_client_id>"
+    GITHUB_CLIENT_SECRET="<your_client_secret>"
+    GITHUB_REDIRECT_URI="http://guestbook.127-0-0-1.sslip.io/api/auth/callback/github"
+    ```
+</Steps>
+
+
+### Create a project in ZaneOps
+
+Login to your ZaneOps instance and on the dashboard, create a new project named **guestbook** : 
+
+![Create new project](/images/tuto-rr7-new-project.png)
+![Project created](/images/tuto-rr7-project-created.png)
+
+### Create postgres and redis services
+
+In your project page, create a new service for redis, we will use the image [valkey](https://valkey.io/) which is an open source version 
+of redis.
+
+<Steps>
+1. Create a docker service using `valkey/valkey` as the image :
+    ![Create new service for valkey](/images/tuto-rr7-create-valkey.png)
+2. Deploy it :
+    ![Valkey service created](/images/tuto-rr7-valkey-created.png)
+3. You can check on the service details page to see if the deployment succeeded : 
+    ![Valkey service page](/images/tuto-rr7-valkey-deployed.png)
+</Steps>
+
+
+Back in your project, we will create a new service for postgres :
+<Steps>
+1. Create a docker service using `postgres` as the image :
+    ![Create new service for postgres](/images/tuto-rr7-create-pg.png)
+
+2. This time, we will need to configure the service, so can go to the service details page and env variable tab :
+    ![Valkey service created](/images/tuto-rr7-pg-env-tab.png)
+
+3. Click on **Add from .env** and paste these variables in the modal :
+   ```shell
+    POSTGRES_DB="guestbook"
+    POSTGRES_USER="guestbook"
+    POSTGRES_PASSWORD="guestbook"
+   ```
+    ![Valkey service page](/images/tuto-rr7-pg-env-modal.png)
+    ![Valkey service page](/images/tuto-rr7-pg-env-added.png)
+
+4. Go to the settings tab and add a volume for persisting the data : 
+    ![Valkey service page](/images/tuto-rr7-pg-add-volume.png)
+
+5. You can review the changes and deploy your service now : 
+    ![Valkey service page](/images/tuto-rr7-pg-changes.png)
+    ![Valkey service page](/images/tuto-rr7-pg-deployed.png)
+</Steps>
+
+### Create the main application
+
+<Steps>
+1. Create a docker service with the image `ghcr.io/zane-ops/guestbook` :
+2. On the environment
+</Steps>
+
+{/*
+    - Create a github container access token : for pushing to ghcr.io 
+    - creating service on ZaneOps : 
+        - setup env variables 
+        - add urls 
+        - add health checks 
+        - deploy
+    - setup github action for auto-deploy
+        - secrets 
+        - github action
+        - push
+*/}
+
+## Demo
+
+A production version of the app can be found here : https://guestbook.fredkiss.dev
+
