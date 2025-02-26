@@ -1,51 +1,50 @@
 ---
 title: React Router v7 app with SSR
-description: Guide for deploying an app made with react-router v7 and node postgres 
+description: Complete guide for deploying a React Router v7 application with Node and PostgreSQL on ZaneOps
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
+## Introduction
 
-[React router v7](https://reactrouter.com) is a full stack web framework that lets you focus on the user interface and work back through web standards to deliver a fast, slick, and resilient user experience. 
-In this article, we are going to deploy a React router application to ZaneOps.
+[React Router v7](https://reactrouter.com) has evolved into a comprehensive full-stack web framework that prioritizes user interface development while leveraging web standards to create fast, responsive, and resilient applications. This guide walks you through deploying a React Router v7 application on ZaneOps.
 
 ## Prerequisites
 
-- A ZaneOps instance setup and working, you can look into [how to install and setup ZaneOps here](/installation)
+- A working ZaneOps instance. If you need help with installation, refer to our [ZaneOps setup guide](/installation).
 
-## Process
+## Deployment Process
 
-### Clone the project
+### Project Overview
 
-We will be working from this repository: https://github.com/zane-ops/guestbook, so you can clone or fork the project.
+We'll be working with a fully-featured guestbook application built with React Router v7. You can clone or fork the repository:
 
 ```shell
 git clone https://github.com/zane-ops/guestbook.git
 ```
 
-The app we will work on is a guestbook app made with React Router v7, with these features: 
+This application showcases several key features:
+- **Authentication**: GitHub OAuth with sessions stored in Redis
+- **Data persistence**: Message storage in PostgreSQL with Drizzle ORM
+- **Modern architecture**: Full server-side rendering with progressive enhancement (works even with JavaScript disabled)
 
-- GitHub authentication: with sessions stored in **Redis**
-- Writing messages: with messages stored in a **PostgreSQL** database and using Drizzle as the ORM
-- Full SSR with progressive enhancement (can work without JavaScript enabled)
+![Guestbook in action](/images/guestbook-screenshot.png)
 
-![Guestbook](/images/guestbook-screenshot.png)
-
-### Set up GitHub OAuth
+### Setting up GitHub OAuth
 
 <Steps>
 
-1. Go to [GitHub Developer Settings](https://github.com/settings/apps) and create a new OAuth/regular app.
+1. Navigate to [GitHub Developer Settings](https://github.com/settings/apps) and create a new OAuth application.
 
-2. Fill in the form with the following values:
+2. Configure the application with these values:
    - Application name: `<your-app-name>`
    - Homepage URL: `http://guestbook.127-0-0-1.sslip.io` 
-   - Callback URL: `http://guestbook.127-0-0-1.sslip.io/api/auth/callback/github`
+   - Authorization callback URL: `http://guestbook.127-0-0-1.sslip.io/api/auth/callback/github`
     <Aside type='note'>
-    If you use ZaneOps in production, please update the domain `guestbook.127-0-0-1.sslip.io` to where your app is installed.
+    For production deployments, replace `guestbook.127-0-0-1.sslip.io` with your actual domain name.
     </Aside>
 
-3. Once the app is created, you will be able to see the `Client ID` and `Client Secret`. Copy these values to the `.env` file:
+3. After creating the application, GitHub will provide a `Client ID` and `Client Secret`. Add these credentials to your project's `.env` file:
 
     ```shell
     GITHUB_CLIENT_ID="<your_client_id>"
@@ -55,60 +54,66 @@ The app we will work on is a guestbook app made with React Router v7, with these
 </Steps>
 
 
-### Create a project in ZaneOps
+### Creating a ZaneOps Project
 
-Login to your ZaneOps instance and on the dashboard, create a new project named **guestbook**: 
+Log in to your ZaneOps dashboard and create a new project named **guestbook**:
 
-![Create new project](/images/tuto-rr7-new-project.png)
-![Project created](/images/tuto-rr7-project-created.png)
+![Creating a new project in ZaneOps](/images/tuto-rr7-new-project.png)
+![Successfully created project](/images/tuto-rr7-project-created.png)
 
-### Create PostgreSQL and Redis services
+### Configuring Database and Caching Services
 
-In your project page, create a new service for Redis. We will use the image [Valkey](https://valkey.io/) which is an open source version 
-of Redis.
+#### Setting up Redis with Valkey
+
+First, we'll create a Redis-compatible service using [Valkey](https://valkey.io/), an open-source Redis alternative:
 
 <Steps>
-1. Create a Docker service using `valkey/valkey` as the image:
-    ![Create new service for valkey](/images/tuto-rr7-create-valkey.png)
-2. Deploy it:
+1. Create a Docker service with the `valkey/valkey` image:
+    ![Creating a Valkey service](/images/tuto-rr7-create-valkey.png)
+2. Deploy the service:
     ![Valkey service created](/images/tuto-rr7-valkey-created.png)
-3. You can check on the service details page to see if the deployment succeeded: 
-    ![Valkey service page](/images/tuto-rr7-valkey-deployed.png)
+3. Verify the deployment status on the service details page:
+    ![Successful Valkey deployment](/images/tuto-rr7-valkey-deployed.png)
 </Steps>
 
+#### Setting up PostgreSQL
 
-Back in your project, we will create a new service for PostgreSQL:
+Next, let's configure a PostgreSQL database service:
+
 <Steps>
-1. Create a Docker service using `postgres` as the image:
-    ![Create new service for postgres](/images/tuto-rr7-create-pg.png)
+1. Create a Docker service using the official `postgres` image:
+    ![Creating a PostgreSQL service](/images/tuto-rr7-create-pg.png)
 
-2. This time, we will need to configure the service, so go to the service details page and env variable tab:
-    ![Valkey service created](/images/tuto-rr7-pg-env-tab.png)
+2. Configure the necessary environment variables by navigating to the service details page and selecting the environment variables tab:
+    ![PostgreSQL environment configuration](/images/tuto-rr7-pg-env-tab.png)
 
-3. Click on **Add from .env** and paste these variables in the modal:
+3. Click **Add from .env** and enter these database credentials:
    ```shell
     POSTGRES_DB="guestbook"
     POSTGRES_USER="guestbook"
     POSTGRES_PASSWORD="guestbook"
    ```
-    ![Valkey service page](/images/tuto-rr7-pg-env-modal.png)
-    ![Valkey service page](/images/tuto-rr7-pg-env-added.png)
+    ![Adding PostgreSQL environment variables](/images/tuto-rr7-pg-env-modal.png)
+    ![Environment variables successfully added](/images/tuto-rr7-pg-env-added.png)
 
-4. Go to the settings tab and add a volume for persisting the data: 
-    ![Valkey service page](/images/tuto-rr7-pg-add-volume.png)
+4. Configure data persistence by adding a volume in the settings tab set it's **container path** to `/var/lib/postgresql/data` :
+    ![Adding a volume for PostgreSQL data](/images/tuto-rr7-pg-add-volume.png)
 
-5. You can review the changes and deploy your service now: 
-    ![Valkey service page](/images/tuto-rr7-pg-changes.png)
-    ![Valkey service page](/images/tuto-rr7-pg-deployed.png)
+5. Review your configuration and deploy the service:
+    ![Reviewing PostgreSQL configuration changes](/images/tuto-rr7-pg-changes.png)
+    ![PostgreSQL service successfully deployed](/images/tuto-rr7-pg-deployed.png)
 </Steps>
 
-### Create the main application
+### Deploying the Main Application
+
+Now let's deploy the guestbook application itself:
 
 <Steps>
-1. Create a Docker service with the image `ghcr.io/zane-ops/guestbook`:
-    ![Create guestbook service](/images/tuto-rr7-create-gb-app.png)
-2. On the env variables tab add these variables:
-    Copy your GitHub credentials from the [GitHub OAuth step](#set-up-github-oauth)
+1. Create a Docker service using the pre-built image `ghcr.io/zane-ops/guestbook`:
+    ![Creating the main application service](/images/tuto-rr7-create-gb-app.png)
+    
+2. Configure the authentication environment variables:
+    Copy your GitHub OAuth credentials from the [earlier step](#setting-up-github-oauth)
     ```shell
     GITHUB_CLIENT_ID="<your_client_id>" 
     GITHUB_CLIENT_SECRET="<your_client_secret>"
@@ -117,89 +122,91 @@ Back in your project, we will create a new service for PostgreSQL:
     SESSION_SECRET="yoursupersecretvalue"
     SESSION_SECURE="false"
    ``` 
-   ![Add env variables](/images/tuto-rr7-gb-env-1.png)
+   ![Adding authentication environment variables](/images/tuto-rr7-gb-env-1.png)
    <Aside type='note'>
-   If you are working with ZaneOps in production, it's highly recommended to set `SESSION_SECURE` to `true`
-   to only allow session authentication via HTTPS.
+   For production environments, always set `SESSION_SECURE` to `true` to enforce HTTPS for session authentication.
    </Aside>
 
-3. We will also need two more variables, `DATABASE_URL` and `REDIS_URL`. For that, you need to copy the 
-   network aliases for Redis and PostgreSQL services.
+3. Configure database and cache connection strings using service network aliases:
 
-   Go to the **Redis service details page > settings > Networking section**, and copy the network alias: 
-   ![Redis network alias](/images/tuto-rr7-alias-redis.png)
+   First, locate the Redis network alias on the **Redis service details page > settings > Networking section**:
+   ![Finding the Redis network alias](/images/tuto-rr7-alias-redis.png)
 
-   And add it as an env variable to your main app service: 
+   Add the Redis connection string as an environment variable:
    ```shell
    REDIS_URL="redis://<redis_network_alias>:6379"
    ```
-   ![Add redis env](/images/tuto-rr7-gb-env-2.png)
+   ![Adding Redis connection environment variable](/images/tuto-rr7-gb-env-2.png)
 
-   Go to the **PostgreSQL service details page > settings > Networking section**, and copy the network alias: 
-   ![postgres network alias](/images/tuto-rr7-alias-pg.png)
+   Next, locate the PostgreSQL network alias on the **PostgreSQL service details page > settings > Networking section**:
+   ![Finding the PostgreSQL network alias](/images/tuto-rr7-alias-pg.png)
 
-   And add it as an env variable to your main app service: 
+   Add the PostgreSQL connection string as an environment variable:
    ```shell
    DATABASE_URL="postgresql://guestbook:guestbook@<postgres_network_alias>:5432/guestbook"
    ```
-   ![Add postgres env](/images/tuto-rr7-gb-env-3.png)
-4. Add a URL for the service to expose the service to the public: 
-    Go to the **service details page > settings > Networking section > URLS** and add 
-    an URL with the domain `guestbook.127-0-0-1.sslip.io` and the forwarded port to `3000`, that's the 
-    port where our service is exposed 
+   ![Adding PostgreSQL connection environment variable](/images/tuto-rr7-gb-env-3.png)
+   
+4. Configure public access by adding a domain:
+    Navigate to the **service details page > settings > Networking section > URLS** and create a URL entry with:
+    - Domain: `guestbook.127-0-0-1.sslip.io`
+    - Forwarded port: `3000` (the application's listening port)
 
-    ![Add URL for service](/images/tuto-rr7-gb-add-url.png)
+    ![Configuring public access](/images/tuto-rr7-gb-add-url.png)
 
-5. Add a health check to make sure the application starts correctly:
-   Go to the **service details page > settings > Deploy section > Healthcheck** and add a health check: 
+5. Implement a health check to ensure reliable deployments:
+   Navigate to **service details page > settings > Deploy section > Healthcheck** and configure:
    - Type: `Path`
-   - Value: `/api/health`, an endpoint that is checked to make sure the app is up
-   - Listening port: `3000`, the same as the port for the URL
+   - Value: `/api/health`
+   - Listening port: `3000`
 
-   ![Add Healthcheck for service](/images/tuto-rr7-gb-add-healthcheck.png)
+   ![Adding a health check](/images/tuto-rr7-gb-add-healthcheck.png)
 
-6. You can review the changes and deploy: 
-   ![Review changes for service](/images/tuto-rr7-gb-changes-modal.png)
+6. Review all configuration changes and deploy the service:
+   ![Reviewing the application configuration](/images/tuto-rr7-gb-changes-modal.png)
 
-7. You can inspect the logs of the deployment to make sure it works: 
-   ![Deployment done](/images/tuto-rr7-gb-deployed.png)
-   ![Deployment logs](/images/tuto-rr7-gb-logs.png)
-8. Once everything is okay, your app will be available at http://guestbook.127-0-0-1.sslip.io
-   ![Demo of the app](/images/tuto-rr7-gb-demo.png)
+7. Monitor the deployment logs to ensure everything is working correctly:
+   ![Deployment completion status](/images/tuto-rr7-gb-deployed.png)
+   ![Checking deployment logs](/images/tuto-rr7-gb-logs.png)
+   
+8. Once deployed successfully, your application will be available at http://guestbook.127-0-0-1.sslip.io
+   ![Guestbook application running](/images/tuto-rr7-gb-demo.png)
 </Steps>
 
+### Setting Up Continuous Deployment
 
-### Setting up automatic deployments 
-
-To automatically deploy your app every time you make changes, you can use GitHub Actions. 
-The process is usually like this: 
-1. Build your app with Docker and tag it with the latest commit SHA
-2. Deploy your container to a Docker registry
-3. Trigger a deployment on ZaneOps and pass the latest tag for the image for your service
-
-In this tutorial, we will use the GitHub Container Registry (`ghcr.io`) as our container registry.
+Automate your deployment workflow with GitHub Actions to update your application whenever changes are pushed to your repository:
 
 <Steps>
-1. Go to [GitHub Developer Settings](https://github.com/settings/apps) and create a new access token with the permissions `repo`, `write:packages` and `delete:packages` 
-   ![Demo of the app](/images/tuto-rr7-github-container-pat.png)
-2. In your ZaneOps instance, go to your **main app service details page > settings > Deploy section > deploy webhook url** and copy the webhook URL 
-   ![Webhook url screenshot](/images/tuto-rr7-webhook-url.png)
-3. Go to your **GitHub repository > settings > secrets and variables > actions** and add the value for the access token to `CONTAINER_REGISTRY_PAT` and the webhook URL to `DEPLOY_WEBHOOK_URL`
-   ![Webhook url screenshot](/images/tuto-rr7-secrets.png)
-4. Add a new GitHub workflow in your repository, it should look something like this: 
+1. Create a Personal Access Token with appropriate permissions:
+   - Go to [GitHub Developer Settings](https://github.com/settings/apps)
+   - Create a new access token with `repo`, `write:packages` and `delete:packages` permissions
+   ![Creating a GitHub PAT for container registry access](/images/tuto-rr7-github-container-pat.png)
+   
+2. Get your ZaneOps deployment webhook URL:
+   Navigate to **main app service details page > settings > Deploy section > deploy webhook url**
+   ![Locating the deployment webhook URL](/images/tuto-rr7-webhook-url.png)
+   
+3. Store your secrets in GitHub:
+   Navigate to **GitHub repository > settings > secrets and variables > actions** and add:
+   - `CONTAINER_REGISTRY_PAT`: Your GitHub Personal Access Token
+   - `DEPLOY_WEBHOOK_URL`: Your ZaneOps webhook URL
+   ![Adding repository secrets](/images/tuto-rr7-secrets.png)
+   
+4. Create a GitHub Actions workflow file in your repository:
     ```yaml
     # .github/workflows/ci.yaml
     name: Deploy
     on:
-        # Triggers the workflow on push or pull request events but only for the main branch
+        # Triggers the workflow on push to main branch
         push:
             branches:
-                - main # you can change this if needed
-        # Allows you to run this workflow manually from the Actions tab
+                - main # customize as needed
+        # Allows manual triggering from the Actions tab
         workflow_dispatch:
     jobs:
         build-push-app:
-            name: Build and Push Guestbook app
+            name: Build and Deploy Guestbook
             runs-on: ubuntu-latest
             permissions:
                 packages: write
@@ -211,26 +218,26 @@ In this tutorial, we will use the GitHub Container Registry (`ghcr.io`) as our c
                   uses: actions/checkout@v4
                 - name: Set up Docker Buildx
                   uses: docker/setup-buildx-action@v2
-                - name: Log in to the Container registry
+                - name: Authenticate with GitHub Container Registry
                   uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
                   with:
                       registry: ghcr.io
                       username: ${{ github.actor }}
                       password: ${{ secrets.CONTAINER_REGISTRY_PAT }}
-                - name: Build and push
+                - name: Build and push Docker image
                   uses: docker/build-push-action@v3
                   with:
                       context: .
                       file: Dockerfile
                       push: true
-                      tags: ghcr.io/zane-ops/guestbook:${{ github.sha }} # change to the tag of your image
+                      tags: ghcr.io/zane-ops/guestbook:${{ github.sha }} # update with your image path
                 - name: Deploy to ZaneOps
                   uses: zane-ops/auto-deploy-action@v4
                   with:
-                      SERVICE_IMAGE: ghcr.io/zane-ops/guestbook:${{ github.sha }} # change to the tag of your image
+                      SERVICE_IMAGE: ghcr.io/zane-ops/guestbook:${{ github.sha }} # update with your image path
                       DEPLOY_WEBHOOK_URL: ${{ secrets.DEPLOY_WEBHOOK_URL }}
                       COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
-                # You can also do this 
+                # Alternative deployment method using curl
                 #- name: Deploy to ZaneOps
                 #  run: |
                 #    curl -f -X PUT "${{ secrets.DEPLOY_WEBHOOK_URL }}" \
@@ -240,10 +247,10 @@ In this tutorial, we will use the GitHub Container Registry (`ghcr.io`) as our c
                 #             "commit_message": "${{ github.event.head_commit.message }}"
                 #           }'
     ```
-5. Now every time you push a change to the `main` branch, it will be reflected on the dashboard
-   ![Service deployed via github](/images/tuto-rr7-github-deploy.png)
+5. With this workflow in place, changes pushed to your main branch will automatically trigger a new build and deployment
+    ![Service deployed via github](/images/tuto-rr7-github-deploy.png)
 </Steps>
 
-## Demo
+## Live Demo
 
-A production version of the app can be found here: https://guestbook.fredkiss.dev
+See a production version of this application at: https://guestbook.fredkiss.dev
