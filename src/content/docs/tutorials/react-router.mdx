@@ -106,21 +106,142 @@ Back in your project, we will create a new service for postgres :
 
 <Steps>
 1. Create a docker service with the image `ghcr.io/zane-ops/guestbook` :
-2. On the environment
+    ![Create guestbook service](/images/tuto-rr7-create-gb-app.png)
+2. On the env variables tab add these variables :
+    Copy your github credentials from the [github OAuth step](#set-up-github-oauth)
+    ```shell
+    GITHUB_CLIENT_ID="<your_client_id>" 
+    GITHUB_CLIENT_SECRET="<your_client_secret>"
+    GITHUB_REDIRECT_URI="http://guestbook.127-0-0-1.sslip.io/api/auth/callback/github"
+    SESSION_DOMAIN="guestbook.127-0-0-1.sslip.io"
+    SESSION_SECRET="yoursupersecretvalue"
+    SESSION_SECURE="false"
+   ``` 
+   ![Add env variables](/images/tuto-rr7-gb-env-1.png)
+   <Aside type='note'>
+   If you are working with ZaneOps on production, it's highly recommended to set `SESSION_SECURE` to `true`
+   to only allow session authentication via https.
+   </Aside>
+
+3. We will also need to two more variables, `DATABASE_URL` and `REDIS_URL`, for that you need to copy the 
+   network aliases for redis and docker services.
+
+   Go to the **redis service details page > settings > Networking section**, and copy the network alias : 
+   ![Redis network alias](/images/tuto-rr7-alias-redis.png)
+
+   And add it as an env variable to your main app service : 
+   ```shell
+   REDIS_URL="redis://<redis_network_alias>:6379"
+   ```
+   ![Add redis env](/images/tuto-rr7-gb-env-2.png)
+
+   Go to the **postgres service details page > settings > Networking section**, and copy the network alias : 
+   ![postgres network alias](/images/tuto-rr7-alias-pg.png)
+
+   And add it as an env variable to your main app service : 
+   ```shell
+   DATABASE_URL="postgresql://guestbook:guestbook@<postgres_network_alias>:5432/guestbook"
+   ```
+   ![Add postgres env](/images/tuto-rr7-gb-env-3.png)
+4. Add a URL for the service to expose the service to the public : 
+    Go to the **service details page > settings > Networking section > URLS** and add 
+    an URL with the domain `guestbook.127-0-0-1.sslip.io` and the forwarded port to `3000`, that's the 
+    port where our service is exposed 
+
+    ![Add URL for service](/images/tuto-rr7-gb-add-url.png)
+
+5. Add a health check for making sure the application starts correctly :
+   Go to the **service details page > settings > Deploy section > Healthcheck** and add a health check : 
+   - type : `Path`
+   - value : `/api/health`, an endpoint that is checked to make sure the app is up
+   - Listening port : `3000`, the same as the port for the URL
+
+   ![Add Healthcheck for service](/images/tuto-rr7-gb-add-healthcheck.png)
+
+6. You can review the changes and deploy : 
+   ![Review changes for service](/images/tuto-rr7-gb-changes-modal.png)
+
+7. You can inspect the logs of the deployment to make sure it works : 
+   ![Deployment done](/images/tuto-rr7-gb-deployed.png)
+   ![Deployment logs](/images/tuto-rr7-gb-logs.png)
+8. Once everything is okay, your app will be available at http://guestbook.127-0-0-1.sslip.io
+   ![Demo of the app](/images/tuto-rr7-gb-demo.png)
 </Steps>
 
-{/*
-    - Create a github container access token : for pushing to ghcr.io 
-    - creating service on ZaneOps : 
-        - setup env variables 
-        - add urls 
-        - add health checks 
-        - deploy
-    - setup github action for auto-deploy
-        - secrets 
-        - github action
-        - push
-*/}
+
+### Setting up automatic deployments 
+
+To automatically deploy your app every time you make changes, you can use github actions. 
+The process is usually like this : 
+1. Build your app with Docker and tag it with the latest commit sha
+2. Deploy your container to a docker registry
+3. Trigger a deployment on ZaneOps and pass the latest tag for the image for your service
+
+In this tutorial, we will use the github container registry (`ghcr.io`) as our container registry.
+
+<Steps>
+1. Go to [GitHub Developer Settings](https://github.com/settings/apps) and create a new access token with the permissions `repo`, `write:packages` and `delete:packages` 
+   ![Demo of the app](/images/tuto-rr7-github-container-pat.png)
+2. In your ZaneOps instance, go to your **main app service details page > settings > Deploy section > deploy webhook url** and copy the webhook url 
+   ![Webhook url screenshot](/images/tuto-rr7-webhook-url.png)
+3. Go to your **GitHub repository > settings > secrets and variables > actions** and Add the value for the access token to `CONTAINER_REGISTRY_PAT` and the webhook url to `DEPLOY_WEBHOOK_URL`
+   ![Webhook url screenshot](/images/tuto-rr7-secrets.png)
+4. Add a new github workflow in your repository, it should look something like this : 
+    ```yaml
+    # .github/workflows/ci.yaml
+    name: Deploy
+    on:
+        # Triggers the workflow on push or pull request events but only for the main branch
+        push:
+            branches:
+                - main # you can change this if needed
+        # Allows you to run this workflow manually from the Actions tab
+        workflow_dispatch:
+    jobs:
+        build-push-app:
+            name: Build and Push Guestbook app
+            runs-on: ubuntu-latest
+            permissions:
+                packages: write
+                contents: read
+                attestations: write
+                id-token: write
+            steps:
+                - name: Checkout
+                  uses: actions/checkout@v4
+                - name: Set up Docker Buildx
+                  uses: docker/setup-buildx-action@v2
+                - name: Log in to the Container registry
+                  uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+                  with:
+                      registry: ghcr.io
+                      username: ${{ github.actor }}
+                      password: ${{ secrets.CONTAINER_REGISTRY_PAT }}
+                - name: Build and push
+                  uses: docker/build-push-action@v3
+                  with:
+                      context: .
+                      file: Dockerfile
+                      push: true
+                      tags: ghcr.io/zane-ops/guestbook:${{ github.sha }} # change to the tag of your image
+                - name: Deploy to Zaneops
+                  uses: zane-ops/auto-deploy-action@v4
+                  with:
+                      SERVICE_IMAGE: ghcr.io/zane-ops/guestbook:${{ github.sha }} # change to the tag of your image
+                      DEPLOY_WEBHOOK_URL: ${{ secrets.DEPLOY_WEBHOOK_URL }}
+                      COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+                # You can also do this 
+                #- name: Deploy to Zaneops
+                #  run: |
+                #    curl -f -X PUT "${{ secrets.DEPLOY_WEBHOOK_URL }}" \
+                #       -H "Content-Type: application/json" \
+                #       -d '{
+                #             "new_image": "ghcr.io/zane-ops/docs:${{ github.sha }}",
+                #             "commit_message": "${{ github.event.head_commit.message }}"
+                #           }'
+    ```
+5. Now every time you push a change to the `main` branch, it will be reflected on the dashboard
+</Steps>
 
 ## Demo
 
