@@ -40,8 +40,28 @@ export default defineConfig({
           label: "Start here",
           items: [
             {
+              label: "Welcome to zaneops",
+              slug: "welcome"
+            },
+            {
               label: "Installation and Setup",
-              slug: "get-started"
+              slug: "installation"
+            },
+            {
+              label: "DNS configuration",
+              slug: "configuring-zaneops"
+            },
+            {
+              label: "Reset user password",
+              slug: "reset-password"
+            },
+            {
+              label: "Uninstalling ZaneOps",
+              slug: "uninstall"
+            },
+            {
+              label: "Stopping ZaneOps",
+              slug: "stopping-zaneops"
             },
             {
               label: "Screenshots",
@@ -50,13 +70,16 @@ export default defineConfig({
           ]
         },
         {
-          label: "Development",
-          items: [
-            {
-              label: "Development",
-              slug: "development/development"
-            }
-          ]
+          label: "Knowledge base",
+          autogenerate: { directory: "knowledge-base" }
+        },
+        {
+          label: "Changelog",
+          autogenerate: { directory: "changelog" }
+        },
+        {
+          label: "Tutorials",
+          autogenerate: { directory: "tutorials" }
         },
         {
           label: "API Reference",

@@ -1,43 +1,51 @@
 ---
 import { Icon } from "@astrojs/starlight/components";
+import DefaultFooter from "@astrojs/starlight/components/Footer.astro";
 import type { Props } from "@astrojs/starlight/props";
-const editUrl = Astro.props.editUrl;
 ---
 
-<footer>
-    <div class="meta sl-flex">
-      <div>
-        <a href={editUrl} class="sl-flex">
-          <Icon name="pencil" size="1em" />
-          Edit this page
-        </a>
-        <a href={`https://github.com/zane-ops/zane-ops/issues/new`} class="sl-flex">
-          <Icon name="github" size="1em" />
-          Find a bug? Open an issue
-        </a>
-      </div>
-      <div>
-        <p>
-          Built with Astro &amp; deployed on ZaneOps
-        </p>
-      </div>
-    </div>
-  </footer>
+<DefaultFooter {...Astro.props} />
+<div class="custom-meta sl-flex my-3">
+  <div class="flex gap-2">
+    <a href={`https://github.com/zane-ops/zane-ops/issues/new?template=bug_report.md`} class="flex gap-1">
+      <Icon name="github" size="1em" />
+      Found a bug? Open an issue
+    </a>
+    <a href={`https://github.com/sponsors/Fredkiss3`} class="flex gap-1">
+      <Icon name="heart" size="1em" />
+      Sponsor this project
+    </a>
+  </div>
+  <div>
+    <p>
+      Built with Astro &amp; deployed on ZaneOps
+    </p>
+  </div>
+</div>
   
-  <style>
-    footer {
-      margin-top: 3rem;
-      border-top: 1px solid var(--sl-color-hairline);
+<style is:global>
+   .meta {
+      border-top: 1px solid var(--sl-color-hairline) !important;
+      padding-top: 1rem;
     }
-    .meta {
+    .link-title {
+      font-size: var(--sl-text-xl);
+    }
+    a[rel="next"], a[rel="prev"] {
+      padding: 1rem;
+    }
+</style>
+
+<style>
+    .custom-meta {
       gap: 0.75rem 3rem;
       justify-content: space-between;
       flex-wrap: wrap;
-      margin-block: 3rem 1.5rem;
+      /* margin-block: 3rem 1.5rem; */
       font-size: var(--sl-text-sm);
     }
     @media (min-width: 30rem) {
-      .meta {
+      .custom-meta {
         flex-direction: row;
       }
     }
