@@ -13,4 +13,4 @@ const ogImageUrl = new URL(`${pathname}/og.png`, Astro.site?.origin);
 
 <meta property="og:image" content={ogImageUrl} />
 <meta name="twitter:image" content={ogImageUrl} />
-<script defer data-domain="zaneops.dev" src="https://analytics.fredkiss.dev/js/script.js"></script>
+<script is:inline defer data-domain="zaneops.dev" src="https://analytics.fredkiss.dev/js/script.js"></script>
