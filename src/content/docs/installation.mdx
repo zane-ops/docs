@@ -99,18 +99,18 @@ it to our supported OS.
 
     </FileTree>
 
-5. **Update environment variables in `.env`** :
+5. **Review environment variables in `.env`** :
     The setup process will generate sane defaults for environment variables, 
-    but you can modify the contents to better suit your needs (see here for [how to customize](#environment-variables-explained)):
+    but you can modify the contents to better suit your needs ([see here for how to customize](#environment-variables-explained)):
     
     ```shell
     # /var/www/zaneops/.env
     # Example configuration - Modify before production use
     IMAGE_VERSION=latest # ZaneOps version to install
     ZANE_APP_DIRECTORY="/var/www/zaneops" # Installation directory for ZaneOps
-    ZANE_DB_USER= # Generate with: "curl -s https://randomuser.me/api/ | jq -r '.results[0].login.username'"
-    ZANE_DB_PASSWORD= # Generate with: "$(openssl rand -base64 32)"
-    DJANGO_SECRET_KEY= # Generate with: "$(openssl rand -base64 64)"
+    ZANE_DB_USER= # Generated with: "curl -s https://randomuser.me/api/ | jq -r '.results[0].login.username'"
+    ZANE_DB_PASSWORD= # Generated with: "$(openssl rand -base64 32)"
+    DJANGO_SECRET_KEY= # Generated with: "$(openssl rand -base64 64)"
 
     ROOT_DOMAIN="<YOUR-IP>.sslip.io" # Root domain for generating app domains
     ZANE_APP_DOMAIN="<YOUR-IP>.sslip.io" # Domain for ZaneOps dashboard
@@ -137,9 +137,51 @@ it to our supported OS.
    ```shell
    Once everything is ok, zaneops will be accessible at https://198-19-249-134.sslip.io
    ```
-   If hosted locally ([see instructions below](#installing-locally)), you can use http://127-0-0-1.sslip.io.
+   <Aside type="note" title='Installing locally'>
+    Please [continue with the instructions below](#installing-locally) if you are installing ZaneOps locally.
+   </Aside>
 </Steps>
 
+
+### Installing Locally 
+
+ZaneOps can be installed locally with minimal configuration changes. 
+To do this :
+- keep the `ZANE_APP_DOMAIN` and `ROOT_DOMAIN` environment variables set to http://127-0-0-1.sslip.io :
+
+  ```shell
+  # /var/www/zaneops/.env
+  # ... other env variables
+  ZANE_APP_DOMAIN="127-0-0-1.sslip.io"
+  ROOT_DOMAIN="127-0-0-1.sslip.io"
+  ```
+- add the `__DANGEROUS_ALLOW_HTTP_SESSION` environment variable, and update the `MODE` variable to open the port `80` :
+
+  ```shell
+  # /var/www/zaneops/.env
+  # ... other env variables
+  MODE=http
+  __DANGEROUS_ALLOW_HTTP_SESSION="true"
+  ```
+- be sure to top zaneops first :
+
+    ```shell
+    make stop
+    ``` 
+
+- run the `deploy` command : 
+  
+  ```shell
+  make deploy
+  ```
+- You can now access zaneops dashboard at http://127-0-0-1.sslip.io
+
+  <Aside type="caution" title="__DANGEROUS_ALLOW_HTTP_SESSION">
+  You can enable the `__DANGEROUS_ALLOW_HTTP_SESSION` environment variable in production to access your ZaneOps instance over HTTP.
+  However, this is strongly discouraged, as it allows for connecting to your dashboard using non secure cookies.
+
+  [See here](/configuring-zaneops#disabling-ssl) for more info.
+  </Aside>
 
 
 ### Environment Variables Explained
@@ -176,43 +218,4 @@ Then deploy again with :
 make setup # re-download configuration files to run zaneops 
 make deploy
 ```
-
-
-### Installing Locally 
-
-ZaneOps can be installed locally with minimal configuration changes. 
-To do this :
-- keep the `ZANE_APP_DOMAIN` and `ROOT_DOMAIN` environment variables set to http://127-0-0-1.sslip.io :
-
-  ```shell
-  # /var/www/zaneops/.env
-  # ... other env variables
-  ZANE_APP_DOMAIN="127-0-0-1.sslip.io"
-  ROOT_DOMAIN="127-0-0-1.sslip.io"
-  ```
-- add the `__DANGEROUS_ALLOW_HTTP_SESSION` environment variable, and update the `MODE` variable to open the port `80` :
-
-  ```shell
-  # /var/www/zaneops/.env
-  # ... other env variables
-  MODE=http
-  __DANGEROUS_ALLOW_HTTP_SESSION="true"
-  ```
-- be sure to top zaneops first :
-
-    ```shell
-    make stop
-    ``` 
-
-- run the `deploy` command : 
-  
-  ```shell
-  make deploy
-  ```
-- You can now access zaneops dashboard at http://127-0-0-1.sslip.io
-
-  <Aside type="caution" title="Important">
-  You can enable the `__DANGEROUS_ALLOW_HTTP_SESSION` environment variable in production to access your ZaneOps instance over HTTP.
-  However, this is strongly discouraged, as it exposes your application to potential security vulnerabilities, including man-in-the-middle attacks.
-  </Aside>
 
