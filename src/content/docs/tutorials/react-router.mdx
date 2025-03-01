@@ -24,34 +24,11 @@ git clone https://github.com/zane-ops/guestbook.git
 ```
 
 This application showcases several key features:
-- **Authentication**: GitHub OAuth with sessions stored in Redis
+- **Authentication**: login/register with username+password with sessions stored in Redis
 - **Data persistence**: Message storage in PostgreSQL with Drizzle ORM
 - **Modern architecture**: Full server-side rendering with progressive enhancement (works even with JavaScript disabled)
 
 ![Guestbook in action](/images/guestbook-screenshot.png)
-
-### Setting up GitHub OAuth
-
-<Steps>
-
-1. Navigate to [GitHub Developer Settings](https://github.com/settings/apps) and create a new OAuth application.
-
-2. Configure the application with these values:
-   - Application name: `<your-app-name>`
-   - Homepage URL: `http://guestbook.127-0-0-1.sslip.io` 
-   - Authorization callback URL: `http://guestbook.127-0-0-1.sslip.io/api/auth/callback/github`
-    <Aside type='note'>
-    For production deployments, replace `guestbook.127-0-0-1.sslip.io` with your actual domain name.
-    </Aside>
-
-3. After creating the application, GitHub will provide a `Client ID` and `Client Secret`. Add these credentials to your project's `.env` file:
-
-    ```shell
-    GITHUB_CLIENT_ID="<your_client_id>"
-    GITHUB_CLIENT_SECRET="<your_client_secret>"
-    GITHUB_REDIRECT_URI="http://guestbook.127-0-0-1.sslip.io/api/auth/callback/github"
-    ```
-</Steps>
 
 
 ### Creating a ZaneOps Project
@@ -113,11 +90,7 @@ Now let's deploy the guestbook application itself:
     ![Creating the main application service](/images/tuto-rr7-create-gb-app.png)
     
 2. Configure the authentication environment variables:
-    Copy your GitHub OAuth credentials from the [earlier step](#setting-up-github-oauth)
     ```shell
-    GITHUB_CLIENT_ID="<your_client_id>" 
-    GITHUB_CLIENT_SECRET="<your_client_secret>"
-    GITHUB_REDIRECT_URI="http://guestbook.127-0-0-1.sslip.io/api/auth/callback/github"
     SESSION_DOMAIN="guestbook.127-0-0-1.sslip.io"
     SESSION_SECRET="yoursupersecretvalue"
     SESSION_SECURE="false"
