@@ -29,7 +29,7 @@ export default defineConfig({
       ],
       social: {
         github: "https://github.com/zane-ops/zane-ops",
-        twitter: "https://twitter.com/zaneopsdev"
+        discord: "https://discord.gg/DUdz2vrh9y"
       },
       components: {
         Footer: "./src/components/Footer.astro",
