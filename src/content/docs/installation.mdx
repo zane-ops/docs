@@ -122,20 +122,31 @@ it to our supported OS.
     make deploy
     ```
    Wait for all the containers to start, it should show `replicated 1/1` for all services, 
-   except for `temporal-admin-tools` which should show `0/1 (1/1 completed)`. ZaneOps can take up to 5 minutes to start.
-   ![zaneops docker services  up and running](/images/docker-stack.png)
-
-7. **Create your first user to login to the dashboard**:
-
-    ```shell
-    make create-user
-    ```
-
-8. Log in to the dashboard by connecting to the domain specified in `ZANE_APP_DOMAIN`, if you are on Linux, you should have a log with the domain for zaneops : 
+   except for `temporal-admin-tools` which should show `0/1 (1/1 completed)`. ZaneOps can take **up to 5 minutes** to start.
    
+   **You can run this command to debug:**
    ```shell
-   Once everything is ok, zaneops will be accessible at https://198-19-249-134.sslip.io
+   $ docker service ls --filter label="zane.stack=true"
+   ID             NAME                            MODE             REPLICAS              IMAGE                                                 PORTS
+   ha0a04t0qbh7   zane_app                        replicated       1/1                   ghcr.io/zane-ops/app:v1                               
+   jx3mpd4gi4ha   zane_db                         replicated       1/1                   postgres:16-alpine                                    
+   s7vjh5gl0ymz   zane_fluentd                    replicated       1/1                   fluentd:v1.16.2-1.1                                   
+   g5j6kjv1nvlf   zane_loki                       replicated       1/1                   grafana/loki:3.4                                      
+   z8jlcfqx5kyp   zane_pgbouncer                  replicated       1/1                   edoburu/pgbouncer:v1.23.1-p3                          
+   al8wyjwlkf3g   zane_proxy                      replicated       1/1                   ghcr.io/zane-ops/proxy:v1                             
+   mngeoctogbzm   zane_temporal-admin-tools       replicated job   0/1 (1/1 completed)   temporalio/admin-tools:1.24.2-tctl-1.18.1-cli-1.0.0   
+   rioi5w43zs3y   zane_temporal-main-worker       replicated       1/1                   ghcr.io/zane-ops/app:v1                               
+   wcdq2srjruml   zane_temporal-schedule-worker   replicated       1/1                   ghcr.io/zane-ops/app:v1                               
+   sjicf9n44svf   zane_temporal-server            replicated       1/1                   temporalio/auto-setup:1.24.2                          
+   u6bbp0o0ua9p   zane_valkey                     replicated       1/1                   valkey/valkey:7.2.5-alpine   
    ```
+
+7. Access the dashboard by connecting to the domain specified in `ZANE_APP_DOMAIN` in the `.env` file. Once the app is up, you will 
+   see a **welcome** page asking you to create your first user :
+   
+   <img className="block dark:hidden" src="/images/create-user-light.png" alt="onboarding page with a form for creating the first user" />
+   <img className="!hidden dark:!block" src="/images/create-user-dark.png" alt="onboarding page with a form for creating the first user" />
+
    <Aside type="note" title='Installing locally'>
     Please [continue with the instructions below](#installing-locally) if you are installing ZaneOps locally.
    </Aside>
