@@ -205,27 +205,3 @@ To do this :
 7. `MODE` : the mode in which to deploy your zaneops instance, should be either `https` or  `http`, if you change this to `http`, it enables the port `80` on your instance, beware as it can be source of security vulnerabilities.
 8. `__DANGEROUS_ALLOW_HTTP_SESSION` : allow for authenticating to zaneops using a domain on `http://`
 
-### Upgrading zaneops 
-
-<Aside type="tip">
-While zaneops is being upgraded, all your services will still be available, including the zaneops dashboard. 
-</Aside>
-
-zaneops is updated automatically to the version specified in the `.env` file in `IMAGE_VERSION`. 
-However if you use the `canary` version, you will automatically be updated to the latest version on the `main` branch, **which can contain breaking changes ⚠️**.
-
-To update the version, change it in `.env` : 
-
-```shell
-# /var/www/zaneops/.env
-IMAGE_VERSION="v2"
-# ... other env variables
-```
-
-Then deploy again with : 
-
-```shell
-make setup # re-download configuration files to run zaneops 
-make deploy
-```
-
