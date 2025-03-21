@@ -3,4 +3,69 @@ title: ZaneOps v1.7
 description: 'See all the new and interesting changes in ZaneOps v1.7'
 ---
 
-> TODO
+Since the release of [v1.0](./announcing-v1.mdx), we added a lot more changes. 
+
+**To update :**
+
+```shell
+# assuming you are at /var/www/zaneops
+make setup
+make deploy
+```
+
+### Environments
+
+Environments let you separate your services logically accross isolated instances. Within environments you 
+can share environment variables available accross all the services within the environment. You can [learn more here](/knowledge-base/environments).
+
+<img className="block dark:hidden" src="/images/project-environments-light.png" alt="project environments page" />
+<img className="!hidden dark:!block" src="/images/project-environments-dark.png" alt="project environments page" />
+
+You can clone environments and copy all the services, variables and configurations to the new environment : 
+
+<img className="block dark:hidden" src="/images/project-clone-environment-light.png" alt="clone environment modal" />
+<img className="!hidden dark:!block" src="/images/project-clone-environment-dark.png" alt="clone environment modal" />
+
+Accross environments you can also have multiple services with the same name :
+
+<img className="block dark:hidden" src="/images/project-environment-search-light.png" alt="searching a service accross multiple environments" />
+<img className="!hidden dark:!block" src="/images/project-environment-search-dark.png" alt="searching a service accross multiple environments" />
+
+
+
+### New Onboarding Page
+
+Now, when you install ZaneOps on a blank instance, you will be greated by an onboarding page allowing you to create
+a first user directly from the UI rather than only from the terminal :
+
+<img className="block dark:hidden" src="/images/create-user-light.png" alt="onboarding page with a form for creating the first user" />
+<img className="!hidden dark:!block" src="/images/create-user-dark.png" alt="onboarding page with a form for creating the first user" />
+
+
+
+### New Upgrading experience
+
+Starting from [v1.7.0](https://github.com/zane-ops/zane-ops/releases/tag/v1.7.0), for all upgrades all future versions you will
+get a toast indicating you of newly available versions of ZaneOps, allowing you to upgrade ZaneOps directly from the UI instead of the terminal only :
+
+<img className="block dark:hidden" src="/images/new-version-toast-light.png" alt="clone environment modal" />
+<img className="!hidden dark:!block" src="/images/new-version-toast-dark.png" alt="clone environment modal" />
+
+<img className="block dark:hidden" src="/images/new-version-modal-light.png" alt="project environments page" />
+<img className="!hidden dark:!block" src="/images/new-version-modal-dark.png" alt="project environments page" />
+
+
+## Other changes
+
+- Changed the logs configuration to only logs the result of monitoring health checks if they fail, significantly reducing clutter 
+  on the logs page
+- Added confirmation modals for destructive actions, for when you want to delete a project, environment or service :
+  ![delete environment confirmation modal](/images/delete-environment-confirmation.png)
+  ![delete project confirmation modal](/images/delete-project-confirmation.png)
+  ![delete service confirmation modal](/images/delete-service-confirmation.png)
+  ![toggle sleep service confirmation modal](/images/toggle-sleep-service-confirmation.png)
+
+## Bug fixes
+
+- We fixed some occasional `502 Bad Gateway` error you would encounter when you deploy services in [#406](https://github.com/zane-ops/zane-ops/pull/406)
+- We fixed some bugs with the metrics not being collected correctly and resulting in you not seeing the metrics of certain services in [#383](https://github.com/zane-ops/zane-ops/pull/383)
