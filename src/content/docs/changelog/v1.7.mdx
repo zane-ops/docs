@@ -5,10 +5,11 @@ description: 'See all the new and interesting changes in ZaneOps v1.7'
 
 Since the release of [v1.0](./announcing-v1.mdx), we added a lot more changes. 
 
-**To update :**
+**To install :**
 
 ```shell
 # assuming you are at /var/www/zaneops
+curl https://cdn.zaneops.dev/makefile > Makefile
 make setup
 make deploy
 ```
@@ -45,8 +46,9 @@ a first user directly from the UI rather than only from the terminal :
 
 ### New Upgrading experience
 
-Starting from [v1.7.0](https://github.com/zane-ops/zane-ops/releases/tag/v1.7.0), for all upgrades all future versions you will
-get a toast indicating you of newly available versions of ZaneOps, allowing you to upgrade ZaneOps directly from the UI instead of the terminal only :
+Starting with [v1.7.0](https://github.com/zane-ops/zane-ops/releases/tag/v1.7.0), 
+future upgrades will trigger a toast notification informing you of new ZaneOps versions,
+ enabling you to upgrade directly from the UI instead of relying solely on the terminal.
 
 <img className="block dark:hidden" src="/images/new-version-toast-light.png" alt="clone environment modal" />
 <img className="!hidden dark:!block" src="/images/new-version-toast-dark.png" alt="clone environment modal" />

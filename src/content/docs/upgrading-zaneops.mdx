@@ -5,14 +5,26 @@ description: Upgrading ZaneOps to a new version
 
 import { Aside} from '@astrojs/starlight/components';
 
-### Upgrading zaneops via the UI
-
-
-### Upgrading zaneops via the terminal
-
 <Aside type="tip">
 While zaneops is being upgraded, all your services will still be available, including the zaneops dashboard. 
 </Aside>
+
+### Upgrading zaneops via the UI
+
+> Introduced in [**v1.7.0**](/changelog/v17)
+
+When a new version of ZaneOps is available, you will get a toast notification in the dashboard, allowing you to 
+update via the UI :
+
+<img className="block dark:hidden" src="/images/new-version-toast-light.png" alt="clone environment modal" />
+<img className="!hidden dark:!block" src="/images/new-version-toast-dark.png" alt="clone environment modal" />
+
+<img className="block dark:hidden" src="/images/new-version-modal-light.png" alt="project environments page" />
+<img className="!hidden dark:!block" src="/images/new-version-modal-dark.png" alt="project environments page" />
+
+
+
+### Upgrading zaneops via the terminal
 
 zaneops is updated automatically to the version specified in the `.env` file in `IMAGE_VERSION`. 
 However if you use the `canary` version, you will automatically be updated to the latest version on the `main` branch, **which can contain breaking changes ⚠️**.
