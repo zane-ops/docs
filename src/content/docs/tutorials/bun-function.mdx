@@ -1,0 +1,63 @@
+---
+title: Bun function
+description: Guide for creating a simple API on ZaneOps easily
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+## Introduction
+
+Railway recently introduced [functions support](https://railway.com/changelog/2025-02-07-railway-functions#railway-functions) 
+based on bun. It allows you to quickly wip up a simple API.
+
+You can achieve the same thing in ZaneOps too leveraging our [Config files](/knowledge-base/config-files) feature.
+
+### Live demo
+
+You can find a production version of this application at: https://bun-function.fkiss.me
+
+## Prerequisites
+
+- A working ZaneOps instance. If you need help with installation, refer to our [ZaneOps setup guide](/installation).
+
+
+
+## Process
+
+<Steps>
+1. Create a Docker service using `oven/bun` image:
+    ![Creating the bun service](/images/tuto-bun-fn-new-service.png)
+
+2. Go to the service settings page and add a new config file with the the mount path of `/app/index.ts` containing your code:
+    ![Config file content](/images/tuto-bun-fn-config-file.png)
+
+    ```ts
+    // /app/index.ts
+    // index.tsx (Bun v1.2 runtime)
+    import { Hono } from "hono@4";
+    import { cors } from 'hono/cors';
+
+    const app = new Hono();
+
+    app.use("/*", cors());
+    app.get("/", (c) => c.text("Hello world!"));
+    app.get("/api/health", (c) => c.json({ status: "ok" }));
+
+    Bun.serve({
+        port: import.meta.env.PORT ?? 3000,
+        fetch: app.fetch,
+    });
+    ```
+
+3. Update the start command to run the script on startip:
+   ```shell
+   bun run /app/index.ts
+   ```
+    ![Updating the start command](/images/tuto-bun-fn-command.png)
+
+4. Add a URL to the service Forwarded to the port `3000`:
+    ![Adding a URL to the service](/images/tuto-bun-fn-create-url.png)
+
+5. Deploy the service:
+    ![service successfully deployed](/images/tuto-bun-fn-deploy.png)
+</Steps>

@@ -48,7 +48,11 @@ export default defineConfig({
               slug: "installation"
             },
             {
-              label: "DNS configuration",
+              label: "Upgrading ZaneOps",
+              slug: "upgrading-zaneops"
+            },
+            {
+              label: "Domain configuration for ZaneOps",
               slug: "configuring-zaneops"
             },
             {
@@ -59,6 +63,7 @@ export default defineConfig({
               label: "Uninstalling ZaneOps",
               slug: "uninstall"
             },
+
             {
               label: "Stopping ZaneOps",
               slug: "stopping-zaneops"

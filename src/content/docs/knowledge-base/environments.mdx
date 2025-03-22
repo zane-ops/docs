@@ -1,0 +1,52 @@
+---
+title: Environments
+description: Overview of environments in ZaneOps
+---
+
+
+import {Steps, Aside} from '@astrojs/starlight/components';
+
+
+> Introduced in [**v1.7.0**](/changelog/v17)
+
+ZaneOps supports complex development workflows through environments, giving you isolated instances of all services in a project.
+When you create a project, by default it comes with a **production** environment, you cann't rename or delete that environment.
+
+## Create an Environment
+
+<Steps>
+
+1. In the project environments page `+ New Environment` 
+    <img className="block dark:hidden" src="/images/project-environments-light.png" alt="project environments page" />
+    <img className="!hidden dark:!block" src="/images/project-environments-dark.png" alt="project environments page" />
+
+
+2. Choose which type of environment to create :
+    <img className="block dark:hidden" src="/images/project-clone-environment-light.png" alt="clone environment modal" />
+    <img className="!hidden dark:!block" src="/images/project-clone-environment-dark.png" alt="clone environment modal" />
+
+    1. If you select one environment in the `Clone Environment` dropdown, it will creates a copy of the selected environment, including services, variables, and configurations.
+        - If you check  `deploy services ?` all the services will be deployed upon cloning
+        - If you don't check  `deploy services ?`, all services and their configuration will be staged for deployment, You will need to review and deploy manually all the staged changes.
+
+    2. If you don't select any environment in the dropdown, it will create an empty environment with no services in it. 
+</Steps>
+
+
+
+<Aside type="tip" title='Use case for cloning'>
+One neat use-case of cloning environments is that it allows you to create a **staging** environment based on the default **production** environment
+</Aside>
+
+
+## Shared Environment variables
+
+Shared variables are inherited by all the services in this environment. 
+If a service has the same variable, that will take precedence over the variable defined in this environment.
+You can reference these variables in services with `{{env.VARIABLE_NAME}}`.
+
+![Shared environment variables](/images/env-shared-variables.png)
+
+ZaneOps will automatically replace the variable in the service :
+
+![Shared environment variables referenced in a service](/images/env-shared-variables-referenced.png)

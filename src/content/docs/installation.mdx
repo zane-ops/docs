@@ -104,16 +104,9 @@ it to our supported OS.
     
     ```shell
     # /var/www/zaneops/.env
-    # Example configuration - Modify before production use
-    IMAGE_VERSION=latest # ZaneOps version to install
-    ZANE_APP_DIRECTORY="/var/www/zaneops" # Installation directory for ZaneOps
-    ZANE_DB_USER= # Generated with: "curl -s https://randomuser.me/api/ | jq -r '.results[0].login.username'"
-    ZANE_DB_PASSWORD= # Generated with: "$(openssl rand -base64 32)"
-    DJANGO_SECRET_KEY= # Generated with: "$(openssl rand -base64 64)"
-
+    # ...other variables 
     ROOT_DOMAIN="<YOUR-IP>.sslip.io" # Root domain for generating app domains
     ZANE_APP_DOMAIN="<YOUR-IP>.sslip.io" # Domain for ZaneOps dashboard
-    MODE=https # or http
     ```
 
 6. **Start ZaneOps**:
@@ -121,21 +114,14 @@ it to our supported OS.
     ```shell
     make deploy
     ```
-   Wait for all the containers to start, it should show `replicated 1/1` for all services, 
-   except for `temporal-admin-tools` which should show `0/1 (1/1 completed)`. ZaneOps can take up to 5 minutes to start.
-   ![zaneops docker services  up and running](/images/docker-stack.png)
 
-7. **Create your first user to login to the dashboard**:
 
-    ```shell
-    make create-user
-    ```
-
-8. Log in to the dashboard by connecting to the domain specified in `ZANE_APP_DOMAIN`, if you are on Linux, you should have a log with the domain for zaneops : 
+7. Access the dashboard by connecting to the domain specified in `ZANE_APP_DOMAIN` in the `.env` file. Once the app is up, you will 
+   see a **welcome** page asking you to create your first user :
    
-   ```shell
-   Once everything is ok, zaneops will be accessible at https://198-19-249-134.sslip.io
-   ```
+   <img className="block dark:hidden" src="/images/create-user-light.png" alt="onboarding page with a form for creating the first user" />
+   <img className="!hidden dark:!block" src="/images/create-user-dark.png" alt="onboarding page with a form for creating the first user" />
+
    <Aside type="note" title='Installing locally'>
     Please [continue with the instructions below](#installing-locally) if you are installing ZaneOps locally.
    </Aside>
@@ -193,28 +179,4 @@ To do this :
 6. `ZANE_APP_DOMAIN`: The domain where the ZaneOps dashboard will be accessible after deployment. It can be the same as `ROOT_DOMAIN`
 7. `MODE` : the mode in which to deploy your zaneops instance, should be either `https` or  `http`, if you change this to `http`, it enables the port `80` on your instance, beware as it can be source of security vulnerabilities.
 8. `__DANGEROUS_ALLOW_HTTP_SESSION` : allow for authenticating to zaneops using a domain on `http://`
-
-### Upgrading zaneops 
-
-<Aside type="tip">
-While zaneops is being upgraded, all your services will still be available, including the zaneops dashboard. 
-</Aside>
-
-zaneops is updated automatically to the version specified in the `.env` file in `IMAGE_VERSION`. 
-However if you use the `canary` version, you will automatically be updated to the latest version on the `main` branch, **which can contain breaking changes ⚠️**.
-
-To update the version, change it in `.env` : 
-
-```shell
-# /var/www/zaneops/.env
-IMAGE_VERSION="v2"
-# ... other env variables
-```
-
-Then deploy again with : 
-
-```shell
-make setup # re-download configuration files to run zaneops 
-make deploy
-```
 
