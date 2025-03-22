@@ -52,7 +52,7 @@ export default defineConfig({
               slug: "upgrading-zaneops"
             },
             {
-              label: "DNS configuration",
+              label: "Domain configuration for ZaneOps",
               slug: "configuring-zaneops"
             },
             {
