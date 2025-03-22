@@ -3,6 +3,9 @@ title: ZaneOps v1.7
 description: 'See all the new and interesting changes in ZaneOps v1.7'
 ---
 
+import {Aside} from '@astrojs/starlight/components';
+
+
 Since the release of [v1.0](./announcing-v1.mdx), we added a lot more changes. 
 
 **To install :**
@@ -13,6 +16,11 @@ curl https://cdn.zaneops.dev/makefile > Makefile
 make setup
 make deploy
 ```
+
+<Aside type="caution" title='Before updating'>
+This version is potentially breaking. If you notice your services failing when deploying, 
+please redeploy all of the services in that environment.
+</Aside>
 
 ### Environments
 
