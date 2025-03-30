@@ -1,0 +1,38 @@
+---
+title: ZaneOps v1.8
+description: 'We support git repositories now'
+---
+
+
+import {Aside} from '@astrojs/starlight/components';
+
+
+Today we release zaneOps v1.8 introducing our all new [Git services](#git-services). 
+
+**To install :**
+
+```shell
+# assuming you are at /var/www/zaneops
+curl https://cdn.zaneops.dev/makefile > Makefile
+make setup
+make deploy
+```
+
+### Git services
+
+We made our first step towards supporting creating services from git repositories, you can now point a public repository 
+which contains a `Dockerfile` to ZaneOps and it will build it for you :
+
+<img className="block dark:hidden" src="/images/create-git-service-light.png" alt="Creating a git service" />
+<img className="!hidden dark:!block" src="/images/create-git-service-dark.png" alt="Creating a git service" />
+
+### other changes
+
+Logs are now separated from deployments and runtime logs. with runtime logs being all the logs your services produce and deployment logs 
+for build and logs produced by ZaneOps.
+
+<img className="block dark:hidden" src="/images/deployment-logs-light.png" alt="deployment logs" />
+<img className="!hidden dark:!block" src="/images/deployment-logs-dark.png" alt="deployment logs" />
+
+<img className="block dark:hidden" src="/images/runtime-logs-light.png" alt="runtime logs" />
+<img className="!hidden dark:!block" src="/images/runtime-logs-dark.png" alt="runtime logs" />
