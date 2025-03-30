@@ -91,7 +91,7 @@ Next, let's configure a PostgreSQL database service:
 Now let's deploy the guestbook application itself:
 
 <Steps>
-1. Create a Docker service using the pre-built image `ghcr.io/zane-ops/guestbook`:
+1. Create a new Git service using the repository url `https://github.com/zane-ops/guestbook`:
     ![Creating the main application service](/images/tuto-rr7-create-gb-app.png)
     
 2. Configure the authentication environment variables:
@@ -156,74 +156,31 @@ Now let's deploy the guestbook application itself:
 Automate your deployment workflow with GitHub Actions to update your application whenever changes are pushed to your repository:
 
 <Steps>
-1. Create a Personal Access Token with appropriate permissions:
-   - Go to [GitHub Developer Settings](https://github.com/settings/apps)
-   - Create a new access token with `repo`, `write:packages` and `delete:packages` permissions
-   ![Creating a GitHub PAT for container registry access](/images/tuto-rr7-github-container-pat.png)
-   
-2. Get your ZaneOps deployment webhook URL:
+1. Get your ZaneOps deployment webhook URL:
    Navigate to **main app service details page > settings > Deploy section > deploy webhook url**
    ![Locating the deployment webhook URL](/images/tuto-rr7-webhook-url.png)
    
-3. Store your secrets in GitHub:
+2. Store your secrets in GitHub:
    Navigate to **GitHub repository > settings > secrets and variables > actions** and add:
-   - `CONTAINER_REGISTRY_PAT`: Your GitHub Personal Access Token
    - `DEPLOY_WEBHOOK_URL`: Your ZaneOps webhook URL
    ![Adding repository secrets](/images/tuto-rr7-secrets.png)
    
-4. Create a GitHub Actions workflow file in your repository:
+3. Create a GitHub Actions workflow file in your repository:
     ```yaml
     # .github/workflows/ci.yaml
     name: Deploy
     on:
-        # Triggers the workflow on push to main branch
-        push:
-            branches:
-                - main # customize as needed
-        # Allows manual triggering from the Actions tab
-        workflow_dispatch:
+      push:
+        branches: [main] # customize as needed
     jobs:
-        build-push-app:
-            name: Build and Deploy Guestbook
-            runs-on: ubuntu-latest
-            permissions:
-                packages: write
-                contents: read
-                attestations: write
-                id-token: write
-            steps:
-                - name: Checkout
-                  uses: actions/checkout@v4
-                - name: Set up Docker Buildx
-                  uses: docker/setup-buildx-action@v2
-                - name: Authenticate with GitHub Container Registry
-                  uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
-                  with:
-                      registry: ghcr.io
-                      username: ${{ github.actor }}
-                      password: ${{ secrets.CONTAINER_REGISTRY_PAT }}
-                - name: Build and push Docker image
-                  uses: docker/build-push-action@v3
-                  with:
-                      context: .
-                      file: Dockerfile
-                      push: true
-                      tags: ghcr.io/zane-ops/guestbook:${{ github.sha }} # update with your image path
-                - name: Deploy to ZaneOps
-                  uses: zane-ops/auto-deploy-action@v4
-                  with:
-                      SERVICE_IMAGE: ghcr.io/zane-ops/guestbook:${{ github.sha }} # update with your image path
-                      DEPLOY_WEBHOOK_URL: ${{ secrets.DEPLOY_WEBHOOK_URL }}
-                      COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
-                # Alternative deployment method using curl
-                #- name: Deploy to ZaneOps
-                #  run: |
-                #    curl -f -X PUT "${{ secrets.DEPLOY_WEBHOOK_URL }}" \
-                #       -H "Content-Type: application/json" \
-                #       -d '{
-                #             "new_image": "ghcr.io/zane-ops/docs:${{ github.sha }}",
-                #             "commit_message": "${{ github.event.head_commit.message }}"
-                #           }'
+      build-push-app:
+        name: Build and Deploy Guestbook
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Deploy to ZaneOps
+              run: curl -f -X PUT "${{ secrets.DEPLOY_WEBHOOK_URL }}" 
     ```
 5. With this workflow in place, changes pushed to your main branch will automatically trigger a new build and deployment
     ![Service deployed via github](/images/tuto-rr7-github-deploy.png)
