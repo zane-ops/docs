@@ -1,5 +1,8 @@
 FROM oven/bun:1-slim AS build-env
 
+ARG ZANE_DOMAINS
+ENV ZANE_DOMAINS=$ZANE_DOMAINS
+
 WORKDIR /usr/src/app
 COPY . /usr/src/app
 COPY ./package.json bun.lockb /usr/src/app/
