@@ -17,4 +17,4 @@ jobs:
               cf_api_token: ${{ secrets.CF_API_TOKEN }}
           - name: Deploy to ZaneOps
             run: |
-              curl -f --silent -H "CF-Access-Client-Id: ${{ secrets.CF_CLIENT_ID }}" -H "CF-Access-Client-Secret: ${{ secrets.CF_CLIENT_SECRET }}" -X PUT ${{ secrets.GIT_DEPLOY_WEBHOOK_URL }}/fails
+              curl -f -o /dev/null --fail -H "CF-Access-Client-Id: ${{ secrets.CF_CLIENT_ID }}" -H "CF-Access-Client-Secret: ${{ secrets.CF_CLIENT_SECRET }}" -X PUT ${{ secrets.GIT_DEPLOY_WEBHOOK_URL }}/fails
