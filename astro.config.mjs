@@ -4,8 +4,9 @@ import tailwind from "@astrojs/tailwind";
 import { defineConfig } from "astro/config";
 
 // https://astro.build/config
+const defaultDomain = process.env.ZANE_DOMAINS?.split(",")[0] ?? "zaneops.dev";
 export default defineConfig({
-  site: process.env.ZANE_DOMAINS?.split(",")[0] ?? "https://zaneops.dev",
+  site: `https://${defaultDomain}`,
   devToolbar: {
     enabled: false
   },
