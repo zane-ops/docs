@@ -180,7 +180,7 @@ Automate your deployment workflow with GitHub Actions to update your application
             - name: Checkout
               uses: actions/checkout@v4
             - name: Deploy to ZaneOps
-              run: curl -f -X PUT "${{ secrets.DEPLOY_WEBHOOK_URL }}" 
+              run: curl -f --silent -X PUT "${{ secrets.DEPLOY_WEBHOOK_URL }}" 
     ```
 5. With this workflow in place, changes pushed to your main branch will automatically trigger a new build and deployment
     ![Service deployed via github](/images/tuto-rr7-github-deploy.png)
