@@ -12,6 +12,4 @@ jobs:
             uses: actions/checkout@v4
           - name: Deploy to ZaneOps
             run: |
-              curl -f -H "CF-Access-Client-Id: ${{ secrets.CF_CLIENT_ID }}" \ 
-                   -H "CF-Access-Client-Secret: ${{ secrets.CF_CLIENT_SECRET }}" \
-                   -X PUT "${{ secrets.GIT_DEPLOY_WEBHOOK_URL }}"
+              curl -f -H "CF-Access-Client-Id: ${{ secrets.CF_CLIENT_ID }}" -H "CF-Access-Client-Secret: ${{ secrets.CF_CLIENT_SECRET }}" -X PUT ${{ secrets.GIT_DEPLOY_WEBHOOK_URL }}
