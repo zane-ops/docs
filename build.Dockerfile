@@ -1,13 +1,18 @@
-FROM oven/bun:1-slim AS build-env
+FROM node:lts-alpine AS base
 
 ARG ZANE_DOMAINS
 ENV ZANE_DOMAINS=$ZANE_DOMAINS
 
+# Install bun
+RUN npm install -g bun
+
+# Install packages
 WORKDIR /usr/src/app
 COPY . /usr/src/app
 COPY ./package.json bun.lockb /usr/src/app/
 RUN FORCE_COLOR=true bun install --frozen-lockfile
 
+# run build
 RUN FORCE_COLOR=true bun run build
 
 FROM caddy:2.9-alpine as production
