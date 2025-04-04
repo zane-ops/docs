@@ -43,6 +43,18 @@ it to our supported OS.
   # on Linux
   sudo apt install make curl jq openssl
 
+  # on Red Hat-based distributions
+  sudo dnf install -y make curl jq openssl
+
+  # on Alpine Linux
+  sudo apk add make curl jq openssl
+
+  # on NixOS
+  nix-shell -p gnumake curl jq openssl
+
+  # on Arch Linux
+  sudo pacman -S --noconfirm make curl jq openssl
+
   # on Mac
   brew install make curl jq openssl
   ```
