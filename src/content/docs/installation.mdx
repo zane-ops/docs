@@ -115,13 +115,13 @@ it to our supported OS.
     </FileTree>
 
 5. **Review environment variables in `.env`** :
-    The setup process will generate sane defaults for environment variables, 
-    but you can modify the contents to better suit your needs ([see here for how to customize](#environment-variables-explained)):
+    The setup process will generate sane defaults for environment variables, the main variables you might want 
+    to modify are `ROOT_DOMAIN` and `ZANE_APP_DOMAIN` and they can be set to the same value if desired. See [How to configure DNS records for ZaneOps ?](/configuring-zaneops)
     
     ```shell
     # /var/www/zaneops/.env
     # ...other variables 
-    ROOT_DOMAIN="<YOUR-IP>.sslip.io" # Root domain for generating app domains
+    ROOT_DOMAIN="<YOUR-IP>.sslip.io" # Root domain for generating app subdomains
     ZANE_APP_DOMAIN="<YOUR-IP>.sslip.io" # Domain for ZaneOps dashboard
     ```
 
