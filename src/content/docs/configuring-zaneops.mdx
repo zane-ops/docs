@@ -10,19 +10,24 @@ ZaneOps requires specific DNS records to be set up for your domains. The primary
 - [`ROOT_DOMAIN`](#root_domain): Used to generate subdomains for deployed web apps.
 - [`ZANE_APP_DOMAIN`](#zane_app_domain): The domain where the ZaneOps dashboard will be accessible after deployment. It can be the same as `ROOT_DOMAIN`.
 
+<Aside type="tip" title="Important">
+You can use any domain you want for services created in ZaneOps, you are not restricted to `ROOT_DOMAIN` or `ZANE_APP_DOMAIN`.
+
+For example, your `ROOT_DOMAIN` might be [zaneops.dev](//zaneops.dev) and your `ZANE_APP_DOMAIN` [admin.zaneops.dev](//admin.zaneops.dev), but a service can still use a domain like [mysupersaas.com](//mysupersaas.com).
+</Aside>
+
 ### Required DNS Records
 
 You need to add the following records in your DNS provider:
 
 ```txt
-@     IN  A    <your-server-ip>       # ROOT_DOMAIN
 *     IN  A    <your-server-ip>       # Wildcard Subdomain (`*.<ROOT_DOMAIN>`, to support subdomains dynamically)
 app   IN  A    <your-server-ip>       # ZANE_APP_DOMAIN
 ```
 
 On [cloudflare](//cloudflare.com), it looks like this : 
 
-![example DNS records on cloudflare](/images/dns-records.png)
+![example DNS records on cloudflare](/images/dns-records-for-zane-domains.png)
 
 ### Verifying DNS Records
 
@@ -30,10 +35,10 @@ Ensure that these records are correctly propagated by checking them with a DNS l
 
 ```shell
 # Using `dig`
-dig +short zane.app A
+dig +short admin.zaneops.dev A
 
 # Using `nslookup`
-nslookup zane.app
+nslookup admin.zaneops.dev
 ```
 
 
@@ -46,8 +51,7 @@ as [project-service-randomid.zaneops.dev](//project-service-randomid.zaneops.dev
 
 In the dashboard, this is what is used when you leave the `domain` field empty when you add urls for your service : 
 
-<img className="block dark:hidden" src="/images/custom-urls-light.png" alt="service settings page on the custom urls section" />
-<img className="!hidden dark:!block" src="/images/custom-urls-dark.png" alt="service settings page on the custom urls section" />
+<img className="block" src="/images/url-with-root-domain.png" alt="Screenshot showing the usage of ROOT_DOMAIN" />
 
 <Aside type='note' title='Default value'>
 By default the setup script of zaneops generate a [sslip.io](https://sslip.io) domain based on the IP of your server (ex: https://198-19-249-134.sslip.io),
@@ -105,4 +109,4 @@ to expose your server IP to the internet.
 For hosting zaneops behing cloudflare tunnel, you will need to : 
 1. [Disable ssl](#disabling-ssl)
 2. Add the records on the public hostname tab on your tunnel instance, all forwarded to http://127.0.0.1:80 :  
-   ![Cloudflare tunnel public hostnames](/images/cf-tunnel.png)
+   ![Cloudflare tunnel public hostnames](/images/dns-records-for-cf-tunnel.png)
