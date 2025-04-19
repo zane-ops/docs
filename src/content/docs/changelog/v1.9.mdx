@@ -1,0 +1,34 @@
+---
+title: ZaneOps v1.9
+description: '1, 2, 3 new builders!'
+---
+
+import {Aside} from '@astrojs/starlight/components';
+
+<span className='text-gray-600 dark:text-gray-400'>20 Apr 2025</span> by [**Fred KISSIE**](https://github.com/Fredkiss3)
+
+Today we release zaneOps v1.9 introducing not 1, not 2, but [3 new builders](/knowledge-base/builders/nixpacks-builder) for your git services!
+
+> Read [release notes](https://github.com/zane-ops/zane-ops/releases/tag/v1.9.0) 
+
+**To install :**
+
+1. via the UI : 
+   > _TODO : screenshot_
+
+3. via the shell :
+    ```shell
+    # assuming you are at /var/www/zaneops
+    curl https://cdn.zaneops.dev/makefile > Makefile
+    make setup
+    make deploy
+    ```
+
+### Nixpacks builder
+
+[nixpacks](https://nixpacks.com) is an open source tool developped by [railway](https://railway.app) that automatically detects your stack, language or framework
+and produce a Dockerfile for building your application. 
+With this, when you want to deploy a new service, no need to specify a `Dockerfile` 
+
+### Railpack builder
+### Static directory builder
