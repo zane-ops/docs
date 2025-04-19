@@ -2,7 +2,92 @@
 title: Nixpacks Builder
 description: Overview of nixpacks builder
 ---
+import {Aside} from '@astrojs/starlight/components';
 
 > Introduced in [**v1.9.0**](/changelog/v19)
 
-> _WIP ✨_ 
+<Aside type="caution" title='Docker build resource usage'>
+The Docker build process can consume up to 100% of your server's resources, potentially slowing it to a crawl.
+Make sure your server is powerful enough to handle it.
+</Aside>
+
+[Nixpacks](https://nixpacks.com) is an open source tool developped by [railway](https://railway.app) that automatically detects your stack, language or framework
+and produce a Dockerfile for building your application. 
+
+With this, when you want to deploy a new service, no need to specify a `Dockerfile` when deploying a service from a git repository, 
+whether it is a next.js web application, a Svelte SPA or a Django backend API, it will automatically detect it for you. 
+
+
+### How to create a service with with nixpacks
+
+You can specify the nixpacks builder when creating your service or modify the builder at any moment in the service's settings. 
+
+![Create a service with Nixpacks builder](/images/create-git-service-nixpacks-builder.png)
+
+
+- You need to specify a **build directory**, where nixpacks will detect and build your application, relative to the root of your repository
+- You can specify custom **install**, **build** and **start** commands to configure nixpacks and override the auto-generated 
+  commands by nixpacks 
+    ![Nixpacks settings](/images/nixpacks-builder.png)
+
+
+### Static websites
+
+The nixpacks builder support deploying static websites, when deploying a static website with ZaneOps, it will be built as a [caddy](https://caddyserver.com/) image,
+with your build assets copied exposed as a file server.
+For that you need to check the static website checkbox and specify a publish directory relative to the build directory.
+
+When updating your options in the UI, ZaneOps will show you a preview of the generated [Caddyfile](https://caddyserver.com/docs/caddyfile) that will be used to host your app.
+
+![Nixpacks static settings](/images/nixpacks-builder-static.png)
+
+- You can also specify the path for a custom not found page, relative to the **published directory**, used for handling all 404 errors.
+- If your app is a **Single Page Application (SPA)**, you can check the box and specify the location of **index.html** page to redirect requests to, 
+  the Not found page is ignored as all requests will be sent to the **index.html** page instead.
+
+### Customizing nixpacks
+
+You have two levers to control nixpacks configuration : 
+
+1. You can add a custom [nixpacks.toml](https://nixpacks.com/docs/configuration/file) configuration file, at the root of your **build directory** (See here for how to [customize](https://nixpacks.com/docs/guides/configuring-builds)) : 
+   
+   With this you add more steps to the build process, customize the different commands, and even change the auto-detected provider by nixpacks.
+
+2. You can add a custom Caddyfile for static websites, at the root of your build directory. 
+    When specifying this, ZaneOps use it over the default generated [Caddyfile](https://caddyserver.com/docs/caddyfile) in the UI.
+
+    With this you can add logging or cache to your static websites. 
+    Note that when specifying a custom Caddyfile, you have to use the directory `/var/www/html` as the root for static files or rely on the variable `$PUBLIC_DIR`. 
+    
+    Here is A fully working example of a custom Caddyfile : 
+    ```ini
+    # ./Caddyfile
+    # expose your app to port 80
+    :80 {
+        # Set the root directory for static files
+        root * $PUBLIC_DIR
+        
+        # Serve all files as is 
+        file_server
+
+        # log all requests
+        log
+
+        # Add `cache-control` header to static assets, images and videos
+        @assets {
+            path_regexp assets \.(css|js|png|jpg|jpeg|gif|svg|woff|woff2|eot|ttf|otf|mp4)$
+        }
+
+        header @assets Cache-Control "public, max-age=31536000, immutable"
+
+        # For all 404 errors, show a custom 404.html page
+        handle_errors {
+            @404 {
+                expression {http.error.status_code} == 404
+            }
+            rewrite @404 ./404.html
+            file_server
+        }
+    }
+    ```
+

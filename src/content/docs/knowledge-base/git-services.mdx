@@ -15,7 +15,7 @@ ZaneOps support creating services and applications via Git repositories.
 
 ### Some notes about the build process
 
-- Since `docker build` can be resource-intensive, ZaneOps limits its resource usage to a maximum of 50% of the CPU.
+- Since `docker build` can be resource-intensive, ZaneOps try to limits its resource usage to a maximum of 50% of the CPU.
 - When building your application, ZaneOps passes all environment variables as build `ARG` to the `docker build` command.
 - It also builds your application within the service's current network, allowing access to other services in the same network during the build process. 
 
