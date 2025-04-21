@@ -2,7 +2,12 @@
 title: Railpack Builder
 description: Overview of railpack builder
 ---
+import {Aside} from '@astrojs/starlight/components';
+
 
 > Introduced in [**v1.9.0**](/changelog/v19)
 
-> _WIP ✨_ 
+<Aside type="caution" title='Docker build resource usage'>
+The Docker build process can consume up to 100% of your server's resources, potentially slowing it to a crawl.
+Make sure your server is powerful enough to handle it.
+</Aside>

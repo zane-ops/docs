@@ -20,3 +20,12 @@ You can deploy services from a git repository if you have a `Dockerfile` inside 
 - You can specify the path of your **Dockerfile**, relative to the root of your repository
 - And you can specify a **Docker build stage target** if you build your image using a multi-stage build and want to stop at a certain step of the build
 
+### Environment variables
+
+When building your application, ZaneOps will put all the environment variables 
+that need to be passed to the build process into an `.env` file at the root of the **build context directory**.
+
+<Aside type="tip" title='Network access'>
+    When building your application, the build process will happen inside of the same network as your service,
+    allowing you to access services inside of the same network.
+</Aside>
