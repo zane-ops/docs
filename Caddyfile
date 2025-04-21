@@ -1,6 +1,6 @@
 :{$PORT:80} {
 	# Set the root directory for static files
-	root * {$PUBLIC_DIR:/var/www/html}
+	root * {$PUBLIC_ROOT:/var/www/html}
 	file_server
 
 	log
