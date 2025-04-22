@@ -11,3 +11,37 @@ import {Aside} from '@astrojs/starlight/components';
 The Docker build process can consume up to 100% of your server's resources, potentially slowing it to a crawl.
 Make sure your server is powerful enough to handle it.
 </Aside>
+
+[Railpack](https://railpack.com) is the new version of [Nixpacks](/knowledge-base/builders/nixpacks-builder/) by Railway, still open source. The benefits over Nixpacks are 
+faster builds and smaller image sizes. The Railpack builder support all the same options as the Nixpacks builder. 
+
+The Railpack builder is in **bêta** for now, as a **v1** of railpack hasn't been released yet. 
+
+### How to create a service with with railpack
+
+You can specify the Railpack builder when creating your service or modify the builder at any moment in the service's settings. 
+
+![Create a service with Railpack builder](/images/create-git-service-railpack-builder.png)
+
+- You need to specify a **build directory**, where Railpack will detect and build your application, relative to the root of your repository
+- You can specify custom **install**, **build** and **start** commands to configure Railpack and override the auto-generated 
+  commands by Railpack 
+    ![Railpack settings](/images/railpack-builder.png)
+
+### Static websites
+
+The Railpack builder support deploying static websites, when deploying a static website with ZaneOps, it will be built as a service using a [caddy on alpine](https://hub.docker.com/_/caddy) image,
+with your build assets copied exposed as a file server.
+For that you need to check the static website checkbox and specify a publish directory relative to the build directory.
+
+When updating your options in the UI, ZaneOps will show you a preview of the generated [Caddyfile](https://caddyserver.com/docs/caddyfile) that will be used to host your app.
+
+![Railpack static settings](/images/nixpacks-builder-static.png)
+
+- You can also specify the path for a custom not found page, relative to the **published directory**, used for handling all 404 errors.
+- If your app is a **Single Page Application (SPA)**, you can check the box and specify the location of **index.html** page to redirect requests to, 
+  the Not found page is ignored as all requests will be sent to the **index.html** page instead.
+
+### Configuring railpack
+
+> WIP ✨

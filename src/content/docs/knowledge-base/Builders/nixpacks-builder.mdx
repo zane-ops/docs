@@ -33,7 +33,7 @@ You can specify the nixpacks builder when creating your service or modify the bu
 
 ### Static websites
 
-The nixpacks builder support deploying static websites, when deploying a static website with ZaneOps, it will be built as a [caddy](https://caddyserver.com/) image,
+The nixpacks builder support deploying static websites, when deploying a static website with ZaneOps, it will be built as a service using a  [caddy on alpine](https://hub.docker.com/_/caddy) image,
 with your build assets copied exposed as a file server.
 For that you need to check the static website checkbox and specify a publish directory relative to the build directory.
 
