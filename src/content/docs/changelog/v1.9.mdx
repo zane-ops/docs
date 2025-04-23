@@ -1,0 +1,68 @@
+---
+title: ZaneOps v1.9
+description: '1, 2, 3 new builders!'
+---
+
+import {Aside} from '@astrojs/starlight/components';
+
+<span className='text-gray-600 dark:text-gray-400'>20 Apr 2025</span> by [**Fred KISSIE**](https://github.com/Fredkiss3)
+
+Today we release zaneOps v1.9 introducing not 1, not 2, but [3 new builders](/knowledge-base/builders/nixpacks-builder) for your git services!
+
+
+**To install :**
+
+1. via the UI : 
+    <img className="block dark:hidden" src="/images/new-version-toast-light.png" alt="clone environment modal" />
+    <img className="!hidden dark:!block" src="/images/new-version-toast-dark.png" alt="clone environment modal" />
+
+    <img className="block dark:hidden" src="/images/new-version-modal-light.png" alt="project environments page" />
+    <img className="!hidden dark:!block" src="/images/new-version-modal-dark.png" alt="project environments page" />
+
+
+3. via the shell :
+    ```shell
+    # assuming you are at /var/www/zaneops
+    curl https://cdn.zaneops.dev/makefile > Makefile
+    make setup
+    make deploy
+    ```
+
+### Nixpacks builder
+
+[Nixpacks](https://nixpacks.com) is an open source tool developped by [railway](https://railway.app) that automatically detects your stack, language or framework
+and produce a Dockerfile for building your application. 
+
+With this, when you want to deploy a new service, no need to specify a `Dockerfile` when deploying a service from a git repository, 
+whether it is a next.js web application, a Svelte SPA or a Django backend API, it will automatically detect it for you. 
+
+<video src='/videos/nixpacks-ssr.mp4' muted controls alt="Nixpacks SSR" />
+
+#### Bonus: static websites
+
+In some cases, you might want to deploy a statically generated websites. 
+You can check static website checkbox when creating your service or in your service settings.
+
+
+<video src='/videos/nixpacks-static.mp4' muted controls alt="Nixpacks static" />
+
+### Railpack builder
+
+[Railpack](https://railpack.com) is the new version of Nixpacks by Railway, still open source. The benefits over Nixpacks are 
+faster builds and smaller image sizes. The railpack builder support all the same options as the Nixpacks builder. 
+
+As of now the railpack builder is in **bêta** as a v1 of railpack hasn't been released yet. 
+
+<video src='/videos/railpack-builder.mp4' muted controls alt="Railpack" />
+
+### Static directory builder
+
+In ZaneOps, you can deploy a simple HTML/CSS/JS pre-built static website, 
+it will be deployed as a simple [Caddy](https://caddyserver.com) with alpine docker container.
+
+<video src='/videos/static-dir-builder.mp4' muted controls alt="Static directory builder" />
+
+### Other changes 
+
+You can now deploy multiple services at once in the project details page:
+  ![Bulk deploy services](/images/bulk-deploy.png)
