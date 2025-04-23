@@ -11,6 +11,11 @@ import {Aside} from '@astrojs/starlight/components';
 The Docker build process can consume up to 100% of your server's resources, potentially slowing it to a crawl.
 Make sure your server is powerful enough to handle it.
 </Aside>
+<Aside type="tip" title='Network access'>
+    When building your application, the build process will happen inside of the same network as your service,
+    allowing you to access services inside of the same network.
+</Aside>
+
 
 You can deploy services from a git repository if you have a `Dockerfile` inside of it.
 
@@ -25,7 +30,3 @@ You can deploy services from a git repository if you have a `Dockerfile` inside 
 When building your application, ZaneOps will put all the environment variables 
 that need to be passed to the build process into an `.env` file at the root of the **build context directory**.
 
-<Aside type="tip" title='Network access'>
-    When building your application, the build process will happen inside of the same network as your service,
-    allowing you to access services inside of the same network.
-</Aside>
