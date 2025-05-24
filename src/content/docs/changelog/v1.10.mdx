@@ -1,0 +1,43 @@
+---
+title: ZaneOps v1.10
+description: 'Sh...🤫 ells !'
+---
+
+import {Aside} from '@astrojs/starlight/components';
+
+<span className='text-gray-600 dark:text-gray-400'>21 May 2025</span> by [**Fred KISSIE**](https://github.com/Fredkiss3)
+
+Today we release zaneOps v1.10 introducing shells for everyone
+
+
+**To install :**
+
+1. via the UI : 
+    <img className="block dark:hidden" src="/images/new-version-toast-light.png" alt="clone environment modal" />
+    <img className="!hidden dark:!block" src="/images/new-version-toast-dark.png" alt="clone environment modal" />
+
+    <img className="block dark:hidden" src="/images/new-version-modal-light.png" alt="project environments page" />
+    <img className="!hidden dark:!block" src="/images/new-version-modal-dark.png" alt="project environments page" />
+
+
+3. via the shell :
+    ```shell
+    # assuming you are at /var/www/zaneops
+    curl https://cdn.zaneops.dev/makefile > Makefile
+    make setup
+    make deploy
+    ```
+
+### Shells to deployments
+
+> todo
+
+### Shell to the server
+
+> todo
+
+
+### Other changes 
+
+- ZaneOps docker image is lighter and with a smaller number of layers ! Downloading new versions of ZaneOps should be faster in the next releases. 
+- We introduced a new anonymous telemetry to allows us to better see the real usage of ZaneOps in production, [how to configure ?](#)
