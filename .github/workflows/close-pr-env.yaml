@@ -1,6 +1,7 @@
-name: Build and Push Images (DEV)
+name: Close PR environment (DEV)
 on:
   pull_request:
+      types: [closed]
   workflow_dispatch:
 
 jobs:
@@ -15,11 +16,11 @@ jobs:
             with:
               bun-version: latest
 
-          - name: Install packages and Deploy to zaneops
+          - name: Close PR
             shell: bash
             run: |
               bun install cookie-es zod@3
-              bun run scripts/deploy-pr.ts
+              bun run scripts/close-pr.ts
             env:
               CF_CLIENT_ID: ${{ secrets.CF_ZONE_ID }}
               CF_CLIENT_SECRET: ${{ secrets.CF_API_TOKEN }}
