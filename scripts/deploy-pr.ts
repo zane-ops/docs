@@ -98,9 +98,7 @@ console.log(`Environment in ${colors.blue(ENV_NAME)}`);
 const docsService = envResponse.services.find(
   (srv) => srv.slug === SERVICE_SLUG
 );
-console.log({
-  service: docsService?.urls
-});
+
 if (!docsService) {
   console.error(
     `The cloned environment doesn't have the service "${SERVICE_SLUG}"`
