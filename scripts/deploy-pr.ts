@@ -77,7 +77,19 @@ if (getEnvRequest.status === 200) {
     process.exit(1);
   } else {
     console.log(`Successfully created environment ${colors.blue(ENV_NAME)} ✅`);
-    envResponse = await cloneEnvRequest.json();
+    const getEnvRequest = await fetch(
+      `${DASHBOARD_URL}/api/projects/${PROJECT_SLUG}/environment-details/${ENV_NAME}/`,
+      {
+        method: "GET",
+        headers: {
+          "x-csrftoken": csrfToken,
+          cookie: requestCookie,
+          ...extraHeaders
+        }
+      }
+    );
+
+    envResponse = await getEnvRequest.json();
   }
 }
 
