@@ -24,6 +24,7 @@ jobs:
               CF_CLIENT_ID: ${{ secrets.CF_ZONE_ID }}
               CF_CLIENT_SECRET: ${{ secrets.CF_API_TOKEN }}
               PR_NUMBER: ${{ github.event.pull_request.number }}
+              PR_BRANCH_NAME: ${{ github.head_ref }}
               ZANE_USERNAME: ${{ secrets.ZANE_USERNAME }}
               ZANE_PASSWORD: ${{ secrets.ZANE_PASSWORD }}
 

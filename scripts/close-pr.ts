@@ -2,9 +2,9 @@ import {
   DASHBOARD_URL,
   ENV_NAME,
   PROJECT_SLUG,
-  PR_NUMBER,
   authenticate,
   colors,
+  env,
   extraHeaders,
   parseResponseBody
 } from "./common";
@@ -16,7 +16,7 @@ const { requestCookie, csrfToken } = await authenticate();
 
 console.log(
   `Creating new environment ${colors.blue(
-    `pr-${PR_NUMBER}`
+    `pr-${env.PR_NUMBER}`
   )} in the project ${colors.blue(PROJECT_SLUG)}...`
 );
 const getEnvRequest = await fetch(

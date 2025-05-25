@@ -6,6 +6,7 @@ const envVariables = z.object({
   ZANE_PASSWORD: z.string(),
   CF_CLIENT_ID: z.string(),
   CF_CLIENT_SECRET: z.string(),
+  PR_BRANCH_NAME: z.string(),
   PR_NUMBER: z.coerce.number()
 });
 export const PROJECT_SLUG = "zane-docs";
@@ -45,15 +46,13 @@ export async function parseResponseBody(response: Response) {
 export const {
   ZANE_USERNAME: username,
   ZANE_PASSWORD: password,
-  CF_CLIENT_ID,
-  CF_CLIENT_SECRET,
-  PR_NUMBER
+  ...env
 } = envVariables.parse(process.env);
-export const ENV_NAME = `pr-${PR_NUMBER}`;
+export const ENV_NAME = `pr-${env.PR_NUMBER}`;
 
 export const extraHeaders = {
-  "CF-Access-Client-Id": CF_CLIENT_ID,
-  "CF-Access-Client-Secret": CF_CLIENT_SECRET
+  "CF-Access-Client-Id": env.CF_CLIENT_ID,
+  "CF-Access-Client-Secret": env.CF_CLIENT_SECRET
 };
 
 export async function authenticate() {
