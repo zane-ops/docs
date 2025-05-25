@@ -1,7 +1,7 @@
 name: Close PR environment (DEV)
 on:
   pull_request:
-      types: [closed]
+      # types: [closed]
   workflow_dispatch:
 
 jobs:
