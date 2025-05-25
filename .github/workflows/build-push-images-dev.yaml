@@ -40,5 +40,5 @@ jobs:
             env:
               GITHUB_TOKEN: ${{ secrets.COMMENT_PAT }}
             with:
-              msg: 🚀 **PR Preview URL:** ${{ steps.read_url.outputs.url }}
+              msg: 🚀 **PR Preview URL:** https://${{ steps.read_url.outputs.url }}
               check_for_duplicate_msg: true
