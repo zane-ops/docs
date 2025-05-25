@@ -1,0 +1,22 @@
+---
+title: Anonymous Telemetry
+description: Learn how and what ZaneOps collects with telemetry
+---
+
+import {Aside} from '@astrojs/starlight/components';
+
+> Since [**v1.10**](/changelog/v110)
+
+### Anonymous Telemetry 
+
+We introduced a new anonymous telemetry to allows us to better see the real usage of ZaneOps in production.
+
+It works by sending a simple `PING` request at most every 30 minutes to the ZaneOps CDN ([cdn.zaneops.dev](https://cdn.zaneops.dev)). 
+The code source of the CDN can be found [here](https://github.com/zane-ops/cdn/tree/main/src/index.ts).
+
+Anonymous telemetry can be disabled by modifying the env variable in  `.env`: 
+
+```shell
+# /var/www/zaneops/.env
+TELEMETRY_ENABLED=false # or true
+```
