@@ -2,72 +2,67 @@
 title: ZaneOps v1.10
 description: 'Sh...🤫 ells !'
 ---
-
 import {Aside} from '@astrojs/starlight/components';
 
 <span className='text-gray-600 dark:text-gray-400'>25 May 2025</span> by [**Fred KISSIE**](https://github.com/Fredkiss3)
 
-Today we release zaneOps v1.10 introducing web terminal for deployments, and a web terminal to the server.
+Today we release ZaneOps v1.10, introducing a web terminal for deployments and a web terminal to the server.
 
+**To install:**
 
-**To install :**
+1. via the UI:
+ <img className="block dark:hidden" src="/images/new-version-toast-light.png" alt="clone environment modal" />
+ <img className="!hidden dark:!block" src="/images/new-version-toast-dark.png" alt="clone environment modal" />
+ <img className="block dark:hidden" src="/images/new-version-modal-light.png" alt="project environments page" />
+ <img className="!hidden dark:!block" src="/images/new-version-modal-dark.png" alt="project environments page" />
 
-1. via the UI : 
-    <img className="block dark:hidden" src="/images/new-version-toast-light.png" alt="clone environment modal" />
-    <img className="!hidden dark:!block" src="/images/new-version-toast-dark.png" alt="clone environment modal" />
-
-    <img className="block dark:hidden" src="/images/new-version-modal-light.png" alt="project environments page" />
-    <img className="!hidden dark:!block" src="/images/new-version-modal-dark.png" alt="project environments page" />
-
-
-3. via the shell :
-    ```shell
-    # assuming you are at /var/www/zaneops
-    curl https://cdn.zaneops.dev/makefile > Makefile
-    make setup
-    make deploy
-    ```
+2. via the shell:
+```shell
+# assuming you are at /var/www/zaneops
+curl https://cdn.zaneops.dev/makefile > Makefile
+make setup
+make deploy
+```
 
 ### Shells to deployments
 
-In this new version, we are introducing a new terminal directly to your service, allowing you to inspect 
-containers created for your service by ZaneOps and debug or run any arbitrary script within it. 
+In this new version, we are introducing a new terminal directly to your service, allowing you to inspect containers created for your service by ZaneOps and debug or run any arbitrary script within it.
 
 <video src="/videos/webshell.mp4" controls muted></video>
 
 ### Shell to the server
 
-As well as terminals to your deployments, you can now connect to your server via SSH directly from the web UI. 
-In the demo, you can see the user connecting via SSH to their server and triggering an update of ZaneOps via the shell 
-from within directly. _pretty cool uh ?_
+As well as terminals to your deployments, you can now connect to your server via SSH directly from the web UI.
 
+In the demo below, you can see the user connecting via SSH to their server and triggering an update of ZaneOps via the shell directly.
+*Pretty cool, huh?*
 
 <video src="/videos/upgrade-with-shell.mp4" controls muted></video>
 
 <Aside type='note' title='SSH keys'>
-This feature works using SSH keys, [learn more how to configure](#).
+This feature works using SSH keys, [learn more about how to configure](#).
 </Aside>
 
+### Persistent cache
 
-### Persistent cache 
+In v1.10, we introduce a new performance improvement on the frontend. 
+Between each new version, you will have persistent cache on the browser, so that next time you access your app, navigation is very snappy even if you refresh the browser.
 
-In v1.10, we introduce a new performance improvement on the frontend, between each new version, you will have a persistent cache on the browser.
-So that next time you access your app, navigation is very snappy even if you refresh the browser. 
-
-Here is a demo where, you can see: 
-- On top : without persistent storage 
-- On the bottom : with persistent storage
+Here is a demo where you can see:
+- On top: without persistent storage
+- On the bottom: with persistent storage
 
 <video src="/videos/persistent-cache.mp4" controls muted></video>
 
-### Anonymous Telemetry 
+### Anonymous Telemetry
 
-We introduced a new anonymous telemetry to allows us to better see the real usage of ZaneOps in production.
+We introduced a new anonymous telemetry feature to help us better understand the real usage of ZaneOps in production.
 
-It works by sending a simple `PING` request at most every 30 minutes to the ZaneOps CDN ([cdn.zaneops.dev](https://cdn.zaneops.dev)). 
-The code source of the CDN can be found [here](https://github.com/zane-ops/cdn/tree/main/src/index.ts).
+It works by sending a simple `PING` request at most every 30 minutes to the ZaneOps CDN ([cdn.zaneops.dev](https://cdn.zaneops.dev)).
 
-Anonymous telemetry can be disabled by modifying the env variable in  `.env`: 
+The source code of the CDN can be found [here](https://github.com/zane-ops/cdn/tree/main/src/index.ts).
+
+Anonymous telemetry can be disabled by modifying the env variable in `.env`:
 
 ```shell
 # /var/www/zaneops/.env
@@ -78,15 +73,15 @@ TELEMETRY_ENABLED=false # or true
 More details [here](/knowledge-base/anonymous-telemetry).
 </Aside>
 
-### Docker Image Size reduction 
+### Docker Image Size reduction
 
-ZaneOps docker image is lighter and with a smaller number of layers, going from **1.5GB** to **902MB**.
+The ZaneOps Docker image is lighter and has a smaller number of layers, going from **1.5GB** to **902MB**.
 
-So downloading new versions of ZaneOps should be faster in the next releases ⚡️.
+So downloading new versions of ZaneOps should be faster in future releases ⚡️.
 
 ### Thank you! 🫶
 
-- We have now on more than **500 stars** ⭐️ on the repository 
-- And **100+ more installs** 🔝 on ZaneOps 
+- We now have more than **500 stars** ⭐️ on the repository
+- And **100+ more installs** 🔝 on ZaneOps
 
-Thank you all for making this happens 🙏
+Thank you all for making this happen 🙏
