@@ -200,10 +200,15 @@ if (deploymentResponse.status >= 200 && deploymentResponse.status <= 299) {
   process.exit(1);
 }
 
-const domain = docsService.urls[0].domain;
+let url = docsService.urls[0];
+if (!url) {
+  url = docsService.unapplied_changes.filter((ch) => ch.field === "urls")[0]
+    ?.new_value;
+}
+
 const file = Bun.file("./service-url");
 const writer = file.writer();
-writer.write(docsService.urls[0].domain);
+writer.write(url.domain);
 writer.flush();
 writer.end();
-console.log(`Service deployed to ${colors.green(domain)} !`);
+console.log(`Service deployed to ${colors.green(url.domain)} !`);

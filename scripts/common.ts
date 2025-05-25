@@ -17,6 +17,11 @@ export type EnvResponse = {
   services: Array<{
     slug: string;
     urls: Array<{ domain: string }>;
+    unapplied_changes: Array<{
+      id: string;
+      field: string;
+      new_value: { domain: string };
+    }>;
   }>;
 };
 
