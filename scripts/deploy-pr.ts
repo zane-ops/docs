@@ -165,7 +165,7 @@ if (deploymentResponse.status >= 200 && deploymentResponse.status <= 299) {
   console.log(`Deployment queued succesfully ✅`);
   console.log(
     `inspect here ➡️ ${colors.blue(
-      `${DASHBOARD_URL}/project/${PROJECT_SLUG}/${ENV_NAME}/services/${SERVICE_SLUG}/deployments/${deployment.hash}`
+      `${DASHBOARD_URL}/project/${PROJECT_SLUG}/${ENV_NAME}/services/${SERVICE_SLUG}/deployments/${deployment.hash}/build-logs`
     )}`
   );
 } else {

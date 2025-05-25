@@ -18,8 +18,9 @@ jobs:
           - name: Install packages and Deploy to zaneops
             shell: bash
             run: |
-              bun add cookie-es zod@3
-              bun run scripts/deploy-pr.ts
+              cd scripts
+              bun install
+              bun run deploy-pr.ts
             env:
               CF_CLIENT_ID: ${{ secrets.CF_CLIENT_ID }}
               CF_CLIENT_SECRET: ${{ secrets.CF_CLIENT_SECRET }}
