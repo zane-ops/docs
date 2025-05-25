@@ -22,7 +22,7 @@ jobs:
               bun run scripts/deploy-pr.ts
             env:
               CF_CLIENT_ID: ${{ secrets.CF_CLIENT_ID }}
-              CF_CLIENT_SECRET: ${{ secrets.CF_API_TOKEN }}
+              CF_CLIENT_SECRET: ${{ secrets.CF_CLIENT_SECRET }}
               PR_NUMBER: ${{ github.event.pull_request.number }}
               PR_BRANCH_NAME: ${{ github.head_ref }}
               ZANE_USERNAME: ${{ secrets.ZANE_USERNAME }}
