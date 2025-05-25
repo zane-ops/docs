@@ -38,7 +38,7 @@ jobs:
           - name: Comment on PR
             uses: unsplash/comment-on-pr@v1.3.0
             env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              GITHUB_TOKEN: ${{ secrets.COMMENT_PAT }}
             with:
               msg: 🚀 **PR Preview URL:** ${{ steps.read_url.outputs.url }}
               check_for_duplicate_msg: true
