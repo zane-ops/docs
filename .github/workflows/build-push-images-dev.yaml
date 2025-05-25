@@ -29,3 +29,16 @@ jobs:
               ZANE_USERNAME: ${{ secrets.ZANE_USERNAME }}
               ZANE_PASSWORD: ${{ secrets.ZANE_PASSWORD }}
 
+          - name: Read service URL
+            id: read_url
+            run: |
+              url=$(cat ./scripts/service-url)
+              echo "url=$url" >> $GITHUB_OUTPUT
+          
+          - name: Comment on PR
+            uses: unsplash/comment-on-pr@v1.3.0
+            env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            with:
+              msg: 🚀 **PR Preview URL:** ${{ steps.read_url.outputs.url }}
+              check_for_duplicate_msg: true
