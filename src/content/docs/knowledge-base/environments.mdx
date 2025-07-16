@@ -17,13 +17,13 @@ When you create a project, by default it comes with a **production** environment
 <Steps>
 
 1. In the project environments page `+ New Environment` 
-    <img className="block dark:hidden" src="/images/project-environments-light.png" alt="project environments page" />
-    <img className="!hidden dark:!block" src="/images/project-environments-dark.png" alt="project environments page" />
+    <img className="block dark:hidden" src="https://assets.zaneops.dev/images/project-environments-light.png" alt="project environments page" />
+    <img className="!hidden dark:!block" src="https://assets.zaneops.dev/images/project-environments-dark.png" alt="project environments page" />
 
 
 2. Choose which type of environment to create :
-    <img className="block dark:hidden" src="/images/project-clone-environment-light.png" alt="clone environment modal" />
-    <img className="!hidden dark:!block" src="/images/project-clone-environment-dark.png" alt="clone environment modal" />
+    <img className="block dark:hidden" src="https://assets.zaneops.dev/images/project-clone-environment-light.png" alt="clone environment modal" />
+    <img className="!hidden dark:!block" src="https://assets.zaneops.dev/images/project-clone-environment-dark.png" alt="clone environment modal" />
 
     1. If you select one environment in the `Clone Environment` dropdown, it will creates a copy of the selected environment, including services, variables, and configurations.
         - If you check  `deploy services ?` all the services will be deployed upon cloning
@@ -45,8 +45,8 @@ Shared variables are inherited by all the services in this environment.
 If a service has the same variable, that will take precedence over the variable defined in this environment.
 You can reference these variables in services with `{{env.VARIABLE_NAME}}`.
 
-![Shared environment variables](/images/env-shared-variables.png)
+![Shared environment variables](https://assets.zaneops.dev/images/env-shared-variables.png)
 
 ZaneOps will automatically replace the variable in the service :
 
-![Shared environment variables referenced in a service](/images/env-shared-variables-referenced.png)
+![Shared environment variables referenced in a service](https://assets.zaneops.dev/images/env-shared-variables-referenced.png)

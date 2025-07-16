@@ -10,20 +10,20 @@ import {Steps, Aside} from '@astrojs/starlight/components';
 To access your server through the ZaneOps web UI, you will need to use SSH keys.
 Each key is associated with a user on your server.
 
-![server shell screenshot](/images/server-shell.png)
+![server shell screenshot](https://assets.zaneops.dev/images/server-shell.png)
 
 ### How to use SSH Keys
 
 <Steps>
 1. You can access the SSH keys in the settings.
-    ![settings dropdown](/images/settings-dropdown.png)
+    ![settings dropdown](https://assets.zaneops.dev/images/settings-dropdown.png)
 
 2. Once there, you can create a new key with a **valid user on your server** and a name for the key.
-    ![Create new SSH key](/images/create-ssh-key.png)
+    ![Create new SSH key](https://assets.zaneops.dev/images/create-ssh-key.png)
 
 3. After clicking _"Add new Key"_, ZaneOps will generate a public/private key pair.
     You can then use the public key on your server.
-    ![SSH key list](/images/ssh-key-list.png)
+    ![SSH key list](https://assets.zaneops.dev/images/ssh-key-list.png)
 
 4. Next, you will need to add the key to your server in your user directory: 
     ```shell
@@ -37,14 +37,14 @@ Each key is associated with a user on your server.
 
 5. Copy the public SSH key and add it at the end of the file on a new line in `$HOME/.ssh/authorized_keys` 
 
-    ![Copy public SSH key](/images/copy-public-ssh-key.png)
+    ![Copy public SSH key](https://assets.zaneops.dev/images/copy-public-ssh-key.png)
 
     <Aside type='caution' title='Warning'>
         You need to add the public SSH key in the folder of the user that you specified when creating the key. 
     </Aside>
 
 6. You can now use the key to SSH to your server from ZaneOps:
-    ![Login using SSH key](/images/login-via-ssh-key.png)
+    ![Login using SSH key](https://assets.zaneops.dev/images/login-via-ssh-key.png)
   
 </Steps>
 
