@@ -5,6 +5,47 @@ description: 'Private repos, auto-deploy on Git push'
 
 import {Aside} from '@astrojs/starlight/components';
 
-<span className='text-gray-600 dark:text-gray-400'>17 July 2025</span> by [**Fred KISSIE**](https://github.com/Fredkiss3)
+<span className='text-gray-600 dark:text-gray-400'>18 July 2025</span> by [**Fred KISSIE**](https://github.com/Fredkiss3)
 
-> TODO
+
+Today we release zaneOps v1.11 introducing support for private GitHub and Gitlab repositories as well as auto-deploy on git push
+all via [Git apps](/knowledge-base/git-apps).
+
+**To install :**
+
+
+1. via the UI:
+    <img className="block dark:hidden" src="https://assets.zaneops.dev/images/new-version-toast-light.png" alt="clone environment modal" />
+    <img className="!hidden dark:!block" src="https://assets.zaneops.dev/images/new-version-toast-dark.png" alt="clone environment modal" />
+    <img className="block dark:hidden" src="https://assets.zaneops.dev/images/new-version-modal-light.png" alt="project environments page" />
+    <img className="!hidden dark:!block" src="https://assets.zaneops.dev/images/new-version-modal-dark.png" alt="project environments page" />
+
+2. via the shell:
+    ```shell
+    # assuming you are at /var/www/zaneops
+    curl https://cdn.zaneops.dev/makefile > Makefile
+    make setup
+    make deploy
+    ```
+
+
+<Aside type="note" title='Important'>
+This version includes changes to the `Makefile`, please re-download the up-to-date `Makefile`:
+```shell
+# assuming you are at `/var/www/zaneops`
+curl https://cdn.zaneops.dev/makefile > Makefile
+```
+</Aside>
+
+### Private git repositories
+
+> TODO 
+
+### Auto-deploy on git push
+
+> TODO 
+
+### Thank you 💖
+
+We just reached **900 stars** on GitHub, it's thanks to supporters like you that this project is getting traction. 
+Slowly but surely we are getting progress.
