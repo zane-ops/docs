@@ -1,12 +1,17 @@
 import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
 import tailwind from "@astrojs/tailwind";
-import { defineConfig } from "astro/config";
+import { defineConfig, envField } from "astro/config";
 
 // https://astro.build/config
 const defaultDomain = process.env.ZANE_DOMAINS?.split(",")[0] ?? "zaneops.dev";
 export default defineConfig({
   site: `https://${defaultDomain}`,
+  env: {
+    schema: {
+        ASSETS_SERVER_DOMAIN: envField.string({ context: "client", access: "public", url: true }),
+    }
+  },
   devToolbar: {
     enabled: false
   },
