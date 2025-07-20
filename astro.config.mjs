@@ -13,7 +13,8 @@ export default defineConfig({
       ASSETS_SERVER_DOMAIN: envField.string({
         context: "client",
         access: "public",
-        url: true
+        url: true,
+        default: "https://assets.zaneops.dev"
       })
     }
   },

@@ -4,6 +4,7 @@ description: 'Private repos, auto-deploy on Git push'
 ---
 
 import {Aside} from '@astrojs/starlight/components';
+import { ASSETS_SERVER_DOMAIN } from "astro:env/client"
 
 <span className='text-gray-600 dark:text-gray-400'>18 July 2025</span> by [**Fred KISSIE**](https://github.com/Fredkiss3)
 
@@ -15,10 +16,10 @@ all via [Git apps](/knowledge-base/git-apps).
 
 
 1. via the UI:
-    <img className="block dark:hidden" src="https://assets.zaneops.dev/images/new-version-toast-light.png" alt="clone environment modal" />
-    <img className="!hidden dark:!block" src="https://assets.zaneops.dev/images/new-version-toast-dark.png" alt="clone environment modal" />
-    <img className="block dark:hidden" src="https://assets.zaneops.dev/images/new-version-modal-light.png" alt="project environments page" />
-    <img className="!hidden dark:!block" src="https://assets.zaneops.dev/images/new-version-modal-dark.png" alt="project environments page" />
+    <img className="block dark:hidden" src={`${ASSETS_SERVER_DOMAIN}/images/new-version-toast-light.png`} alt="clone environment modal" />
+    <img className="!hidden dark:!block" src={`${ASSETS_SERVER_DOMAIN}/images/new-version-toast-dark.png`} alt="clone environment modal" />
+    <img className="block dark:hidden" src={`${ASSETS_SERVER_DOMAIN}/images/new-version-modal-light.png`} alt="project environments page" />
+    <img className="!hidden dark:!block" src={`${ASSETS_SERVER_DOMAIN}/images/new-version-modal-dark.png`} alt="project environments page" />
 
 2. via the shell:
     ```shell
@@ -37,16 +38,31 @@ curl https://cdn.zaneops.dev/makefile > Makefile
 ```
 </Aside>
 
-### Support for private git repositories
+### Git apps
 
-In this version we added support for private GitHub and GitLab repositories. This 
-is done via [Git apps](/knowledge-base/git-apps). You can create and install a git app either on your GitHub or GitLab profile.
+[Git apps](/knowledge-base/git-apps) are integrations with providers like GitHub and GitLab that allows you to 
+listen to git events to your repositories as well as perform actions on your behalf.
+They are installed either on your profile or in an organization you are a member of.
 
+Using Git apps on ZaneOps, you get:
 
+- Support for private GitHub and GitLab repositories. 
+    <video src={`${ASSETS_SERVER_DOMAIN}/videos/private-github-repos.mp4`} controls muted></video>
+- Auto-deploy on git push:
+    <video src={`${ASSETS_SERVER_DOMAIN}/videos/auto-deploy-github-gitlab.mp4`} controls muted></video>
 
-### Auto-deploy on git
+### Cleanup deploy queue
 
-> TODO 
+You can now cleanup the queue when making a new deployment, this way if there are multiple deployments queued, only the latest is considered, the other ones are cancelled
+
+- You can choose to cleanup the deploy queue when triggering a new deployment:
+    <video src={`${ASSETS_SERVER_DOMAIN}/videos/cleanup-queue-preserve-latest.mp4`} controls muted></video>
+- Or simply cleanup all the deployments in the queue:
+    <video src={`${ASSETS_SERVER_DOMAIN}/videos/cleanup-deploy-queue.mp4`} controls muted></video>
+
+### Your PaaS is ready for AI ✨
+
+We added both [llms.txt](/llms.txt) and [llms-full.txt](/llms-full.txt) endpoints to the documentation for easier digest from chatGPT, Claude and Cursor.
 
 ### Thank you 💖
 
