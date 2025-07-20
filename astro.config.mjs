@@ -1,20 +1,27 @@
 import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
-import tailwind from "@astrojs/tailwind";
+import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, envField } from "astro/config";
 
 // https://astro.build/config
 const defaultDomain = process.env.ZANE_DOMAINS?.split(",")[0] ?? "zaneops.dev";
 export default defineConfig({
   site: `https://${defaultDomain}`,
+
   env: {
     schema: {
-        ASSETS_SERVER_DOMAIN: envField.string({ context: "client", access: "public", url: true }),
+      ASSETS_SERVER_DOMAIN: envField.string({
+        context: "client",
+        access: "public",
+        url: true
+      })
     }
   },
+
   devToolbar: {
     enabled: false
   },
+
   integrations: [
     starlight({
       title: "ZaneOps documentation",
@@ -31,10 +38,18 @@ export default defineConfig({
         "./src/assets/theme.css",
         "./src/assets/fonts/font-face.css"
       ],
-      social: {
-        github: "https://github.com/zane-ops/zane-ops",
-        discord: "https://discord.gg/DUdz2vrh9y"
-      },
+      social: [
+        {
+          label: "Github",
+          icon: "github",
+          href: "https://github.com/zane-ops/zane-ops"
+        },
+        {
+          label: "Discord",
+          icon: "discord",
+          href: "https://zaneops.dev/discord"
+        }
+      ],
       components: {
         Footer: "./src/components/Footer.astro",
         Head: "./src/components/Head.astro"
@@ -109,9 +124,11 @@ export default defineConfig({
         }
       ]
     }),
-    tailwind({
-      applyBaseStyles: false
-    }),
+
     react()
-  ]
+  ],
+
+  vite: {
+    plugins: [tailwindcss()]
+  }
 });

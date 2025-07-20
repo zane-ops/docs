@@ -7,8 +7,7 @@
     "formatWithErrors": true,
     "indentStyle": "tab",
     "indentWidth": 2,
-    "lineWidth": 80,
-    "ignore": ["./src/api/v1.ts"]
+    "lineWidth": 80
   },
   "javascript": {
     "formatter": {
@@ -24,13 +23,5 @@
       "indentStyle": "space"
     }
   },
-  "files": {
-    "ignore": [
-      "./frontend/src/api/v1.ts",
-      "./frontend/src/routeTree.gen.ts",
-      "./frontend/dist/**",
-      "./docs/dist/**",
-      "node_modules/**"
-    ]
-  }
+  "files": {}
 }
