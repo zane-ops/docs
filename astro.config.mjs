@@ -34,8 +34,7 @@ export default defineConfig({
         baseUrl: "https://github.com/zane-ops/docs/edit/main/"
       },
       customCss: [
-        "./src/tailwind.css",
-        "./src/assets/theme.css",
+        "./src/assets/global.css",
         "./src/assets/fonts/font-face.css"
       ],
       social: [
