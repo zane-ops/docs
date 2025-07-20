@@ -9,8 +9,8 @@ import { ASSETS_SERVER_DOMAIN } from "astro:env/client"
 <span className='text-gray-600 dark:text-gray-400'>18 July 2025</span> by [**Fred KISSIE**](https://github.com/Fredkiss3)
 
 
-Today we release zaneOps v1.11 introducing support for private GitHub and Gitlab repositories as well as auto-deploy on git push
-all via [Git apps](/knowledge-base/git-apps).
+Today we release zaneOps v1.11 introducing support for private **GitHub** and **Gitlab** repositories as well as auto-deploy on git push
+all via [Git apps](/knowledge-base/git).
 
 **To install :**
 
@@ -40,25 +40,33 @@ curl https://cdn.zaneops.dev/makefile > Makefile
 
 ### Git apps
 
-[Git apps](/knowledge-base/git-apps) are integrations with providers like GitHub and GitLab that allows you to 
-listen to git events to your repositories as well as perform actions on your behalf.
-They are installed either on your profile or in an organization you are a member of.
 
-Using Git apps on ZaneOps, you get:
+[Git apps](/knowledge-base/git) are integrations with **GitHub** and **GitLab** that allow you to
+listen to Git events from your repositories and perform actions on your behalf.
+They can be installed either on your personal profile or within an organization you’re a member of.
 
-- Support for private GitHub and GitLab repositories. 
+With Git apps on ZaneOps, you get:
+
+- Support for private GitHub and GitLab repositories.
     <video src={`${ASSETS_SERVER_DOMAIN}/videos/private-github-repos.mp4`} controls muted></video>
-- Auto-deploy on git push:
+- Auto-deploy on Git push:
     <video src={`${ASSETS_SERVER_DOMAIN}/videos/auto-deploy-github-gitlab.mp4`} controls muted></video>
+
+
+<Aside type="note" title='supported providers'>
+Currently, only **GitHub** and **GitLab** apps are supported.
+</Aside>
 
 ### Cleanup deploy queue
 
-You can now cleanup the queue when making a new deployment, this way if there are multiple deployments queued, only the latest is considered, the other ones are cancelled
+You can now clean up the deployment queue when triggering a new deployment.
+For example, if multiple deployments are queued, only the latest one will be kept, the others will be canceled.
 
-- You can choose to cleanup the deploy queue when triggering a new deployment:
+- Choose to clean up the queue while preserving the latest deployment:
     <video src={`${ASSETS_SERVER_DOMAIN}/videos/cleanup-queue-preserve-latest.mp4`} controls muted></video>
-- Or simply cleanup all the deployments in the queue:
+- Or clean up all deployments in the queue:
     <video src={`${ASSETS_SERVER_DOMAIN}/videos/cleanup-deploy-queue.mp4`} controls muted></video>
+
 
 ### Your PaaS is ready for AI ✨
 
