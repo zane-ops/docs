@@ -1,0 +1,31 @@
+---
+title: Overview
+description: Builders overview
+---
+
+import {Aside} from '@astrojs/starlight/components';
+
+> Introduced in [**v1.8.0**](/changelog/v18)
+
+Builders are tools used to package [Git services](/knowledge-base/git) into deployable containers.
+They either detect or generate a **Dockerfile**, then build your application using `docker build`.
+
+Supported builders include:
+- [Nixpacks](./nixpacks-builder)
+- [Railpack](./railpack-builder)
+- [Dockerfile](./dockerfile-builder)
+- [Static directory](./static-dir-builder)
+
+<Aside type="caution" title='Docker build resource usage'>
+The Docker build process can consume up to 100% of your server's resources, potentially slowing it to a crawl.
+Make sure your server is powerful enough to handle it.
+
+ZaneOps will try to limit the resource usage of the build process to **~33%** to avoid that, but 
+it is not guaranteed to work for every builder.
+</Aside>
+
+
+#### Accessing other services
+
+When building your application, all the services from the same project are available, you can reference them using their network alias.
+

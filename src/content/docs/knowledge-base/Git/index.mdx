@@ -1,17 +1,29 @@
 ---
-title: Git apps
-description: Learn how to connect git providers to ZaneOps
+title: Overview
+description: Learn how to deploy git services on ZaneOps
 ---
 import { ASSETS_SERVER_DOMAIN } from "astro:env/client"
+import {Aside} from '@astrojs/starlight/components';
 
-Git apps are integrations with providers like **GitHub** and **GitLab** that allow you to
-listen to Git events from your repositories and perform actions on your behalf.
+ZaneOps supports creating and deploying applications from Git repositories.  
+These applications are **built directly on the server** using [builders](/knowledge-base/builders) that detect or define how your code should be packaged and built.
 
-They can be installed either on your personal profile or within an organization you’re a member of.
+Learn more about the available options in the [builders documentation](/knowledge-base/builders).
 
-With Git apps on ZaneOps, you get:
+### From GitHub and GitLab
 
-- Support for private GitHub and GitLab repositories.
-    <video src={`${ASSETS_SERVER_DOMAIN}/videos/private-github-repos.mp4`} controls muted></video>
-- Auto-deploy on Git push:
-    <video src={`${ASSETS_SERVER_DOMAIN}/videos/auto-deploy-github-gitlab.mp4`} controls muted></video>
+You can connect your account on ZaneOps using [Git applications](./git-apps). 
+Using Git apps, you can deploy private repositories with automatic deploys on Git push.
+
+
+### From any provider
+
+As well as GitHub and GitLab, you can deploy any repository as long as it is a public repository. 
+You do so by specifying its repository URL. 
+
+Keep in mind that using the repository URL, auto-deploy on Git push are not available.
+
+<img className="block dark:hidden" src="https://assets.zaneops.dev/images/create-git-service-light.png" alt="create git service page" />
+<img className="!hidden dark:!block" src="https://assets.zaneops.dev/images/create-git-service-dark.png" alt="create git service page" />
+
+
