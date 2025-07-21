@@ -2,3 +2,71 @@
 title: GitHub apps
 description: Learn how to connect your GitHub account to ZaneOps
 ---
+
+import { ASSETS_SERVER_DOMAIN } from "astro:env/client"
+import {Steps, Aside} from '@astrojs/starlight/components';
+
+> Introduced in [**v1.11.0**](/changelog/v11)
+
+To connect your GitHub account to ZaneOps, you use GitHub apps. 
+
+
+### How to create a GitHub app
+
+<Steps>
+1. Go to **Settings > Git**: 
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/settings-git.png`} alt="Git settings" />
+2. Choose Create GitHub app: 
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/create-github-app.png`} alt="Create GitHub app" />
+
+   If you want to deploy repos from your organization, you can check **Install into organization ?** and fill 
+   in the organization name:
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/create-github-app-org.png`} alt="Create GitHub app with Org" />
+
+   <Aside type="caution" title="webhook URL">
+    The webhook URL should be on a publicly accessible domain on https.
+    
+    If testing ZaneOps locally, you can use a service like https://webhook.site/ for forwarding webhooks 
+    to your local instance.
+   </Aside>
+
+3. Once you submit the form, you will be redirected to GitHub where you will need to give the app a name: 
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/create-github-app-github.com.png`} alt="Create GitHub app on Github.com" />
+
+4. After submitting, you will be redirected back to ZaneOps where you will see the newly created app.
+   You will need to install the application on GitHub to get access to the repositories you want to deploy on ZaneOps:
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/install-git-app.png`} alt="Install github app" />
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/install-git-app-github.com.png`} alt="Install github app on GitHub" />
+
+5. Once the application is installed, you can test the application installation to make sure it has access to your repositories: 
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/test-github-app.png`} alt="Test github app" />
+</Steps>
+
+### How to deploy a service from a GitHub app
+
+<Steps>
+1. Go to your **project > new service** and choose **Create from Git Provider**:
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/create-from-git-provider.png`} alt="New service page" />
+2. Choose the newly created Github app in the list of available apps:
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/choose-github-app.png`} alt="Select Git app" />
+3. There you can select the repository you want to deploy:
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/create-github-service.png`} alt="Create new github service" />
+4. Once deployed, you will notice in the logs, that your app is cloned using github access token, meaning that it worked !
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/git-clone-access-token.png`} alt="Git clone with access token" />
+</Steps>
+
+### Auto-deploy on Git push
+
+By default when creating a service from a GitHub app, auto-deploy on Git push is enabled. 
+
+- You can choose to disable it if you don't want it
+- You can choose to automatically cleanup the deploy queue (enabled by default), this way when multiple git pushes are made in quick succession, only the 
+  latest one is considered
+- You can also add **watch paths**, if you want to only trigger new deployments if certains folders or files have been changed. 
+   They are specified as a [Glob pattern](https://en.wikipedia.org/wiki/Glob_(programming)) (Ex: `frontend/**`, `{packages/trpc,packages/db,apps/web}/**`)
+
+<img src={`${ASSETS_SERVER_DOMAIN}/images/auto-deploy-options.png`} alt="Service Auto-deploy options" />
+
+New deployments made by git push will show in the app with the label `git push`:
+<img src={`${ASSETS_SERVER_DOMAIN}/images/git-push-deployment.png`} alt="Git push deployment" />
+
