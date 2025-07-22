@@ -6,6 +6,8 @@ description: Learn how to deploy on git push
 import { ASSETS_SERVER_DOMAIN } from "astro:env/client"
 import {Aside, Steps} from '@astrojs/starlight/components';
 
+### Auto-deploy with Git apps
+
 
 When creating a service from a [Git app](../git-apps), **auto-deploy on Git push is enabled by default**.
 
@@ -26,7 +28,7 @@ Deployments triggered by a Git push will appear with the label `git push`:
 <img src={`${ASSETS_SERVER_DOMAIN}/images/git-push-deployment.png`} alt="Git push deployment" />
 
 
-### Auto-deploy Via API
+### Auto-deploy via API
 
 Using the API, you can trigger a new deployment for a service without needing to create a git apps. 
 This can be used to trigger a deployment in a Continuous Integration script after a git push.
