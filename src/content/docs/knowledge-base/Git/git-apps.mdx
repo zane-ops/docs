@@ -1,0 +1,30 @@
+---
+title: Git apps
+description: Learn how to connect git providers to ZaneOps
+---
+import { ASSETS_SERVER_DOMAIN } from "astro:env/client"
+import {Aside} from '@astrojs/starlight/components';
+
+> Introduced in [**v1.11.0**](/changelog/v11)
+
+Git apps are integrations with Git providers that allow you to listen to Git events from your repositories and perform actions on your behalf.
+
+They can be installed either on your personal profile or within an organization you’re a member of.
+
+<Aside type="note" title="Public repositories">
+ZaneOps supports both **public and private repositories**. 
+However, only repositories where you are an **owner or maintainer** will appear in the list when creating a service.
+</Aside>
+
+### Supported providers
+
+- [GitHub](../github)
+- [GitLab](../gitlab)
+
+
+### What you get with Git apps
+
+- **Support for private repositories**  
+    <video src={`${ASSETS_SERVER_DOMAIN}/videos/private-github-repos.mp4`} controls muted></video>
+- **Automatic deployment on Git push**  
+    <video src={`${ASSETS_SERVER_DOMAIN}/videos/auto-deploy-github-gitlab.mp4`} controls muted></video>

@@ -28,5 +28,6 @@ You can deploy services from a git repository if you have a `Dockerfile` inside 
 ### Environment variables
 
 When building your application, ZaneOps will put all the environment variables 
-that need to be passed to the build process into an `.env` file at the root of the **build context directory**.
+that need to be passed to the build process into an `.env` file at the root of the **build context directory** as well as 
+pass them as [build-args](https://docs.docker.com/build/building/variables/#arg-usage-example) to the build process.
 

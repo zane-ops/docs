@@ -57,25 +57,25 @@ export async function getStaticPaths() {
   return [
     ...docs,
     {
-      slug: "api-reference/openapi",
+      id: "api-reference/openapi",
       data: {
         title: "API Reference",
         description: "full open api reference for zaneops."
       }
     }
   ].map((doc) => {
-    if (doc.slug === "index") {
+    if (doc.id === "index") {
       return {
         params: { route: undefined },
         props: {
           title: "Zaneops",
           description:
-            "A self-hosted platform for deploying web apps, databases, workers, CRONS, and more..."
+            "A self-hosted platform for managing and deploying web apps, static sites, databases, workers, and more..."
         }
       };
     }
     return {
-      params: { route: doc.slug },
+      params: { route: doc.id },
       props: { title: doc.data.title, description: doc.data.description }
     };
   });
