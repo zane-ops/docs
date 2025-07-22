@@ -1,0 +1,141 @@
+---
+title: Troubleshooting
+description: Learn how to fix different errors when installing and running ZaneOps
+---
+import { ASSETS_SERVER_DOMAIN } from "astro:env/client"
+import {Steps, Aside} from '@astrojs/starlight/components';
+
+In this section, we provides solutions for resolving issues you might encounter with ZaneOps.
+
+## ZaneOps installation is stuck
+
+Usually ZaneOps will take less than 5 minutes to start, but if you encounter a case where ZaneOps is stuck and takes more than that. It may be because of multiple reasons.
+
+```shell
+# make deploy
+====== Deploying ZaneOps with HTTPS 🔒 ======
+# other logs...
+🏁 Deploy initiated
+Waiting for all services to reach desired state, this should take less than 5 minutes... ◐
+```
+
+### General debugging steps
+
+To check that ZaneOps started correctly: 
+
+<Steps>
+1. You need to verify that all ZaneOps docker services started correctly:
+   ```shell
+   docker service ls --filter label="zane.stack=true"
+   ```
+
+   You should have an output like this in the terminal where `1/1` means **OK** except for `zane_temporal-admin-tools` which should be `0/1 (1/1 completed)` :
+   ```shell
+    ID             NAME                            MODE             REPLICAS              IMAGE                                                 PORTS
+    inpyph774s3l   zane_app                        replicated       1/1                   ghcr.io/zane-ops/app:canary                           
+    otewzijsmzaj   zane_db                         replicated       1/1                   postgres:16-alpine                                    
+    adv0qcj7fqga   zane_fluentd                    replicated       1/1                   fluentd:v1.16.2-1.1                                   
+    fa7t7r508bd9   zane_loki                       replicated       1/1                   grafana/loki:3.4                                      
+    kisb92em589i   zane_pgbouncer                  replicated       1/1                   edoburu/pgbouncer:v1.23.1-p3                          
+    t432gf67whmx   zane_proxy                      replicated       1/1                   ghcr.io/zane-ops/proxy:canary                         
+    ux5vuucsm9cv   zane_temporal-admin-tools       replicated job   0/1 (1/1 completed)   temporalio/admin-tools:1.24.2-tctl-1.18.1-cli-1.0.0   
+    flwwyuihygay   zane_temporal-main-worker       replicated       1/1                   ghcr.io/zane-ops/app:canary                           
+    wldqkpahhuyr   zane_temporal-schedule-worker   replicated       1/1                   ghcr.io/zane-ops/app:canary                           
+    m8wk18qer4ys   zane_temporal-server            replicated       1/1                   temporalio/auto-setup:1.24.2                          
+    limmbrl9o0ub   zane_valkey                     replicated       1/1                   valkey/valkey:7.2.5-alpine                            
+   ```
+2. If one of the services is not starting correctly, you can check the tasks for the service with:
+
+   ```shell
+   docker service ps zane_{service} # ex: `zane_app` 
+   ```
+
+   You should get an output similar to this where the latest task (the first task from the top) state is `Running`:
+   ```shell
+    ID             NAME             IMAGE                         NODE      DESIRED STATE   CURRENT STATE          ERROR                              PORTS
+    7b21smevkj6l   zane_app.1       ghcr.io/zane-ops/app:canary   ubs01     Running         Running 2 hours ago                                       
+    ppfheeofce3t    \_ zane_app.1   ghcr.io/zane-ops/app:canary   ubs01     Shutdown        Shutdown 2 hours ago                                      
+    1e9geumyvs0g    \_ zane_app.1   ghcr.io/zane-ops/app:canary   ubs01     Shutdown        Failed 2 hours ago     "task: non-zero exit (255)"        
+    ypqk8horkrof    \_ zane_app.1   ghcr.io/zane-ops/app:canary   ubs01     Shutdown        Failed 6 days ago      "No such container: zane_app.1…"   
+    d9p4bntkzjjq    \_ zane_app.1   ghcr.io/zane-ops/app:pr-466   ubs01     Shutdown        Shutdown 6 days ago 
+   ```
+
+</Steps>
+
+
+### Something is running on either port `80` or `443`
+
+Zaneops proxy (which is caddy) uses ports 80 & 443 to expose your deployed applications in the public. 
+If another application is running on these ports, it will conflict with ZaneOps, preventing it from starting.
+
+<Aside type="note" title="Solution">
+Stop the applications running in those ports.
+</Aside>
+
+If you absolutely want to use another proxy alongside ZaneOps, you can create it as a service inside ZaneOps,
+and do all your reverse-proxying from there using the network alias of your service to reference it from 
+inside your proxy: 
+
+<img src={`${ASSETS_SERVER_DOMAIN}/images/proxy-inception.png`} alt="running a proxy inside Zaneops" />
+
+```nginx
+#/etc/nginx/nginx.conf
+server {
+    listen 80;
+    server_name xyz.com;
+
+    location / {
+        proxy_pass http://{your_service_network_alias}:80;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+### You are connected to GitHub Container Registry (`ghcr.io`)
+
+ZaneOps docker images are hosted on GitHub Container Registry as public images. 
+It is known to cause conflicts if you are already connected to github container registry with 
+an **access token that is no longer valid**. 
+
+To check if you are connected:
+
+```shell
+cat ~/.docker/config.json
+```
+
+If `ghcr.io` appear in the `auths` key, you are authenticated to GitHub container:
+
+```jsonc
+{
+    "auths": {
+         "https://ghcr.io": {}
+    },
+    // other keys ...
+}
+```
+
+<Aside type="note" title="Solution">
+Logout from the container registry
+```shell
+docker logout ghcr.io
+```
+You may need to login again to the container registry with a new valid access token
+</Aside>
+
+
+Note that you can also deploy any application hosted on a private container registry by specifying 
+the credentials in the **source** in the service settings page:
+
+<img src={`${ASSETS_SERVER_DOMAIN}/images/docker-credentials.png`} alt="Docker credentials" />
+
+
+### Issues with a VPN
+
+You might get this error if you have a VPN
+```shell
+network sandbox join failed: subnet sandbox join failed for "10.0.1.0/24": error creating vxlan interface: operation not supported
+```
+

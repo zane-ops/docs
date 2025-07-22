@@ -66,6 +66,12 @@ export default defineConfig({
               label: "Installation and Setup",
               slug: "installation"
             },
+
+            {
+              label: "Troubleshooting",
+              slug: "troubleshooting"
+            },
+
             {
               label: "Upgrading ZaneOps",
               slug: "upgrading-zaneops"
