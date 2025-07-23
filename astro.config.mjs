@@ -77,6 +77,10 @@ export default defineConfig({
               slug: "upgrading-zaneops"
             },
             {
+              label: "Architecture",
+              slug: "architecture"
+            },
+            {
               label: "Domain configuration for ZaneOps",
               slug: "configuring-zaneops"
             },
