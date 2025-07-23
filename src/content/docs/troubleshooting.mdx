@@ -1,0 +1,207 @@
+---
+title: Troubleshooting
+description: Learn how to fix different errors when installing and running ZaneOps
+---
+import { ASSETS_SERVER_DOMAIN } from "astro:env/client"
+import {Steps, Aside} from '@astrojs/starlight/components';
+
+In this section, we provides solutions for resolving issues you might encounter with ZaneOps.
+
+## ZaneOps installation is stuck
+
+ZaneOps typically takes less than 5 minutes to start. If it's stuck longer than that, it may be due to several possible issues.
+```shell
+# make deploy
+====== Deploying ZaneOps with HTTPS 🔒 ======
+# other logs...
+🏁 Deploy initiated
+Waiting for all services to reach desired state, this should take less than 5 minutes... ◐
+```
+
+### General debugging steps
+
+To check that ZaneOps started correctly: 
+
+<Steps>
+1. You need to verify that all ZaneOps docker services started correctly:
+   ```shell
+   docker service ls --filter label="zane.stack=true"
+   ```
+
+   You should have an output like this in the terminal where `1/1` means **OK** except for `zane_temporal-admin-tools` which should be `0/1 (1/1 completed)` :
+   ```shell
+    ID             NAME                            MODE             REPLICAS              IMAGE                                                 PORTS
+    inpyph774s3l   zane_app                        replicated       1/1                   ghcr.io/zane-ops/app:canary                           
+    otewzijsmzaj   zane_db                         replicated       1/1                   postgres:16-alpine                                    
+    adv0qcj7fqga   zane_fluentd                    replicated       1/1                   fluentd:v1.16.2-1.1                                   
+    fa7t7r508bd9   zane_loki                       replicated       1/1                   grafana/loki:3.4                                      
+    kisb92em589i   zane_pgbouncer                  replicated       1/1                   edoburu/pgbouncer:v1.23.1-p3                          
+    t432gf67whmx   zane_proxy                      replicated       1/1                   ghcr.io/zane-ops/proxy:canary                         
+    ux5vuucsm9cv   zane_temporal-admin-tools       replicated job   0/1 (1/1 completed)   temporalio/admin-tools:1.24.2-tctl-1.18.1-cli-1.0.0   
+    flwwyuihygay   zane_temporal-main-worker       replicated       1/1                   ghcr.io/zane-ops/app:canary                           
+    wldqkpahhuyr   zane_temporal-schedule-worker   replicated       1/1                   ghcr.io/zane-ops/app:canary                           
+    m8wk18qer4ys   zane_temporal-server            replicated       1/1                   temporalio/auto-setup:1.24.2                          
+    limmbrl9o0ub   zane_valkey                     replicated       1/1                   valkey/valkey:7.2.5-alpine                            
+   ```
+2. If one of the services is not starting correctly, you can check the tasks for the service with:
+
+   ```shell
+   docker service ps zane_{service} # ex: `zane_app` 
+   ```
+
+   You should get an output similar to this where the latest task (the first task from the top) state is `Running`:
+   ```shell {2} 
+   ID             NAME             IMAGE                         NODE      DESIRED STATE   CURRENT STATE          ERROR                              PORTS
+   7b21smevkj6l   zane_app.1       ghcr.io/zane-ops/app:canary   ubs01     Running         Running 2 hours ago                                 
+   ppfheeofce3t    \_ zane_app.1   ghcr.io/zane-ops/app:canary   ubs01     Shutdown        Shutdown 2 hours ago                                      
+   ```
+
+3. If the latest task state show `Failed`, you can check the logs of the failed status: 
+    ```shell
+    docker inspect --format '{{ json .Status }}' <TASK-ID> | jq # ex: `7b21smevkj6l` the ID above
+    ```
+
+    You will get a JSON object like this:
+    ```json {5}
+    {
+        "Timestamp": "2025-07-16T19:31:21.277975012Z",
+        "State": "failed",
+        "Message": "started",
+        "Err": "No such container: zane_app.1.ypqk8horkrofmsij7r6xtn7kf",
+        // ... other fields
+    }
+    ```
+
+    The `Err` field might have a full explanation of the error. 
+    
+    Ex: **"no suitable node (host-mode port already in use on 1 node)"** meaning the port is already used by another service
+4. You can also see the application logs of the services using: 
+   ```shell
+   docker service logs zane_{service}
+   ``` 
+
+   <Aside type="caution" title="main app logs">
+    Running logs for `zane_app` might not show you any actionable logs. You can instead run: 
+
+    ```shell
+    # to see error logs
+    docker exec -it $(docker ps -qf "name=zane_app") /bin/bash -c "cat /app/logs/daphne/stderr"
+    # to see access logs
+    docker exec -it $(docker ps -qf "name=zane_app") /bin/bash -c "cat /app/logs/daphne/stdout"
+    ```
+   </Aside>
+
+5. Still stuck? [create an issue](https://github.com/zane-ops/zane-ops/issues/new?template=bug_report.md)
+</Steps>
+
+
+### Something is running on either port `80` or `443`
+
+ZaneOps’ proxy (Caddy) uses ports 80 & 443 to expose applications.
+If another app is using these ports, ZaneOps won’t start.
+
+<Aside type="note" title="Solution">
+Stop the applications running in those ports.
+</Aside>
+
+If you must use another proxy alongside ZaneOps, you can run it as a service inside ZaneOps and proxy requests internally using the service's network alias:
+<img src={`${ASSETS_SERVER_DOMAIN}/images/proxy-inception.png`} alt="running a proxy inside Zaneops" />
+
+```nginx "service-xyz.zaneops.internal" {"Your service network alias: ":7}
+#/etc/nginx/nginx.conf
+server {
+    listen 80;
+    server_name xyz.com;
+
+    location / {
+
+        proxy_pass http://service-xyz.zaneops.internal:80;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+### You are connected to GitHub Container Registry (`ghcr.io`)
+
+ZaneOps images are hosted on GitHub Container Registry (public). 
+Auth conflicts may happen if your token is not longer valid.
+
+To check if you are connected:
+
+```shell
+cat ~/.docker/config.json
+```
+
+If `ghcr.io` appear in the `auths` key, you are authenticated to GitHub container:
+
+```jsonc
+{
+    "auths": {
+         "https://ghcr.io": {}
+    },
+    // other keys ...
+}
+```
+
+<Aside type="note" title="Solution">
+Logout from the container registry
+```shell
+docker logout ghcr.io
+```
+You may need to login again to the container registry with a new valid access token
+</Aside>
+
+
+Note that you can also deploy any application hosted on a private container registry by specifying 
+the credentials in the **source** in the service settings page:
+
+<img src={`${ASSETS_SERVER_DOMAIN}/images/docker-credentials.png`} alt="Docker credentials" />
+
+
+### Issues with a VPN
+
+You might get this error if you have a VPN installed:
+```shell {7}
+$ docker inspect --format '{{ json .Status }}' <task-id> | jq 
+
+{
+        "Timestamp": "2025-07-16T19:31:21.277975012Z",
+        "State": "failed",
+        "Message": "started",
+        "Err": "network sandbox join failed: subnet sandbox join failed for \"10.0.1.0/24\": error creating vxlan interface: operation not supported",
+        # ... other fields
+}
+```
+
+This error means Docker couldn't create a VXLAN interface—usually due to missing kernel modules or VPN conflicts.
+
+<Aside type="note" title="Potential solution">
+The best solution is to disable the VPN and restart ZaneOps: 
+
+```shell
+# assuming you are in /var/www/zaneops
+make stop
+make deploy
+```
+
+In other cases, you can try solutions outlined here: 
+https://forums.docker.com/t/debian-9-error-creating-vxlan-interface-operation-not-supported-resolved/39995/8
+</Aside>
+
+## Service metrics aren't shown in the dashboard
+
+If your app deployed successfully but no metrics appear (usually after ~30s), 
+it may be because [cgroups](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v1/cgroups.html) are not enabled on your server.
+
+<img src={`${ASSETS_SERVER_DOMAIN}/images/empty-metrics.png`} alt="Empty metrics" />
+
+
+<Aside type="note" title="Solution">
+Enable cgroups. Here are some resources for how to do so in debian/ubuntu: 
+
+- [Enabling memory cgroup in Ubuntu 20.04](https://askubuntu.com/questions/1237813/enabling-memory-cgroup-in-ubuntu-20-04)
+- [What is required to activate cgroups in Linux](https://serverfault.com/questions/525162/what-is-required-to-activate-cgroups-in-linux)
+</Aside>

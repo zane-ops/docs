@@ -1,0 +1,167 @@
+---
+title: Architecture
+description: 'Learn the architecture of ZaneOps'
+---
+
+import { ASSETS_SERVER_DOMAIN } from "astro:env/client"
+import {Steps, Aside} from '@astrojs/starlight/components';
+
+ZaneOps is a self-hosted PaaS platform designed to manage, deploy, and monitor services with [docker swarm](https://docs.docker.com/engine/swarm/). 
+Each service and app deployed on ZaneOps correspond one-to-one to a [swarm service]((https://docs.docker.com/engine/swarm/how-swarm-mode-works/services/)).
+
+
+## Components
+
+<img src={`${ASSETS_SERVER_DOMAIN}/images/main-architecture.svg`} alt="Main architecture" />
+
+
+**🔌 Proxy (`caddy`)**
+Acts as the single entrypoint for all HTTP traffic. Routes API and service requests appropriately and serves static assets.
+
+**🧠 App (Backend + Frontend)**
+- **Backend**: Django + Django REST Framework
+- **Frontend**: Single Page App (SPA) made with React Router
+- Provides the user interface and the core API logic.
+
+**⚙️ Workers**
+- Run scheduled/background jobs.
+- Use the same Docker image as the main app.
+
+**🧾 Log Collector (`fluentd`)**
+- Aggregates all logs from running services.
+- Collects logs from proxy for [HTTP logs](/screenshots/#http-logs-page).
+
+**🔍 Log Searcher (`grafana/loki`)**
+- Stores and indexes logs for querying.
+
+**⚡️ Cache (`valkey`)**
+- Used for caching and session storage.
+
+**🗃️ Database (`PostgreSQL`)**
+- Stores all persistent application data.
+
+**📬 Task Queue (`temporal`)**
+- Orchestrates background tasks and worker coordination.
+
+## Core Scenarios
+
+### 1. Deploy a New Service
+
+<img src={`${ASSETS_SERVER_DOMAIN}/images/initial-deploy-scenario.svg`} alt="Initial service deploy scenario" />
+
+#### Step-by-Step
+
+<Steps>
+1. **User Action**:  
+   `PUT /deploys/XYZ` is sent to the proxy.
+
+2. **Routing**:  
+   The proxy forwards it to the app backend.
+
+3. **App Logic**:  
+   App creates a new deployment record in the database with status `PENDING`.
+
+4. **Task Queue**:  
+   App sends a `deploy_service(XYZ)` message to the task queue (Temporal).
+
+5. **Worker Execution**:  
+   A worker picks up the task and runs the deployment logic (Docker service creation).
+
+6. **Completion**:  
+   Worker notifies the task queue that the task is done.
+
+7. **State Update**:  
+   Worker updates the Deployment state in the DB  to `HEALTHY` or `FAILED`.
+
+8. **Proxy Mapping**:  
+   The proxy maps `xyz.com` to the new service, e.g., `service_XYZ:3000`.
+</Steps>
+
+### 2. Deploy the same service again
+
+<img src={`${ASSETS_SERVER_DOMAIN}/images/redeploy-service-scenario.svg`} alt="Redeploy service scenario" />
+
+#### Step-by-Step
+
+<Steps>
+1. **User Action**:  
+   `PUT /deploys/XYZ` sent again.
+
+2. **App Processing**:  
+   The app creates a new deployment version and sends a deploy task.
+
+3. **Worker Logic**:
+   * Stops (removes) the previous Docker service (v1).
+   * Starts a new one with the updated spec (v2).
+
+4. **State Update**:  
+   DB updated accordingly (`HEALTHY` or `FAILED`).
+
+5. **Proxy Keeps Same Mapping**:  
+   `xyz.com` still points to `service_XYZ`, which now resolves to the new container.
+
+</Steps>
+
+### 3. Access a Running Service
+
+<img src={`${ASSETS_SERVER_DOMAIN}/images/access-service-scenario.svg`} alt="Access service scenario" />
+
+#### Step-by-Step
+
+<Steps>
+1. **User Request**:  
+   Browser makes `GET xyz.com`.
+
+2. **Proxy Resolution**:  
+   Proxy resolves the domain to the correct internal service (Docker alias or internal hostname).
+
+3. **Routing**:  
+   The request is forwarded to the running container.
+
+4. **Response**:  
+   Container sends back the HTTP response via the proxy.
+</Steps>
+
+### 4. Logs Collection
+
+<img src={`${ASSETS_SERVER_DOMAIN}/images/logs-collection-scenario.svg`} alt="Log collection scenario" />
+
+#### Step-by-Step
+
+<Steps>
+1. **Logs Emitted**:  
+   Each service sends logs to Fluentd over `stdout`.
+
+2. **Collector Buffering**:  
+   Fluentd waits ~5 seconds and tags/filters logs.
+
+3. **Forward to App**:  
+   Logs are forwarded to the API `/logs/ingest`.
+
+4. **App Preprocessing**:  
+   Enriches logs (adds metadata like service/deployment IDs).
+
+5. **Send to Loki**:  
+   App sends structured logs to Loki.
+</Steps>
+
+
+### 5. Logs Search
+
+<img src={`${ASSETS_SERVER_DOMAIN}/images/logs-search-scenario.svg`} alt="Log search scenario" />
+
+#### Step-by-Step
+
+<Steps>
+1. **User Request**:  
+   `GET /search/logs` hits the proxy.
+
+2. **Routing**:  
+   Proxy forwards to the app backend.
+
+3. **Query Execution**:  
+   App translates filters and queries Loki.
+
+4. **Return**:  
+   Logs are returned to the frontend (paginated, filtered, etc.).
+</Steps>
