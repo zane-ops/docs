@@ -51,15 +51,48 @@ To check that ZaneOps started correctly:
    ```
 
    You should get an output similar to this where the latest task (the first task from the top) state is `Running`:
-   ```shell
-    ID             NAME             IMAGE                         NODE      DESIRED STATE   CURRENT STATE          ERROR                              PORTS
-    7b21smevkj6l   zane_app.1       ghcr.io/zane-ops/app:canary   ubs01     Running         Running 2 hours ago                                       
-    ppfheeofce3t    \_ zane_app.1   ghcr.io/zane-ops/app:canary   ubs01     Shutdown        Shutdown 2 hours ago                                      
-    1e9geumyvs0g    \_ zane_app.1   ghcr.io/zane-ops/app:canary   ubs01     Shutdown        Failed 2 hours ago     "task: non-zero exit (255)"        
-    ypqk8horkrof    \_ zane_app.1   ghcr.io/zane-ops/app:canary   ubs01     Shutdown        Failed 6 days ago      "No such container: zane_app.1…"   
-    d9p4bntkzjjq    \_ zane_app.1   ghcr.io/zane-ops/app:pr-466   ubs01     Shutdown        Shutdown 6 days ago 
+   ```shell {2} 
+   ID             NAME             IMAGE                         NODE      DESIRED STATE   CURRENT STATE          ERROR                              PORTS
+   7b21smevkj6l   zane_app.1       ghcr.io/zane-ops/app:canary   ubs01     Running         Running 2 hours ago                                 
+   ppfheeofce3t    \_ zane_app.1   ghcr.io/zane-ops/app:canary   ubs01     Shutdown        Shutdown 2 hours ago                                      
    ```
 
+3. If the latest task state show `Failed`, you can check the logs of the failed status: 
+    ```shell
+    docker inspect --format '{{ json .Status }}' <TASK-ID> | jq # ex: `7b21smevkj6l` the ID above
+    ```
+
+    You will get a JSON object like this:
+    ```json {5}
+    {
+        "Timestamp": "2025-07-16T19:31:21.277975012Z",
+        "State": "failed",
+        "Message": "started",
+        "Err": "No such container: zane_app.1.ypqk8horkrofmsij7r6xtn7kf",
+        // ... other fields
+    }
+    ```
+
+    The `Err` field might have a full explanation of the error. 
+    
+    Ex: **"no suitable node (host-mode port already in use on 1 node)"** meaning the port is already used by another service
+4. You can also see the application logs of the services using: 
+   ```shell
+   docker service logs zane_{service}
+   ``` 
+
+   <Aside type="caution" title="main app logs">
+    Running logs for `zane_app` might not show you any actionable logs. You can instead run: 
+
+    ```shell
+    # to see error logs
+    docker exec -it $(docker ps -qf "name=zane_app") /bin/bash -c "cat /app/logs/daphne/stderr"
+    # to see access logs
+    docker exec -it $(docker ps -qf "name=zane_app") /bin/bash -c "cat /app/logs/daphne/stdout"
+    ```
+   </Aside>
+
+5. If still stuck, Please [create an issue](https://github.com/zane-ops/zane-ops/issues/new?template=bug_report.md) in the repository.
 </Steps>
 
 
@@ -78,14 +111,15 @@ inside your proxy:
 
 <img src={`${ASSETS_SERVER_DOMAIN}/images/proxy-inception.png`} alt="running a proxy inside Zaneops" />
 
-```nginx
+```nginx "service-xyz.zaneops.internal" {"Your service network alias: ":7}
 #/etc/nginx/nginx.conf
 server {
     listen 80;
     server_name xyz.com;
 
     location / {
-        proxy_pass http://{your_service_network_alias}:80;
+
+        proxy_pass http://service-xyz.zaneops.internal:80;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -134,8 +168,46 @@ the credentials in the **source** in the service settings page:
 
 ### Issues with a VPN
 
-You might get this error if you have a VPN
-```shell
-network sandbox join failed: subnet sandbox join failed for "10.0.1.0/24": error creating vxlan interface: operation not supported
+You might get this error if you have a VPN installed:
+```shell {7}
+$ docker inspect --format '{{ json .Status }}' <task-id> | jq 
+
+{
+        "Timestamp": "2025-07-16T19:31:21.277975012Z",
+        "State": "failed",
+        "Message": "started",
+        "Err": "network sandbox join failed: subnet sandbox join failed for \"10.0.1.0/24\": error creating vxlan interface: operation not supported",
+        # ... other fields
+}
 ```
 
+This error is related to Docker networking and specifically the creation of VXLAN interfaces. 
+The error "operation not supported" suggests that your system's kernel doesn't support VXLAN or that the required kernel modules aren't loaded.
+
+<Aside type="note" title="Potential solution">
+The best solution is to disable the VPN and restart ZaneOps: 
+
+```shell
+# assuming you are in /var/www/zaneops
+make stop
+make deploy
+```
+
+In other cases, you can try solutions outlined here: 
+https://forums.docker.com/t/debian-9-error-creating-vxlan-interface-operation-not-supported-resolved/39995/8
+</Aside>
+
+## Service metrics aren't shown in the dashboard
+
+When you succesfully deploy your applications and you notice that even after a bit of time (usually 30 seconds), no metrics are shown in the 
+dashboard, it might be because you [cgroups](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v1/cgroups.html) aren't enabled on your server.
+
+<img src={`${ASSETS_SERVER_DOMAIN}/images/empty-metrics.png`} alt="Empty metrics" />
+
+
+<Aside type="note" title="Solution">
+Enable cgroups. Here are some resources for how to do so in debian/ubuntu: 
+
+- [Enabling memory cgroup in Ubuntu 20.04](https://askubuntu.com/questions/1237813/enabling-memory-cgroup-in-ubuntu-20-04)
+- [What is required to activate cgroups in Linux](https://serverfault.com/questions/525162/what-is-required-to-activate-cgroups-in-linux)
+</Aside>
