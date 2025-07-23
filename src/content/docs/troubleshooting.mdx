@@ -9,8 +9,7 @@ In this section, we provides solutions for resolving issues you might encounter 
 
 ## ZaneOps installation is stuck
 
-Usually ZaneOps will take less than 5 minutes to start, but if you encounter a case where ZaneOps is stuck and takes more than that. It may be because of multiple reasons.
-
+ZaneOps typically takes less than 5 minutes to start. If it's stuck longer than that, it may be due to several possible issues.
 ```shell
 # make deploy
 ====== Deploying ZaneOps with HTTPS 🔒 ======
@@ -92,23 +91,20 @@ To check that ZaneOps started correctly:
     ```
    </Aside>
 
-5. If still stuck, Please [create an issue](https://github.com/zane-ops/zane-ops/issues/new?template=bug_report.md) in the repository.
+5. Still stuck? [create an issue](https://github.com/zane-ops/zane-ops/issues/new?template=bug_report.md)
 </Steps>
 
 
 ### Something is running on either port `80` or `443`
 
-Zaneops proxy (which is caddy) uses ports 80 & 443 to expose your deployed applications in the public. 
-If another application is running on these ports, it will conflict with ZaneOps, preventing it from starting.
+ZaneOps’ proxy (Caddy) uses ports 80 & 443 to expose applications.
+If another app is using these ports, ZaneOps won’t start.
 
 <Aside type="note" title="Solution">
 Stop the applications running in those ports.
 </Aside>
 
-If you absolutely want to use another proxy alongside ZaneOps, you can create it as a service inside ZaneOps,
-and do all your reverse-proxying from there using the network alias of your service to reference it from 
-inside your proxy: 
-
+If you must use another proxy alongside ZaneOps, you can run it as a service inside ZaneOps and proxy requests internally using the service's network alias:
 <img src={`${ASSETS_SERVER_DOMAIN}/images/proxy-inception.png`} alt="running a proxy inside Zaneops" />
 
 ```nginx "service-xyz.zaneops.internal" {"Your service network alias: ":7}
@@ -130,9 +126,8 @@ server {
 
 ### You are connected to GitHub Container Registry (`ghcr.io`)
 
-ZaneOps docker images are hosted on GitHub Container Registry as public images. 
-It is known to cause conflicts if you are already connected to github container registry with 
-an **access token that is no longer valid**. 
+ZaneOps images are hosted on GitHub Container Registry (public). 
+Auth conflicts may happen if your token is not longer valid.
 
 To check if you are connected:
 
@@ -181,8 +176,7 @@ $ docker inspect --format '{{ json .Status }}' <task-id> | jq
 }
 ```
 
-This error is related to Docker networking and specifically the creation of VXLAN interfaces. 
-The error "operation not supported" suggests that your system's kernel doesn't support VXLAN or that the required kernel modules aren't loaded.
+This error means Docker couldn't create a VXLAN interface—usually due to missing kernel modules or VPN conflicts.
 
 <Aside type="note" title="Potential solution">
 The best solution is to disable the VPN and restart ZaneOps: 
@@ -199,8 +193,8 @@ https://forums.docker.com/t/debian-9-error-creating-vxlan-interface-operation-no
 
 ## Service metrics aren't shown in the dashboard
 
-When you succesfully deploy your applications and you notice that even after a bit of time (usually 30 seconds), no metrics are shown in the 
-dashboard, it might be because you [cgroups](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v1/cgroups.html) aren't enabled on your server.
+If your app deployed successfully but no metrics appear (usually after ~30s), 
+it may be because [cgroups](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v1/cgroups.html) are not enabled on your server.
 
 <img src={`${ASSETS_SERVER_DOMAIN}/images/empty-metrics.png`} alt="Empty metrics" />
 
