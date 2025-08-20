@@ -172,7 +172,8 @@ Then recreate the network with a subnet not in use: i.e `172.28.0.0/16`
 The network needs to be attachable and with this specific label or else it might cause unwanted errors.
 </Aside>
 
-```shell
+```shell "--attachable" "--driver overlay"  "--label zane.stack=true"
+docker network create --attachable --driver overlay --label zane.stack=true  --subnet 172.28.0.0/16 zane
 docker network create --attachable --driver overlay --label zane.stack=true  --subnet 172.28.0.0/16 zane
 ```
 
