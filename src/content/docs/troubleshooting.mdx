@@ -74,7 +74,10 @@ To check that ZaneOps started correctly:
 
     The `Err` field might have a full explanation of the error. 
     
-    Ex: **"no suitable node (host-mode port already in use on 1 node)"** meaning the port is already used by another service
+    Examples:
+      - **"no suitable node (host-mode port already in use on 1 node)"**: meaning the port is already used by another service
+      - **"invalid pool request: Pool overlaps with other one in this address space"**: meaning the address pool (subnet) is already used by another network
+
 4. You can also see the application logs of the services using: 
    ```shell
    docker service logs zane_{service}
@@ -123,6 +126,63 @@ server {
     }
 }
 ```
+
+
+### Another network already uses the subnet
+
+ZaneOps services share a common docker network: `zane` <br/>
+If another network already uses its subnet, ZaneOps won't start.
+
+<Aside type="note" title="Solution">
+Delete and recreate ZaneOps network with a free subnet.
+</Aside>
+
+First list all docker networks and their subnets:
+
+```shell
+docker network ls -q | xargs docker network inspect -f '{{.Name}}: {{range .IPAM.Config}}{{.Subnet}}{{end}}'
+```
+
+You should see zane network and another one sharing the same subnet:
+
+```shell
+bridge: 10.0.0.0/24
+host:
+none:
+my_network: 10.0.1.0/24
+zane: 10.0.1.0/24
+```
+
+Make sure to stop all ZaneOps remaining processes:
+
+```shell
+# assuming you are in /var/www/zaneops
+make stop
+```
+
+You can proceed to delete `zane` network:
+
+```shell
+docker network rm zane
+```
+
+Then recreate the network with a subnet not in use, for example: `172.28.0.0/16`
+
+```shell "--attachable" "--driver overlay"  "--label zane.stack=true"
+docker network create --attachable --driver overlay --label zane.stack=true  --subnet 172.28.0.0/16 zane
+```
+
+<Aside type="caution" title="Warning">
+The network needs to be attachable and with the label `zane.stack=true` or else it might cause unwanted errors.
+</Aside>
+
+Restart ZaneOps
+
+```shell
+# assuming you are in /var/www/zaneops
+make deploy
+```
+
 
 ### You are connected to GitHub Container Registry (`ghcr.io`)
 
