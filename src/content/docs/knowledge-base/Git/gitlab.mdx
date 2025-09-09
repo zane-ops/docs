@@ -7,8 +7,11 @@ import {Steps, Aside} from '@astrojs/starlight/components';
 
 > Introduced in [**v1.11.0**](/changelog/v11)
 
-To connect your GitLab account to ZaneOps, you use GitLab apps. 
+<Aside title="Version support">
+  ZaneOps supports both gitlab.com and self-managed Gitlab instances version from `16.9.0` or higher.
+</Aside>
 
+To connect your GitLab account to ZaneOps, you use GitLab apps. 
 
 ### How to create a GitLab app
 
@@ -76,8 +79,3 @@ and paste in the new credentials:
 Once done, you will be redirected to your gitlab instance and will need to authorize the app again:
 
 <img src={`${ASSETS_SERVER_DOMAIN}/images/authorize-gitlab-app-on-gitlab.com.png`} alt="Authorize gitlab app on gitlab.com" />
-
-### Self-hosted Gitlab
-
-ZaneOps supports both Gitlab.com and self-managed Gitlab instances version 16.9.0 or higher.
-
