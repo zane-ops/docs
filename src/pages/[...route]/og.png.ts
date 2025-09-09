@@ -43,7 +43,7 @@ export const GET: APIRoute = async function get({ props }) {
     }
   );
 
-  return new Response(resvg.render().asPng(), {
+  return new Response(new Uint8Array(resvg.render().asPng()), {
     status: 200,
     headers: {
       "Content-Type": "image/png"
