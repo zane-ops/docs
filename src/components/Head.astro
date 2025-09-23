@@ -2,8 +2,8 @@
 import Default from "@astrojs/starlight/components/Head.astro";
 
 const pathname = Astro.url.pathname.endsWith("/")
-  ? Astro.url.pathname.substring(0, Astro.url.pathname.length - 1)
-  : Astro.url.pathname;
+    ? Astro.url.pathname.substring(0, Astro.url.pathname.length - 1)
+    : Astro.url.pathname;
 
 const ogImageUrl = new URL(`${pathname}/og.png`, Astro.site?.origin);
 ---
@@ -12,4 +12,13 @@ const ogImageUrl = new URL(`${pathname}/og.png`, Astro.site?.origin);
 
 <meta property="og:image" content={ogImageUrl} />
 <meta name="twitter:image" content={ogImageUrl} />
-<script is:inline defer data-domain="zaneops.dev" src="https://analytics.fredkiss.dev/js/script.js"></script>
+{
+    process.env.NODE_ENV !== "development" && (
+        <script
+            is:inline
+            defer
+            data-domain="zaneops.dev"
+            src="https://analytics.fredkiss.dev/js/script.js"
+        />
+    )
+}
