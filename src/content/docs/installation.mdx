@@ -5,7 +5,14 @@ description: 'Step-by-step guide to install and set up ZaneOps'
 
 import {FileTree, Steps, Aside} from '@astrojs/starlight/components';
 
-ZaneOps is a deployment platform that simplifies the process of managing and deploying web applications. This guide will walk you through the steps to install ZaneOps either locally or on a remote server with minimal configuration.
+
+## Quick-start
+
+You can install ZaneOps with one script:
+
+```shell
+curl -fsSL https://cdn.zaneops.dev/install.sh | sudo bash
+```
 
 
 ## System requirements
@@ -35,7 +42,11 @@ As of now ZaneOps has been tested on these platforms :
 We can't assure you that zaneops will work on other platforms, but if you try and succeed, we are more than happy to add 
 it to our supported OS.
 
-## Prerequisites
+
+
+## Manual installation
+
+### Prerequisites
 
 - Ensure you have [Docker >= `v27.0.3`](https://docs.docker.com/engine/install/) installed and are using a Unix-based machine. It's recommended to use the latest version of Docker to avoid compatibility issues.
 - Ensure you have `make`, `curl`, `jq` and `openssl` installed : 
@@ -58,8 +69,6 @@ it to our supported OS.
   # on Mac
   brew install make curl jq openssl
   ```
-
-## Process
 
 <Steps>
 1. **Initialize Docker Swarm**:
