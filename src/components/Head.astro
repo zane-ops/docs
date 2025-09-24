@@ -6,7 +6,11 @@ const pathname = Astro.url.pathname.endsWith("/")
     : Astro.url.pathname;
 
 const ogImageUrl = new URL(`${pathname}/og.png`, Astro.site?.origin);
+
+import TailwindIndicator from "./tailwind-indicator.astro";
 ---
+
+{process.env.NODE_ENV === "development" && <TailwindIndicator />}
 
 <Default {...Astro.props}><slot /></Default>
 

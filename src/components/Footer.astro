@@ -1,12 +1,10 @@
 ---
 import { Icon } from "@astrojs/starlight/components";
 import DefaultFooter from "@astrojs/starlight/components/Footer.astro";
-import TailwindIndicator from "./tailwind-indicator.astro";
 ---
 
 <DefaultFooter {...Astro.props} />
 
-{process.env.NODE_ENV === "development" && <TailwindIndicator />}
 <div class="custom-meta sl-flex my-3">
     <div class="flex flex-col">
         <a

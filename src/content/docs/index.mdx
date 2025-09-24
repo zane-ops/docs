@@ -1,0 +1,64 @@
+---
+title: Welcome to ZaneOps
+description: ZaneOps is a self-hosted, open source platform as a service for hosting static sites, web apps, databases, CRONS, Workers using docker swarm as the engine.
+template: splash
+banner:
+  content: |
+    <a href="/changelog/v112/" class="flex items-center gap-1 justify-center">Support for Preview Deployments (v1.12) <svg aria-hidden="true" class="astro-vnzlvqnm astro-445ym5ac" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5em;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"></path></svg></a>
+hero:
+  title: ''
+---
+import { Code, Icon, LinkButton } from "@astrojs/starlight/components";
+import Logo from "../../assets/Logo.svg";
+import Style from "../../components/StyleOverride.astro"
+import DashboardLight from "../../assets/dashboard-home-light.jpeg";
+import DashboardDark  from "../../assets/dashboard-home-dark.jpeg";
+
+<Style />
+<section
+    id="hero"
+    class="py-12 md:pt-24 grid grid-cols-1 md:grid-cols-3 gap-2 items-center"
+>
+    <div
+        class="md:col-span-2 flex flex-col items-center text-center md:text-start md:items-start"
+    >
+        <h1 class="text-4xl md:text-5xl lg:text-6xl whitespace-nowrap">
+            Welcome to ZaneOps
+        </h1>
+        <p>
+            ZaneOps is a beautiful and fast self-hosted platform for
+            deploying and managing apps, databases, static websites and
+            more.
+        </p>
+        <Code
+            lang="shell"
+            code={`curl -fsSL https://cdn.zaneops.dev/install.sh | sudo bash`}
+            frame="none"
+            class="[&_.frame]:!rounded-md w-full max-w-full"
+        />
+        <div class="flex items-center gap-4">
+            <LinkButton variant="primary" href="/installation">
+                Get started
+                <Icon name="right-arrow" />
+            </LinkButton>
+            <LinkButton variant="minimal" href="/installation">
+                Star us on Github
+                <Icon name="github" />
+            </LinkButton>
+        </div>
+    </div>
+    <div
+        class="order-first md:order-last flex justify-center md:justify-start"
+    >
+        <Logo class="w-52 sm:w-80" />
+    </div>
+</section>
+
+<section id="screenshots">
+
+  <h2>In action</h2>
+<img className="block dark:hidden rounded-2xl shadow-xl" src={DashboardLight.src} alt="ZaneOps dashboard"  />
+<img className="!hidden dark:!block rounded-2xl shadow-xl" src={DashboardDark.src} alt="ZaneOps dashboard"  />
+
+</section>
+

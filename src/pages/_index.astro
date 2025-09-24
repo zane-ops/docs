@@ -37,10 +37,16 @@ const installScript = `curl -fsSL https://cdn.zaneops.dev/install.sh | sudo bash
                 frame="none"
                 class="[&_.frame]:!rounded-md w-full max-w-full"
             />
-            <LinkButton variant="primary" href="/installation">
-                Get started
-                <Icon name="right-arrow" />
-            </LinkButton>
+            <div class="flex items-center gap-4">
+                <LinkButton variant="primary" href="/installation">
+                    Get started
+                    <Icon name="right-arrow" />
+                </LinkButton>
+                <LinkButton variant="minimal" href="/installation">
+                    Star us on Github
+                    <Icon name="github" />
+                </LinkButton>
+            </div>
         </div>
         <div
             class="order-first md:order-last flex justify-center md:justify-start"
