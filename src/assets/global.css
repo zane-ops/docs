@@ -1,8 +1,9 @@
 @layer base;
-/* @layer starlight; */
+@layer starlight;
 @layer theme;
 @layer components;
 @layer utilities;
+
 
 @import '@astrojs/starlight-tailwind' important;
 @import 'tailwindcss/theme.css' layer(theme);
