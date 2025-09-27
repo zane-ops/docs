@@ -15,7 +15,7 @@ import BrowserScreenshot from "../../components/BrowserScreenshot.astro";
 import DashboardLight from "../../assets/Dashboard_ZaneOps-light.jpeg";
 import DashboardDark from "../../assets/Dashboard_ZaneOps-dark.jpeg";
 import SourcePickerLight from "../../assets/source-picker-light.png";
-import SourcePickerDark from "../../assets/source-picker-dark.png";
+import SourcePickerDark from "../../assets/source-picker-darkk.png";
 import EnvironmentListLight from "../../assets/environment-list-light.png";
 import EnvironmentListDark from "../../assets/environment-list-darkk.png";
 import { Rocket, Network, FlaskConical } from '@lucide/astro';
@@ -70,17 +70,7 @@ import { Rocket, Network, FlaskConical } from '@lucide/astro';
       </small>
 
       <div 
-        style="
-            --mask-top: linear-gradient(to top, #000 90%, transparent 100%);
-            --mask-bottom: linear-gradient(to bottom, #000 90%, transparent 100%);
-            --mask-right: linear-gradient(to right, #000 90%, transparent 100%);
-            --mask-left: linear-gradient(to left, #000 90%, transparent 100%);
-            mask-image: var(--mask-bottom), var(--mask-right), var(--mask-top), var(--mask-left);
-            mask-composite: intersect;
-        " 
-        class:list={[
-          "relative w-full aspect-16/9 bg-center bg-contain p-6",
-        ]}
+        className="relative w-full aspect-16/9 bg-center bg-contain bg-bg p-6 rounded-lg h-80"
         >
         <img src={SourcePickerLight.src} className="dark:hidden" />
         <img src={SourcePickerDark.src} className="hidden dark:inline" />
@@ -100,18 +90,11 @@ import { Rocket, Network, FlaskConical } from '@lucide/astro';
       </small>
 
       <div 
-        style="
-            --mask-top: linear-gradient(to top, #000 90%, transparent 100%);
-            --mask-bottom: linear-gradient(to bottom, #000 90%, transparent 100%);
-            --mask-right: linear-gradient(to right, #000 90%, transparent 100%);
-            --mask-left: linear-gradient(to left, #000 90%, transparent 100%);
-            mask-image: var(--mask-bottom), var(--mask-right), var(--mask-top), var(--mask-left);
-            mask-composite: intersect;
-        " 
-        className="relative w-full aspect-16/9 bg-center bg-contain bg-bg p-6 flex items-center justify-center"
+        
+        className="relative w-full aspect-16/9 bg-center bg-contain bg-bg py-6 px-4 flex  h-80 items-center justify-center rounded-lg"
         >
-        <img src={EnvironmentListLight.src} className="dark:hidden" />
-        <img src={EnvironmentListDark.src} className="hidden dark:inline" />
+        <img src={EnvironmentListLight.src} className="dark:hidden " />
+        <img src={EnvironmentListDark.src} className="hidden dark:inline " />
       </div>
     </div>
 
