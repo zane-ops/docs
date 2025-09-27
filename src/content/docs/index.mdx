@@ -11,8 +11,10 @@ hero:
 import { Code, Icon, LinkButton } from "@astrojs/starlight/components";
 import Logo from "../../assets/Logo.svg";
 import Style from "../../components/StyleOverride.astro"
-import DashboardLight from "../../assets/dashboard-home-light.jpeg";
-import DashboardDark  from "../../assets/dashboard-home-dark.jpeg";
+import BrowserScreenshot from "../../components/BrowserScreenshot.astro"
+import DashboardLight from "../../assets/Dashboard_ZaneOps-light.jpeg";
+import DashboardDark  from "../../assets/Dashboard_ZaneOps-dark.jpeg";
+
 
 <Style />
 <section
@@ -56,8 +58,8 @@ import DashboardDark  from "../../assets/dashboard-home-dark.jpeg";
 
 <section id="screenshots">
 
-<img className="block dark:hidden rounded-2xl shadow-xl" src={DashboardLight.src} alt="ZaneOps dashboard"  />
- <img className="!hidden dark:!block rounded-2xl shadow-xl" src={DashboardDark.src} alt="ZaneOps dashboard"  />
+<BrowserScreenshot srcLight={DashboardLight.src} srcDark={DashboardDark.src} alt="ZaneOps dashboard" />
+
 
 </section>
 
