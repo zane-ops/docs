@@ -14,6 +14,10 @@ import Style from "../../components/StyleOverride.astro";
 import BrowserScreenshot from "../../components/BrowserScreenshot.astro";
 import DashboardLight from "../../assets/Dashboard_ZaneOps-light.jpeg";
 import DashboardDark from "../../assets/Dashboard_ZaneOps-dark.jpeg";
+import SourcePickerLight from "../../assets/source-picker-light.png";
+import SourcePickerDark from "../../assets/source-picker-dark.png";
+import EnvironmentListLight from "../../assets/environment-list-light.png";
+import EnvironmentListDark from "../../assets/environment-list-darkk.png";
 import { Rocket, Network, FlaskConical } from '@lucide/astro';
 
 
@@ -26,7 +30,7 @@ import { Rocket, Network, FlaskConical } from '@lucide/astro';
     <p>
       ZaneOps is a beautiful and fast self-hosted platform for deploying and managing apps, databases, static websites and more.
     </p>
-    <Code lang="shell" code={`curl -fsSL https://cdn.zaneops.dev/install.sh | sudo bash`} frame="none" class="[&_.frame]:!rounded-md w-full max-w-full" />
+    <Code lang="shell" code={`curl -fsSL https://cdn.zaneops.dev/install.sh | sudo bash`} frame="none" class="w-full max-w-full" />
     <div class="flex items-center gap-4">
       <LinkButton variant="primary" href="/installation">
         Get started
@@ -54,7 +58,7 @@ import { Rocket, Network, FlaskConical } from '@lucide/astro';
   </p>
 
   <div className="grid md:grid-cols-2 my-14 [&>*]:py-6 [&>:nth-of-type(even)]:pl-6  [&>:nth-of-type(even)]:border-l [&>:nth-of-type(odd)]:pr-6">
-    <div className="border-b border-neutral-200/80 flex flex-col gap-3">
+    <div className="border-b border-border flex flex-col gap-3">
       <h3 className="text-xl font-medium flex items-center gap-2">
         <Rocket class="text-neutral-400" />
         <span>
@@ -64,9 +68,27 @@ import { Rocket, Network, FlaskConical } from '@lucide/astro';
       <small className="text-sm">
         No code changes, extra packages, or CLI tools needed - just connect your git provider account, select a repo, and click deploy !
       </small>
+
+      <div 
+        style="
+            --mask-top: linear-gradient(to top, #000 90%, transparent 100%);
+            --mask-bottom: linear-gradient(to bottom, #000 90%, transparent 100%);
+            --mask-right: linear-gradient(to right, #000 90%, transparent 100%);
+            --mask-left: linear-gradient(to left, #000 90%, transparent 100%);
+            mask-image: var(--mask-bottom), var(--mask-right), var(--mask-top), var(--mask-left);
+            mask-composite: intersect;
+        " 
+        class:list={[
+          "relative w-full aspect-16/9 bg-center bg-contain p-6",
+        ]}
+        >
+        <img src={SourcePickerLight.src} className="dark:hidden" />
+        <img src={SourcePickerDark.src} className="hidden dark:inline" />
+      </div>
+
     </div>
 
-    <div className="border-b border-neutral-200/80 flex flex-col gap-3">
+    <div className="border-b border-border  flex flex-col gap-3">
       <h3 className="text-xl font-medium flex items-center gap-2">
         <Network class="text-neutral-400" />
         <span>
@@ -76,9 +98,24 @@ import { Rocket, Network, FlaskConical } from '@lucide/astro';
       <small className="text-sm">
         Create multiple environments for your app, such as `staging`, `production`, and `development`. Each environment can have its own configuration and is isolated from each other.
       </small>
+
+      <div 
+        style="
+            --mask-top: linear-gradient(to top, #000 90%, transparent 100%);
+            --mask-bottom: linear-gradient(to bottom, #000 90%, transparent 100%);
+            --mask-right: linear-gradient(to right, #000 90%, transparent 100%);
+            --mask-left: linear-gradient(to left, #000 90%, transparent 100%);
+            mask-image: var(--mask-bottom), var(--mask-right), var(--mask-top), var(--mask-left);
+            mask-composite: intersect;
+        " 
+        className="relative w-full aspect-16/9 bg-center bg-contain bg-bg p-6 flex items-center justify-center"
+        >
+        <img src={EnvironmentListLight.src} className="dark:hidden" />
+        <img src={EnvironmentListDark.src} className="hidden dark:inline" />
+      </div>
     </div>
 
-    <div className="border-0 border-neutral-200/80">
+    <div className="border-0 border-border flex flex-col gap-3">
       <h3 className="text-xl font-medium flex items-center gap-2">
         <FlaskConical class="text-neutral-400" />
         <span>
@@ -90,15 +127,15 @@ import { Rocket, Network, FlaskConical } from '@lucide/astro';
       </small>
     </div>
 
-    <div className="border-0 border-neutral-200/80">
+    <div className="border-0 border-border flex flex-col gap-3">
       <h3 className="text-xl font-medium flex items-center gap-2">
         <Network class="text-neutral-400" />
         <span>
-          Multiple environments
+          Automatic & Free SSL certificates
         </span>
       </h3>
       <small className="text-sm">
-        Create multiple environments for your app, such as `staging`, `production`, and `development`. Each environment can have its own configuration and is isolated from each other.
+        Every domain-custom or auto-generated gets a free SSL certificate that is automatically renewed on expiration.
       </small>
     </div>
   </div>
