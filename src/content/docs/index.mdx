@@ -1,5 +1,5 @@
 ---
-title: Welcome to ZaneOps
+title: ZaneOps
 description: ZaneOps is a self-hosted, open source platform as a service for hosting static sites, web apps, databases, CRONS, Workers using docker swarm as the engine.
 template: splash
 banner:
@@ -10,56 +10,110 @@ hero:
 ---
 import { Code, Icon, LinkButton } from "@astrojs/starlight/components";
 import Logo from "../../assets/Logo.svg";
-import Style from "../../components/StyleOverride.astro"
-import BrowserScreenshot from "../../components/BrowserScreenshot.astro"
+import Style from "../../components/StyleOverride.astro";
+import BrowserScreenshot from "../../components/BrowserScreenshot.astro";
 import DashboardLight from "../../assets/Dashboard_ZaneOps-light.jpeg";
-import DashboardDark  from "../../assets/Dashboard_ZaneOps-dark.jpeg";
+import DashboardDark from "../../assets/Dashboard_ZaneOps-dark.jpeg";
+import { Rocket, Network, FlaskConical } from '@lucide/astro';
 
 
 <Style />
-<section
-    id="hero"
-    class="py-12 md:pt-24 grid grid-cols-1 md:grid-cols-3 gap-2 items-center"
->
-    <div
-        class="md:col-span-2 flex flex-col items-center text-center md:text-start md:items-start"
-    >
-        <h1 class="text-4xl md:text-5xl lg:text-6xl whitespace-nowrap">
-            Welcome to ZaneOps
-        </h1>
-        <p>
-            ZaneOps is a beautiful and fast self-hosted platform for
-            deploying and managing apps, databases, static websites and
-            more.
-        </p>
-        <Code
-            lang="shell"
-            code={`curl -fsSL https://cdn.zaneops.dev/install.sh | sudo bash`}
-            frame="none"
-            class="[&_.frame]:!rounded-md w-full max-w-full"
-        />
-        <div class="flex items-center gap-4">
-            <LinkButton variant="primary" href="/installation">
-                Get started
-                <Icon name="right-arrow" />
-            </LinkButton>
-            <LinkButton variant="minimal" href="/installation">
-                Star us on Github
-                <Icon name="github" />
-            </LinkButton>
-        </div>
+<section id="hero" class="py-12 md:pt-24 grid grid-cols-1 md:grid-cols-3 gap-2 items-center">
+  <div class="md:col-span-2 flex flex-col gap-2 items-center text-center md:text-start md:items-start">
+    <h1 class="text-4xl md:text-5xl lg:text-6xl whitespace-nowrap">
+      Welcome to ZaneOps
+    </h1>
+    <p>
+      ZaneOps is a beautiful and fast self-hosted platform for deploying and managing apps, databases, static websites and more.
+    </p>
+    <Code lang="shell" code={`curl -fsSL https://cdn.zaneops.dev/install.sh | sudo bash`} frame="none" class="[&_.frame]:!rounded-md w-full max-w-full" />
+    <div class="flex items-center gap-4">
+      <LinkButton variant="primary" href="/installation">
+        Get started
+        <Icon name="right-arrow" />
+      </LinkButton>
+      <LinkButton variant="minimal" href="/installation">
+        Star us on Github
+        <Icon name="github" />
+      </LinkButton>
     </div>
-    <div
-        class="order-first md:order-last flex justify-center md:justify-start"
-    >
-        <Logo class="w-52 sm:w-80" />
-    </div>
+  </div>
+  <div class="order-first md:order-last flex justify-center md:justify-start">
+    <Logo class="w-52 sm:w-80" />
+  </div>
 </section>
 
 <section id="screenshots">
-
-<BrowserScreenshot srcLight={DashboardLight.src} srcDark={DashboardDark.src} alt="ZaneOps dashboard" />
-
-
+  <BrowserScreenshot srcLight={DashboardLight.src} srcDark={DashboardDark.src} alt="ZaneOps dashboard" />
 </section>
 
+<section id="feature-highlight" className="my-32 flex flex-col gap-2">
+  <h2 className="text-pretty">Exceptional speed, user experience, packed with features</h2>
+  <p>
+    Who said a free and open source project should look ugly ?
+  </p>
+
+  <div className="grid md:grid-cols-2 my-14 [&>*]:py-6 [&>:nth-of-type(even)]:pl-6  [&>:nth-of-type(even)]:border-l [&>:nth-of-type(odd)]:pr-6">
+    <div className="border-b border-neutral-200/80 flex flex-col gap-3">
+      <h3 className="text-xl font-medium flex items-center gap-2">
+        <Rocket class="text-neutral-400" />
+        <span>
+          Get started under 60 seconds
+        </span>
+      </h3>
+      <small className="text-sm">
+        No code changes, extra packages, or CLI tools needed - just connect your git provider account, select a repo, and click deploy !
+      </small>
+    </div>
+
+    <div className="border-b border-neutral-200/80 flex flex-col gap-3">
+      <h3 className="text-xl font-medium flex items-center gap-2">
+        <Network class="text-neutral-400" />
+        <span>
+          Multiple environments
+        </span>
+      </h3>
+      <small className="text-sm">
+        Create multiple environments for your app, such as `staging`, `production`, and `development`. Each environment can have its own configuration and is isolated from each other.
+      </small>
+    </div>
+
+    <div className="border-0 border-neutral-200/80">
+      <h3 className="text-xl font-medium flex items-center gap-2">
+        <FlaskConical class="text-neutral-400" />
+        <span>
+          Preview deployments
+        </span>
+      </h3>
+      <small className="text-sm">
+        Create preview deployments from Gitlab and GitHub repositories, either ...
+      </small>
+    </div>
+
+    <div className="border-0 border-neutral-200/80">
+      <h3 className="text-xl font-medium flex items-center gap-2">
+        <Network class="text-neutral-400" />
+        <span>
+          Multiple environments
+        </span>
+      </h3>
+      <small className="text-sm">
+        Create multiple environments for your app, such as `staging`, `production`, and `development`. Each environment can have its own configuration and is isolated from each other.
+      </small>
+    </div>
+  </div>
+</section>
+
+<section id="other-features" className="my-32">
+  <h2 className="text-pretty">Everything you need, included</h2>
+  <p>
+    Monitor and debug effortlessly with streamlined logs, commands, metrics, and resource navigation.
+  </p>
+</section>
+
+<section id="scalability" className="my-32">
+  <h2 className="text-pretty">Secure and scalable</h2>
+  <p>
+    Built on the shoulder of giants.
+  </p>
+</section>
