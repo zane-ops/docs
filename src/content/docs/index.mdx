@@ -15,9 +15,9 @@ import BrowserScreenshot from "../../components/BrowserScreenshot.astro";
 import DashboardLight from "../../assets/Dashboard_ZaneOps-light.jpeg";
 import DashboardDark from "../../assets/Dashboard_ZaneOps-dark.jpeg";
 import SourcePickerLight from "../../assets/source-picker-light.png";
-import SourcePickerDark from "../../assets/source-picker-darkk.png";
+import SourcePickerDark from "../../assets/source-picker-dark.png";
 import EnvironmentListLight from "../../assets/environment-list-light.png";
-import EnvironmentListDark from "../../assets/environment-list-darkk.png";
+import EnvironmentListDark from "../../assets/environment-list-dark.png";
 import { Rocket, Network, FlaskConical } from '@lucide/astro';
 
 
@@ -57,8 +57,8 @@ import { Rocket, Network, FlaskConical } from '@lucide/astro';
     Who said a free and open source project should look ugly ?
   </p>
 
-  <div className="grid md:grid-cols-2 gap-8 my-14 [&>*]:py-6 [&>:nth-of-type(even)]:pl-6  [&>:nth-of-type(even)]:border-l [&>:nth-of-type(odd)]:pr-6">
-    <div className="border-border grid grid-rows-subgrid flex-col gap-3 row-span-3">
+  <div className="grid md:grid-cols-2 my-14 [&>*]:py-6 [&>:nth-of-type(even)]:pl-6  [&>:nth-of-type(even)]:border-l [&>:nth-of-type(odd)]:pr-6">
+    <div className="border-border flex-col gap-3 grid grid-cols-1 grid-rows-subgrid row-span-3">
       <h3 className="text-xl font-medium flex items-center gap-2">
         <Rocket class="text-neutral-400" />
         <span>
@@ -70,7 +70,7 @@ import { Rocket, Network, FlaskConical } from '@lucide/astro';
       </small>
 
       <div 
-        className="relative w-full aspect-16/9 bg-center bg-contain bg-bg p-6 rounded-lg h-80"
+        className="relative aspect-16/9 bg-center bg-bg p-6 rounded-lg h-80 w-full border border-slate-400/10 shadow-xs"
         >
         <img src={SourcePickerLight.src} className="dark:hidden" />
         <img src={SourcePickerDark.src} className="hidden dark:inline" />
@@ -78,7 +78,7 @@ import { Rocket, Network, FlaskConical } from '@lucide/astro';
 
     </div>
 
-    <div className="border-border  flex-col gap-3 grid grid-rows-subgrid row-span-3">
+    <div className="border-border flex-col gap-3 grid grid-cols-1 grid-rows-subgrid row-span-3">
       <h3 className="text-xl font-medium flex items-center gap-2">
         <Network class="text-neutral-400" />
         <span>
@@ -91,14 +91,14 @@ import { Rocket, Network, FlaskConical } from '@lucide/astro';
 
       <div 
         
-        className="relative w-full aspect-16/9 bg-center bg-contain bg-bg py-6 px-4 flex  h-80 items-center justify-center rounded-lg"
+        className="relative w-full aspect-16/9 bg-center bg-contain bg-bg py-6 px-4 flex  h-80 items-center justify-center rounded-lg border border-slate-400/10 shadow-xs"
         >
         <img src={EnvironmentListLight.src} className="dark:hidden " />
         <img src={EnvironmentListDark.src} className="hidden dark:inline " />
       </div>
     </div>
 
-    <div className="border-border  grid grid-rows-subgrid gap-3 row-span-3">
+    <div className="border-t border-border gap-3 grid grid-cols-1 grid-rows-subgrid row-span-3">
       <h3 className="text-xl font-medium flex items-center gap-2">
         <FlaskConical class="text-neutral-400" />
         <span>
@@ -110,7 +110,7 @@ import { Rocket, Network, FlaskConical } from '@lucide/astro';
       </small>
     </div>
 
-    <div className="border-0 border-border grid grid-rows-subgrid gap-3 row-span-3">
+    <div className="border-t border-border gap-3 grid grid-cols-1 grid-rows-subgrid row-span-3">
       <h3 className="text-xl font-medium flex items-center gap-2">
         <Network class="text-neutral-400" />
         <span>
@@ -121,6 +121,7 @@ import { Rocket, Network, FlaskConical } from '@lucide/astro';
         Every domain-custom or auto-generated gets a free SSL certificate that is automatically renewed on expiration.
       </small>
     </div>
+  
   </div>
 </section>
 
