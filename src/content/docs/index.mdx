@@ -20,9 +20,9 @@ import EnvironmentListLight from "../../assets/environment-list-light.png";
 import EnvironmentListDark from "../../assets/environment-list-dark.png";
 import PreviewDeploymentCommentLight from "../../assets/preview-deployment-light.png";
 import PreviewDeploymentCommentDark from "../../assets/preview-deployment-dark.png";
-import UrlsLight from "../../assets/urls-light.png";
-import UrlsDark from "../../assets/urls-dark.png";
-import { Rocket, Network, FlaskConical } from '@lucide/astro';
+import BlueGreenLight from "../../assets/blue-green-deployments-light.png";
+import BlueGreenDark from "../../assets/blue-green-deployments-dark.png";
+import { Rocket, Network, FlaskConical, Split } from '@lucide/astro';
 
 
 <Style />
@@ -114,7 +114,7 @@ import { Rocket, Network, FlaskConical } from '@lucide/astro';
       </small>
 
       <div 
-        className="relative w-full aspect-16/9 bg-center bg-contain dark:bg-[#0D1118] py-6 px-4 flex  h-80 items-center justify-center rounded-lg border border-slate-400/10 shadow-xs"
+        className="relative w-full aspect-16/9 bg-center bg-contain bg-bg py-6 px-4 flex  h-80 items-center justify-center rounded-lg border border-slate-400/10 shadow-xs"
         >
         <img src={PreviewDeploymentCommentLight.src} className="dark:hidden " />
         <img src={PreviewDeploymentCommentDark.src} className="hidden dark:inline " />
@@ -123,36 +123,43 @@ import { Rocket, Network, FlaskConical } from '@lucide/astro';
 
     <div className="border-t border-border gap-3 grid grid-cols-1 grid-rows-subgrid row-span-3">
       <h3 className="text-xl font-medium flex items-center gap-2">
-        <Network class="text-neutral-400" />
+        <Split class="text-neutral-400" />
         <span>
-          Automatic & Free SSL certificates
+          Blue/Green deployments
         </span>
       </h3>
       <small className="text-sm">
-        Every domain-custom or auto-generated gets a free SSL certificate that is automatically renewed on expiration.
+        Deploying a new version doesn’t require stopping the old one, ensuring uninterrupted uptime.
       </small>
 
        <div 
         className="relative w-full aspect-16/9 bg-center bg-contain bg-bg py-6 px-4 flex  h-80 items-center justify-center rounded-lg border border-slate-400/10 shadow-xs"
         >
-        <img src={UrlsLight.src} className="dark:hidden " />
-        <img src={UrlsDark.src} className="hidden dark:inline " />
+        <img src={BlueGreenLight.src} className="dark:hidden " />
+        <img src={BlueGreenDark.src} className="hidden dark:inline " />
       </div>
     </div>
   
   </div>
 </section>
 
-<section id="other-features" className="my-32">
-  <h2 className="text-pretty">Everything you need, included</h2>
+<section id="monitoring" className="my-32">
+  <h2 className="text-pretty">Monitoring Made Simple</h2>
   <p>
-    Monitor and debug effortlessly with streamlined logs, commands, metrics, and resource navigation.
+    Unified logs, metrics, and resource views for effortless debugging. 
   </p>
 </section>
 
 <section id="scalability" className="my-32">
-  <h2 className="text-pretty">Secure and scalable</h2>
+  <h2 className="text-pretty">Strength in Battle-Tested Tech</h2>
   <p>
-    Built on the shoulder of giants.
+    Built on trusted open-source technologies, so you can focus on shipping.
+  </p>
+</section>
+
+<section id="testimonials" className="my-32">
+  <h2 className="text-pretty">Developpers love ZaneOps ❤️ </h2>
+  <p>
+     Hear what real teams say about shipping faster with ZaneOps.
   </p>
 </section>
