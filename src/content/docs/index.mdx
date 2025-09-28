@@ -57,8 +57,8 @@ import { Rocket, Network, FlaskConical } from '@lucide/astro';
     Who said a free and open source project should look ugly ?
   </p>
 
-  <div className="grid md:grid-cols-2 my-14 [&>*]:py-6 [&>:nth-of-type(even)]:pl-6  [&>:nth-of-type(even)]:border-l [&>:nth-of-type(odd)]:pr-6">
-    <div className="border-b border-border flex flex-col gap-3">
+  <div className="grid md:grid-cols-2 gap-8 my-14 [&>*]:py-6 [&>:nth-of-type(even)]:pl-6  [&>:nth-of-type(even)]:border-l [&>:nth-of-type(odd)]:pr-6">
+    <div className="border-border grid grid-rows-subgrid flex-col gap-3 row-span-3">
       <h3 className="text-xl font-medium flex items-center gap-2">
         <Rocket class="text-neutral-400" />
         <span>
@@ -78,7 +78,7 @@ import { Rocket, Network, FlaskConical } from '@lucide/astro';
 
     </div>
 
-    <div className="border-b border-border  flex flex-col gap-3">
+    <div className="border-border  flex-col gap-3 grid grid-rows-subgrid row-span-3">
       <h3 className="text-xl font-medium flex items-center gap-2">
         <Network class="text-neutral-400" />
         <span>
@@ -98,7 +98,7 @@ import { Rocket, Network, FlaskConical } from '@lucide/astro';
       </div>
     </div>
 
-    <div className="border-0 border-border flex flex-col gap-3">
+    <div className="border-border  grid grid-rows-subgrid gap-3 row-span-3">
       <h3 className="text-xl font-medium flex items-center gap-2">
         <FlaskConical class="text-neutral-400" />
         <span>
@@ -110,7 +110,7 @@ import { Rocket, Network, FlaskConical } from '@lucide/astro';
       </small>
     </div>
 
-    <div className="border-0 border-border flex flex-col gap-3">
+    <div className="border-0 border-border grid grid-rows-subgrid gap-3 row-span-3">
       <h3 className="text-xl font-medium flex items-center gap-2">
         <Network class="text-neutral-400" />
         <span>
