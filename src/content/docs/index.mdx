@@ -18,6 +18,10 @@ import SourcePickerLight from "../../assets/source-picker-light.png";
 import SourcePickerDark from "../../assets/source-picker-dark.png";
 import EnvironmentListLight from "../../assets/environment-list-light.png";
 import EnvironmentListDark from "../../assets/environment-list-dark.png";
+import PreviewDeploymentCommentLight from "../../assets/preview-deployment-light.png";
+import PreviewDeploymentCommentDark from "../../assets/preview-deployment-dark.png";
+import UrlsLight from "../../assets/urls-light.png";
+import UrlsDark from "../../assets/urls-dark.png";
 import { Rocket, Network, FlaskConical } from '@lucide/astro';
 
 
@@ -90,7 +94,6 @@ import { Rocket, Network, FlaskConical } from '@lucide/astro';
       </small>
 
       <div 
-        
         className="relative w-full aspect-16/9 bg-center bg-contain bg-bg py-6 px-4 flex  h-80 items-center justify-center rounded-lg border border-slate-400/10 shadow-xs"
         >
         <img src={EnvironmentListLight.src} className="dark:hidden " />
@@ -106,8 +109,16 @@ import { Rocket, Network, FlaskConical } from '@lucide/astro';
         </span>
       </h3>
       <small className="text-sm">
-        Create preview deployments from Gitlab and GitHub repositories, either ...
+        Create preview deployments from Gitlab and GitHub repositories. 
+        Test & Preview your features before sending them to production. 
       </small>
+
+      <div 
+        className="relative w-full aspect-16/9 bg-center bg-contain dark:bg-[#0D1118] py-6 px-4 flex  h-80 items-center justify-center rounded-lg border border-slate-400/10 shadow-xs"
+        >
+        <img src={PreviewDeploymentCommentLight.src} className="dark:hidden " />
+        <img src={PreviewDeploymentCommentDark.src} className="hidden dark:inline " />
+      </div>
     </div>
 
     <div className="border-t border-border gap-3 grid grid-cols-1 grid-rows-subgrid row-span-3">
@@ -120,6 +131,13 @@ import { Rocket, Network, FlaskConical } from '@lucide/astro';
       <small className="text-sm">
         Every domain-custom or auto-generated gets a free SSL certificate that is automatically renewed on expiration.
       </small>
+
+       <div 
+        className="relative w-full aspect-16/9 bg-center bg-contain bg-bg py-6 px-4 flex  h-80 items-center justify-center rounded-lg border border-slate-400/10 shadow-xs"
+        >
+        <img src={UrlsLight.src} className="dark:hidden " />
+        <img src={UrlsDark.src} className="hidden dark:inline " />
+      </div>
     </div>
   
   </div>
