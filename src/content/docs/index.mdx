@@ -1,5 +1,5 @@
 ---
-title: ZaneOps
+title: Welcome
 description: ZaneOps is a self-hosted, open source platform as a service for hosting static sites, web apps, databases, CRONS, Workers using docker swarm as the engine.
 template: splash
 banner:
@@ -11,6 +11,7 @@ hero:
 import { Code, Icon, LinkButton } from "@astrojs/starlight/components";
 import Logo from "../../assets/Logo.svg";
 import Style from "../../components/StyleOverride.astro";
+import LogSectionHome from "../../components/LogSectionHome.astro";
 import BrowserScreenshot from "../../components/BrowserScreenshot.astro";
 import DashboardLight from "../../assets/Dashboard_ZaneOps-light.jpeg";
 import DashboardDark from "../../assets/Dashboard_ZaneOps-dark.jpeg";
@@ -143,12 +144,7 @@ import { Rocket, Network, FlaskConical, Split } from '@lucide/astro';
   </div>
 </section>
 
-<section id="monitoring" className="my-32">
-  <h2 className="text-pretty">Monitoring Made Simple</h2>
-  <p>
-    Unified logs, metrics, and resource views for effortless debugging. 
-  </p>
-</section>
+<LogSectionHome />
 
 <section id="scalability" className="my-32">
   <h2 className="text-pretty">Strength in Battle-Tested Tech</h2>

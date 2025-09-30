@@ -1,0 +1,147 @@
+---
+import HttpLogsDark from "../assets/http-logs-dark.png";
+import HttpLogsLight from "../assets/http-logs-light.png";
+import RuntimeLogsDark from "../assets/logs-meili-dark.png";
+import RuntimeLogsLight from "../assets/logs-meili-light.png";
+import MetricsDark from "../assets/service-metrics-dark.png";
+import MetricsLight from "../assets/service-metrics-light.png";
+import ShellDark from "../assets/terminal-dark.png";
+import ShellLight from "../assets/terminal-light.png";
+
+const items = [
+    {
+        id: "runtime-logs",
+        title: "Application Logs",
+        subtitle: "Application logs let you debug your app easily",
+        img: {
+            light: RuntimeLogsLight.src,
+            dark: RuntimeLogsDark.src,
+        },
+    },
+    {
+        id: "http-logs",
+        title: "HTTP Logs",
+        subtitle: "See all the HTTP requests made to your services",
+        img: {
+            light: HttpLogsLight.src,
+            dark: HttpLogsDark.src,
+        },
+    },
+    {
+        id: "metrics",
+        title: "Metrics",
+        subtitle:
+            "Monitor your app's performance with builtin metrics for services and deployments",
+        img: {
+            light: MetricsLight.src,
+            dark: MetricsDark.src,
+        },
+    },
+    {
+        id: "shell",
+        title: "Terminal",
+        subtitle:
+            "Debug your apps by accessing to the shell of their live running deployments",
+        img: {
+            light: ShellLight.src,
+            dark: ShellDark.src,
+        },
+    },
+];
+---
+
+<section id="monitoring" class="my-32 grid md:grid-cols-2">
+    <div class="flex flex-col">
+        <h2 class="text-pretty">Monitoring Made Simple</h2>
+        <p>
+            Unified logs, metrics, and resource views for effortless debugging.
+        </p>
+
+        <div class="py-8 flex flex-col">
+            {
+                items.map((item, index) => (
+                    <button
+                        data-type="slide-trigger"
+                        data-id={item.id}
+                        aria-selected={index === 0 ? "true" : "false"}
+                        class:list={[
+                            "flex flex-col gap-1 border-l px-4 py-2 justify-center border-border",
+                            "aria-selected:border-l-2 aria-selected:border-slate-600",
+                            "bg-transparent items-start text-start cursor-pointer",
+                        ]}
+                    >
+                        <h3 class="text-lg">{item.title}</h3>
+                        <p class="!my-0">{item.subtitle}</p>
+                    </button>
+                ))
+            }
+        </div>
+    </div>
+
+    <div class="flex flex-col">
+        {
+            items.map((item, index) => (
+                <div
+                    id={item.id}
+                    data-type="slide-target"
+                    aria-selected={index === 0 ? "true" : "false"}
+                    class:list={[
+                        "hidden aria-selected:block relative h-full overflow-hidden px-4 pt-12 w-full",
+                        "[mask-image:var(--mask-bottom),_var(--mask-right)]",
+                    ]}
+                    style="
+        --mask-bottom: linear-gradient(to bottom, #000 60%, transparent 100%);
+        --mask-left: linear-gradient(to left, #000 70%, transparent 100%);
+        --mask-right: linear-gradient(to right, #000 70%, transparent 100%);
+        mask-composite: intersect;
+    "
+                >
+                    <div class="relative w-[700px] origin-top-right  sm:scale-100">
+                        <img
+                            src={item.img.light}
+                            class="dark:hidden object-contain object-top-right absolute right-0 top-0 bottom-0"
+                        />
+                        <img
+                            src={item.img.dark}
+                            class="hidden dark:inline object-contain object-top-right absolute right-0 top-0 bottom-0"
+                        />
+                    </div>
+                </div>
+            ))
+        }
+    </div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const buttons = document.querySelectorAll(
+            "button[data-type='slide-trigger']",
+        ) as NodeListOf<HTMLButtonElement>;
+
+        const targets = document.querySelectorAll("[data-type='slide-target']");
+
+        for (const button of buttons) {
+            button.addEventListener("click", (ev) => {
+                buttons.forEach((btn) => {
+                    btn.setAttribute("aria-selected", "false");
+                });
+
+                targets.forEach((target) => {
+                    target.setAttribute("aria-selected", "false");
+                });
+
+                const btn = ev.currentTarget as HTMLButtonElement;
+
+                btn.setAttribute("aria-selected", "true");
+                const selectedTarget = document.getElementById(btn.dataset.id!);
+                console.log({
+                    id: btn.dataset.id,
+                    selectedTarget,
+                });
+                if (selectedTarget) {
+                    selectedTarget.setAttribute("aria-selected", "true");
+                }
+            });
+        }
+    });
+</script>

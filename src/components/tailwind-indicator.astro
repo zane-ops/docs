@@ -12,7 +12,7 @@
 </div>
 
 <script>
-    document.addEventListener("astro:page-load", () => {
+    document.addEventListener("DOMContentLoaded", () => {
         function updateMediaSize() {
             const mediaSizeDisplay = document.getElementById("media-size")!;
             mediaSizeDisplay.textContent = window.innerWidth.toString();
