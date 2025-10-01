@@ -23,7 +23,7 @@ import PreviewDeploymentCommentLight from "../../assets/preview-deployment-light
 import PreviewDeploymentCommentDark from "../../assets/preview-deployment-dark.png";
 import BlueGreenLight from "../../assets/blue-green-deployments-light.png";
 import BlueGreenDark from "../../assets/blue-green-deployments-dark.png";
-import { Rocket, Network, FlaskConical, Split } from '@lucide/astro';
+import { Rocket, Network, FlaskConical, Split, CloudUpload, ShieldCheck, GitCompareArrows, Heart } from '@lucide/astro';
 
 
 <Style />
@@ -146,25 +146,37 @@ import { Rocket, Network, FlaskConical, Split } from '@lucide/astro';
 
 <LogSectionHome />
 
-<section id="workflow" className="my-32 grid md:grid-cols-2 lg:grid-cols-4 gap-12 place-items-center place-content-center md:mx-auto w-fit lg:w-full">
-  <div className="flex flex-col gap-2 max-w-80">
-    <h3 className="text-lg flex items-center gap-2">Push to deploy</h3>
+<section id="workflow" className="my-32 grid md:grid-cols-2 lg:grid-cols-4 gap-12 place-items-start place-content-center md:mx-auto w-fit lg:w-full">
+  <div className="flex flex-col gap-2 w-full md:max-w-80">
+    <h3 className="text-lg flex items-center gap-2">
+      <CloudUpload className="text-neutral-400 flex-none" />
+    <span>Push to deploy</span>
+    </h3>
     <p>You can deploy manually, automatically on every `git push` or via CI/CD.</p>
   </div>
 
-  <div className="flex flex-col gap-2 max-w-80">
-    <h3 className="text-lg flex items-center gap-2">Deploy hooks</h3>
-    <p>Connect your app to any external service of your choice.</p>
+  <div className="flex flex-col gap-2 w-full md:max-w-80">
+    <h3 className="text-lg flex items-center gap-2">
+      <ShieldCheck className="text-neutral-400 flex-none" />
+      <span>Free SSL certificates</span>
+    </h3>
+    <p>Every domain-custom or auto-generated gets a free SSL certificate no manual setup required</p>
   </div>
 
-  <div className="flex flex-col gap-2 max-w-80">
-    <h3 className="text-lg flex items-center gap-2">Task scheduler</h3>
-    <p>Need a job to run every hour, or every day? Just toggle it on.</p>
+  <div className="flex flex-col gap-2 w-full md:max-w-80">
+    <h3 className="text-lg flex items-start gap-2">
+       <GitCompareArrows className="text-neutral-400 flex-none" />
+      <span>Git-Like Config System</span>
+    </h3>
+    <p>Review and validate changes before deploying new versions.</p>
   </div>
 
-  <div className="flex flex-col gap-2 max-w-80">
-    <h3 className="text-lg flex items-center gap-2">Octane</h3>
-    <p>Run your app on Octane, Laravel's high‑performance application server.</p>
+  <div className="flex flex-col gap-2 w-full md:max-w-80">
+    <h3 className="text-lg flex items-start gap-2">
+       <Heart className="text-neutral-400 flex-none" />
+      <span>Best in class UI & UX</span>
+    </h3>
+    <p>Sleek, intuitive and fast, built to get out of your way.</p>
   </div>
 </section>
 
@@ -176,8 +188,8 @@ import { Rocket, Network, FlaskConical, Split } from '@lucide/astro';
   </p>
 </section> */}
 
-{/*
-<section id="testimonials" className="my-32">
+
+{/* <section id="testimonials" className="my-32">
   <h2 className="text-pretty">Developpers love ZaneOps ❤️ </h2>
   <p>
      Hear what real teams say about shipping faster with ZaneOps.
