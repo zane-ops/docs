@@ -146,13 +146,37 @@ import { Rocket, Network, FlaskConical, Split } from '@lucide/astro';
 
 <LogSectionHome />
 
+<section id="workflow" className="my-32 grid md:grid-cols-2 lg:grid-cols-4 gap-12 place-items-center place-content-center md:mx-auto w-fit lg:w-full">
+  <div className="flex flex-col gap-2 max-w-80">
+    <h3 className="text-lg flex items-center gap-2">Push to deploy</h3>
+    <p>You can deploy manually, automatically on every `git push` or via CI/CD.</p>
+  </div>
+
+  <div className="flex flex-col gap-2 max-w-80">
+    <h3 className="text-lg flex items-center gap-2">Deploy hooks</h3>
+    <p>Connect your app to any external service of your choice.</p>
+  </div>
+
+  <div className="flex flex-col gap-2 max-w-80">
+    <h3 className="text-lg flex items-center gap-2">Task scheduler</h3>
+    <p>Need a job to run every hour, or every day? Just toggle it on.</p>
+  </div>
+
+  <div className="flex flex-col gap-2 max-w-80">
+    <h3 className="text-lg flex items-center gap-2">Octane</h3>
+    <p>Run your app on Octane, Laravel's high‑performance application server.</p>
+  </div>
+</section>
+
+
 {/* <section id="scalability" className="my-32">
   <h2 className="text-pretty">Strength in Battle-Tested Tech</h2>
   <p>
     Built on trusted open-source technologies, so you can focus on shipping.
   </p>
-</section>
+</section> */}
 
+{/*
 <section id="testimonials" className="my-32">
   <h2 className="text-pretty">Developpers love ZaneOps ❤️ </h2>
   <p>
