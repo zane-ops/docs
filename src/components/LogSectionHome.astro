@@ -57,7 +57,7 @@ const items = [
             Unified logs, metrics, and resource views for effortless debugging.
         </p>
 
-        <div class="py-8 flex flex-col">
+        <div class="py-8 flex flex-col w-full">
             {
                 items.map((item, index) => (
                     <button
@@ -86,8 +86,9 @@ const items = [
                     data-type="slide-target"
                     aria-selected={index === 0 ? "true" : "false"}
                     class:list={[
-                        "hidden aria-selected:block relative h-full overflow-hidden px-4 pt-12 w-full",
-                        "[mask-image:var(--mask-bottom),_var(--mask-right)]",
+                        "hidden aria-selected:block relative h-[400px] md:h-full overflow-hidden px-4 pt-12 w-full",
+                        "[mask-image:var(--mask-bottom)]",
+                        "md:[mask-image:var(--mask-bottom),_var(--mask-right)]",
                     ]}
                     style="
         --mask-bottom: linear-gradient(to bottom, #000 60%, transparent 100%);
@@ -96,7 +97,7 @@ const items = [
         mask-composite: intersect;
     "
                 >
-                    <div class="relative w-[700px] origin-top-right  sm:scale-100">
+                    <div class="relative md:w-[700px] origin-top-right w-full">
                         <img
                             src={item.img.light}
                             class="dark:hidden object-contain object-top-right absolute right-0 top-0 bottom-0"
