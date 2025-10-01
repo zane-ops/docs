@@ -1,9 +1,21 @@
+FROM node:22-alpine AS base
+WORKDIR /app
+
+# install dependencies
+COPY package.json ./pnpm-lock.yaml ./
+RUN corepack enable && corepack install
+RUN pnpm install --frozen-lockfile
+
+# build the app
+FROM base AS build
+COPY . .
+RUN FORCE_COLOR=true pnpm run build
+
+
 # Webapp based on caddy
-FROM caddy:2.8-alpine
-
-LABEL org.opencontainers.image.source = "https://github.com/zane-ops/docs"
-
+FROM caddy:2.9-alpine AS runtime
 WORKDIR /var/www/html
 
-COPY ./dist/ ./
-COPY ./Caddyfile /etc/caddy/Caddyfile
+
+COPY --from=build /app/dist ./
+COPY --from=build /app/Caddyfile /etc/caddy/Caddyfile
