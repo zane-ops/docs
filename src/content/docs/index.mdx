@@ -23,7 +23,9 @@ import PreviewDeploymentCommentLight from "../../assets/preview-deployment-light
 import PreviewDeploymentCommentDark from "../../assets/preview-deployment-dark.png";
 import BlueGreenLight from "../../assets/blue-green-deployments-light.png";
 import BlueGreenDark from "../../assets/blue-green-deployments-dark.png";
-import { Rocket, Network, FlaskConical, Split, CloudUpload, ShieldCheck, GitCompareArrows, Heart } from '@lucide/astro';
+import SwarmLogo from "../../assets/swarm-logo.png";
+import CaddyLogo from "../../assets/caddy-logo.svg";
+import { Rocket, Network, FlaskConical, Split, CloudUpload, ShieldCheck, GitCompareArrows, Heart, Globe } from '@lucide/astro';
 
 
 <Style />
@@ -181,12 +183,47 @@ import { Rocket, Network, FlaskConical, Split, CloudUpload, ShieldCheck, GitComp
 </section>
 
 
-{/* <section id="scalability" className="my-32">
-  <h2 className="text-pretty">Strength in Battle-Tested Tech</h2>
-  <p>
-    Built on trusted open-source technologies, so you can focus on shipping.
-  </p>
-</section> */}
+<section id="scalability" className="my-46 flex flex-col gap-24">
+  <div>
+    <h2 className="text-pretty">Strength in Battle-Tested Tech</h2>
+    <p>
+      Powered by trusted open-source technologies, ZaneOps lets you focus on building and shipping, while we handle the complexity.
+    </p>
+  </div>
+
+  <div className="grid md:grid-cols-2 gap-16 md:gap-8 place-items-start">
+    <div className="flex flex-col gap-4 items-start h-full">
+      <div class="flex flex-col gap-1">
+        <h3 className="text-lg flex items-center gap-2">
+          <Network className="text-neutral-400" />
+          Docker swarm
+        </h3>
+        <p> 
+          Powers ZaneOps behind the scenes, orchestrating your services, handling scaling, 
+          and keeping deployments reliable without manual intervention.
+        </p>
+      </div>
+      <div class="h-full flex items-center w-full">
+        <img src={SwarmLogo.src} className="w-80 max-w-full" />
+      </div>
+    </div>
+    <div className="flex flex-col gap-6 items-start h-full">
+      <div class="flex flex-col gap-1">
+        <h3 className="text-lg flex items-center gap-2">
+          <Globe className="text-neutral-400" />
+          Caddy
+        </h3>
+        <p>
+          Manages all external traffic in ZaneOps, providing automatic HTTPS,
+          acting as a reverse proxy, and ensuring your services are securely and seamlessly accessible.
+        </p>
+      </div>
+      <div class="h-full flex items-center w-full">
+        <img src={CaddyLogo.src} className="w-80 max-w-full" />
+      </div>
+    </div>
+  </div>
+</section>
 
 
 {/* <section id="testimonials" className="my-32">
