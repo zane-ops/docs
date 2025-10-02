@@ -29,6 +29,7 @@ import { Rocket, Network, FlaskConical, Split, CloudUpload, ShieldCheck, GitComp
 
 
 <Style />
+
 <section id="hero" class="py-12 md:pt-24 grid grid-cols-1 md:grid-cols-3 gap-2 items-center">
   <div class="md:col-span-2 flex flex-col gap-2 items-center text-center md:text-start md:items-start">
     <h1 class="text-4xl md:text-5xl lg:text-6xl whitespace-nowrap">
@@ -58,13 +59,16 @@ import { Rocket, Network, FlaskConical, Split, CloudUpload, ShieldCheck, GitComp
   <BrowserScreenshot srcLight={DashboardLight.src} srcDark={DashboardDark.src} alt="ZaneOps dashboard" />
 </section>
 
+
+<div className="flex flex-col gap-46">
+
 <section id="feature-highlight" className="mt-60 flex flex-col gap-2">
   <h2 className="text-pretty">Exceptional speed and user experience, packed with features</h2>
   <p>
     Who said a free and open source project should look ugly ?
   </p>
 
-  <div className="grid md:grid-cols-2 my-14 [&>*]:py-6 [&>:nth-of-type(even)]:md:pl-6  [&>:nth-of-type(even)]:md:border-l [&>:nth-of-type(odd)]:md:pr-6">
+  <div className="grid md:grid-cols-2 [&>*]:py-6 [&>:nth-of-type(even)]:md:pl-6  [&>:nth-of-type(even)]:md:border-l [&>:nth-of-type(odd)]:md:pr-6">
     <div className="border-border flex-col gap-3 grid grid-cols-1 grid-rows-subgrid row-span-3">
       <h3 className="text-xl font-medium flex items-center gap-2">
         <Rocket class="text-neutral-400" />
@@ -146,9 +150,7 @@ import { Rocket, Network, FlaskConical, Split, CloudUpload, ShieldCheck, GitComp
   </div>
 </section>
 
-<LogSectionHome />
-
-<section id="workflow" className="my-46 grid md:grid-cols-2 lg:grid-cols-4 gap-12 place-items-start place-content-center md:mx-auto w-fit lg:w-full">
+<section id="workflow" className="mb-32 grid md:grid-cols-2 lg:grid-cols-4 gap-12 place-items-start place-content-center md:mx-auto w-fit lg:w-full">
   <div className="flex flex-col gap-2 w-full md:max-w-80">
     <h3 className="text-lg flex items-center gap-2">
       <CloudUpload className="text-neutral-400 flex-none" />
@@ -183,7 +185,9 @@ import { Rocket, Network, FlaskConical, Split, CloudUpload, ShieldCheck, GitComp
 </section>
 
 
-<section id="scalability" className="my-46 flex flex-col gap-24">
+<LogSectionHome />
+
+<section id="scalability" className="flex flex-col gap-24">
   <div>
     <h2 className="text-pretty">Strength in Battle-Tested Tech</h2>
     <p>
@@ -232,3 +236,5 @@ import { Rocket, Network, FlaskConical, Split, CloudUpload, ShieldCheck, GitComp
      Hear what real teams say about shipping faster with ZaneOps.
   </p>
 </section> */}
+
+</div>
