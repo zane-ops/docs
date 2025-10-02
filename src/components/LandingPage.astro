@@ -11,14 +11,18 @@ import {
     ShieldCheck,
     Split,
 } from "@lucide/astro";
+import AhmedBasetPFP from "../assets/ahmedbaset.jpg";
+import AwahPFP from "../assets/awah.jpeg";
 import BlueGreenDark from "../assets/blue-green-deployments-dark.png";
 import BlueGreenLight from "../assets/blue-green-deployments-light.png";
 import CaddyLogo from "../assets/caddy-logo.svg";
 import DashboardDark from "../assets/Dashboard_ZaneOps-dark.jpeg";
 import DashboardLight from "../assets/Dashboard_ZaneOps-light.jpeg";
+import EdhPFP from "../assets/edh.jpg";
 import EnvironmentListDark from "../assets/environment-list-dark.png";
 import EnvironmentListLight from "../assets/environment-list-light.png";
 import Logo from "../assets/Logo.svg";
+import MocherifPFP from "../assets/mocherif.jpg";
 import PreviewDeploymentCommentDark from "../assets/preview-deployment-dark.png";
 import PreviewDeploymentCommentLight from "../assets/preview-deployment-light.png";
 import SourcePickerDark from "../assets/source-picker-dark.png";
@@ -28,35 +32,47 @@ import BrowserScreenshot from "./BrowserScreenshot.astro";
 import LogSectionHome from "./LogSectionHome.astro";
 
 type Testimonial = {
+    avatarUrl?: string;
     name: string;
     occupation: string;
-    message: string;
+    message: string[];
 };
 
 const testimonials: Testimonial[] = [
     {
         name: " Enzo",
         occupation: "Hobbyist",
-        message:
-            "I really enjoy ZaneOps as it makes it easy to deploy full-stack applications without needing to spend endless amounts of money on proprietary hosting.",
+        avatarUrl: EdhPFP.src,
+        message: [
+            `I really enjoy ZaneOps.`,
+            `It makes it easy to deploy full-stack applications without needing to spend endless amounts of money on proprietary hosting.`,
+        ],
     },
     {
         name: "Awa",
         occupation: "Fullstack Developer",
-        message:
+        avatarUrl: AwahPFP.src,
+        message: [
             "It’s made in France 🇫🇷, easy to use, well documented and the main contributor closely listens to feedback",
+        ],
     },
     {
         name: "Mohamed Cherif",
         occupation: "Product and AI engineer | ZaneOps core team",
-        message:
-            "I’ve had the chance to contribute to ZaneOps while also using it for many of my clients. What I really like about it is how straightforward it is — you don’t get lost in complexity, it just works. From development all the way to production, it helps manage and deploy services smoothly. We built it with care to make things easier for teams, and it really shows. I’m proud to recommend ZaneOps because it’s a tool that actually makes life simpler.",
+        avatarUrl: MocherifPFP.src,
+        message: [
+            "I’ve had the chance to contribute to ZaneOps while also using it for many of my clients.",
+            "What I really like about it is how straightforward it is — you don’t get lost in complexity, it just works. From development all the way to production, it helps manage and deploy services smoothly. We built it with care to make things easier for teams, and it really shows. I’m proud to recommend ZaneOps because it’s a tool that actually makes life simpler.",
+        ],
     },
     {
         name: "Ahmed Abdelbaset",
         occupation: "Full-stack Developer",
-        message:
-            "We tried many hosting setups — from expensive managed services to the endless pain of building CI pipelines, Docker, and Nginx configs by hand. Moving to ZaneOps changed everything: a couple of commands on our VPS and we were up and running with multi-environment hosting, preview deployments, domain management, a beautiful dashboard, and persistent runtime logs. So glad we made the switch.",
+        avatarUrl: AhmedBasetPFP.src,
+        message: [
+            "We tried many hosting setups, from expensive managed services to the endless pain of building CI pipelines, Docker, and Nginx configs by hand.",
+            " Moving to ZaneOps changed everything: a couple of commands on our VPS and we were up and running with multi-environment hosting, preview deployments, domain management, a beautiful dashboard, and persistent runtime logs. So glad we made the switch.",
+        ],
     },
 ];
 ---
@@ -86,7 +102,10 @@ const testimonials: Testimonial[] = [
                 Get started
                 <Icon name="right-arrow" />
             </LinkButton>
-            <LinkButton variant="minimal" href="/installation">
+            <LinkButton
+                variant="minimal"
+                href="https://github.com/zane-ops/zane-ops"
+            >
                 Star us on Github
                 <Icon name="github" />
             </LinkButton>
@@ -317,19 +336,30 @@ const testimonials: Testimonial[] = [
     <section id="testimonials" class="flex flex-col gap-8">
         <div>
             <h2 class="text-pretty">Developers love ZaneOps ❤️</h2>
-            <p>Hear what real teams say about shipping faster with ZaneOps.</p>
+            <p>Hear what people are saying about ZaneOps.</p>
         </div>
 
         <div class="grid md:grid-cols-2 gap-8 place-content-center">
             {
                 testimonials.map((t) => (
-                    <div class="flex flex-col gap-2 justify-center">
-                        <blockquote class="border-l-2 border-[var(--sl-color-accent)] px-4">
-                            {t.message}
+                    <div class="flex flex-col gap-6 justify-center">
+                        <blockquote class="border-l-2 border-[var(--sl-color-accent)] px-4 ">
+                            <div class="border border-neutral-400/50 p-2 rounded-sm">
+                                {t.message.map((msg) => (
+                                    <p class="my-1.5">{msg}</p>
+                                ))}
+                            </div>
                         </blockquote>
-                        <span>
-                            <strong>{t.name}</strong> - {t.occupation}
-                        </span>
+                        <div class="flex items-center gap-2">
+                            <img
+                                src={t.avatarUrl}
+                                class="size-12 flex-none rounded-full object-cover object-center border-2 border-[var(--sl-color-accent)]"
+                            />
+                            <div class="flex flex-col items-start">
+                                <strong>{t.name}</strong>
+                                <span>{t.occupation}</span>
+                            </div>
+                        </div>
                     </div>
                 ))
             }
