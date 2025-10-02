@@ -62,7 +62,8 @@ const testimonials: Testimonial[] = [
         avatarUrl: MocherifPFP.src,
         message: [
             "I’ve had the chance to contribute to ZaneOps while also using it for many of my clients.",
-            "What I really like about it is how straightforward it is — you don’t get lost in complexity, it just works. From development all the way to production, it helps manage and deploy services smoothly. We built it with care to make things easier for teams, and it really shows. I’m proud to recommend ZaneOps because it’s a tool that actually makes life simpler.",
+            "What I really like about it is how straightforward it is, you don’t get lost in complexity, it just works. From development all the way to production, it helps manage and deploy services smoothly. We built it with care to make things easier for teams, and it really shows.",
+            "I’m proud to recommend ZaneOps because it’s a tool that actually makes life simpler.",
         ],
     },
     {
@@ -71,7 +72,8 @@ const testimonials: Testimonial[] = [
         avatarUrl: AhmedBasetPFP.src,
         message: [
             "We tried many hosting setups, from expensive managed services to the endless pain of building CI pipelines, Docker, and Nginx configs by hand.",
-            " Moving to ZaneOps changed everything: a couple of commands on our VPS and we were up and running with multi-environment hosting, preview deployments, domain management, a beautiful dashboard, and persistent runtime logs. So glad we made the switch.",
+            "Moving to ZaneOps changed everything: a couple of commands on our VPS and we were up and running with multi-environment hosting, preview deployments, domain management, a beautiful dashboard, and persistent runtime logs.",
+            "So glad we made the switch.",
         ],
     },
 ];
@@ -339,14 +341,14 @@ const testimonials: Testimonial[] = [
             <p>Hear what people are saying about ZaneOps.</p>
         </div>
 
-        <div class="grid md:grid-cols-2 gap-8 place-content-center">
+        <div class="grid md:grid-cols-2 gap-12 md:gap-8 place-content-center">
             {
                 testimonials.map((t) => (
-                    <div class="flex flex-col gap-6 justify-center">
+                    <div class="flex flex-col gap-4 md:gap-6 justify-center">
                         <blockquote class="border-l-2 border-[var(--sl-color-accent)] px-4 ">
                             <div class="border border-neutral-400/50 p-2 rounded-sm">
                                 {t.message.map((msg) => (
-                                    <p class="my-1.5">{msg}</p>
+                                    <p class="my-2">{msg}</p>
                                 ))}
                             </div>
                         </blockquote>
