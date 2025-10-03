@@ -19,6 +19,12 @@
 
 }
 
+@layer base {
+	video {
+		 border-radius: var(--radius-md);
+	}
+}
+
 :root[data-theme='dark'] {
 	--sl-color-accent-low: #440921;
 	--sl-color-accent: hsl(164 61% 70%);
