@@ -32,7 +32,26 @@ Today we release zaneOps v1.12 introducing support for [preview environments](#)
 
 ### Preview environments
 
-...
+The major feature for this version is preview environments. They allow you to test a feature in 
+a branch or pull request on your app before merging to production. 
+
+For services created via Git applications, Pull request preview environments are activated by default, 
+each preview environment
+
+You can create preview environments via API or Pull Request (GitHub)/Merge Request (GitLab).
+
+#### GitHub PR preview environments
+<video src="https://assets.zaneops.dev/videos/pull request preview with comment.mp4" alt="GitHub pull request preview deployments" muted controls />
+
+#### GitLab MR preview environments
+
+<Aside type="caution" title='Resync gitlab app'>
+There was a bug with GitLab application webhooks where 
+it didn't subscribe to merge request events, you need to resync repositories to fix this. 
+</Aside>
+
+<video src="https://assets.zaneops.dev/videos/giltab-merge-request.mp4" alt="GitLab merge request preview deployments" muted controls />
+
 
 ### New dashboard design
 
@@ -72,7 +91,7 @@ You can now update the user's info (firstname, lastname, username) and password 
     <img className="block dark:hidden rounded-md" src="/images/docker-image-autocomplete-light.png" alt="Autocomplete docker images" />
     <img className="!hidden dark:!block rounded-md" src="/images/docker-image-autocomplete-dark.png" alt="Autocomplete docker images" />
 
-- New theme switcher to allow you to select between light & dark mode:
+- New theme switcher to allow you to select between light, dark mode or following the system's preferences:
     <video src="https://assets.zaneops.dev/videos/theme switcher.mp4" alt="Theme switcher" muted controls />
 
 - Starting from `v1.12`, release notes for next versions will be shown directly in ZaneOps's dashboard: 
