@@ -31,7 +31,7 @@ async function SVG(props: OpenGraphProps) {
 export const GET: APIRoute = async function get({ props }) {
   const resvg = new Resvg(
     await SVG({
-      title: props.title ?? "Zaneops documentation",
+      title: props.title ?? "ZaneOps documentation",
       description: props.description ?? "zaneops.dev"
     }),
     {
@@ -68,7 +68,7 @@ export async function getStaticPaths() {
       return {
         params: { route: undefined },
         props: {
-          title: "Zaneops",
+          title: "ZaneOps",
           description:
             "A self-hosted platform for managing and deploying web apps, static sites, databases, workers, and more..."
         }
