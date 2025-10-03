@@ -1,0 +1,32 @@
+---
+title: Overview
+description: Learn how preview environments and deployments work on ZaneOps.
+---
+
+import { ASSETS_SERVER_DOMAIN } from "astro:env/client"
+import {Aside} from '@astrojs/starlight/components';
+
+> Introduced in [**v1.12.0**](/changelog/v112)
+
+Preview environments allow you to spin ephemeral environments for features. You might want 
+to use them to:
+- Test features in isolation before merging to production 
+- To generate experiments
+- A/B tests, etc.
+
+
+
+## How do they work behind the scenes ?
+
+By default when creating a preview environment, all the services from the base environment (production by default) will
+be cloned to the new environment, including all service configurations & env variables, volumes are not cloned, instead
+they are recreated, so data stays separated between each environment.
+
+You can customize which services are cloned using [preview templates](./preview-templates).
+
+
+
+## Creating preview environments
+
+You can create preview environments two ways, via [API](./create-preview-from-api) or [pull request](./create-preview-from-pull-request).
+
