@@ -8,25 +8,39 @@ import {Aside} from '@astrojs/starlight/components';
 
 > Introduced in [**v1.12.0**](/changelog/v112)
 
-Preview environments allow you to spin ephemeral environments for features. You might want 
-to use them to:
-- Test features in isolation before merging to production 
-- To generate experiments
-- A/B tests, etc.
+Preview environments let you spin up **ephemeral copies of your apps** for testing and review.  
+They are ideal when you want to:  
+
+- Test features in isolation before merging to production  
+- Run product experiments or proofs of concept  
+- Conduct A/B testing with real services  
+- Share a working feature branch with your team or stakeholders  
+
+---
+
+### How do they work?
+
+When you create a preview environment:  
+
+- All services from a **base environment** (production by default) are **cloned** into a new environment.  
+- Service configuration and environment variables are preserved.  
+- **Volumes are not cloned**. Instead, fresh volumes are created to ensure data stays isolated between environments.  
+
+You can control which services get cloned by defining a [preview template](./a-preview-templates).  
+This allows you to include only the services needed for your feature or experiment.  
 
 
+### Creating preview environments
 
-## How do they work behind the scenes ?
+There are two ways to create a preview environment:  
 
-By default when creating a preview environment, all the services from the base environment (production by default) will
-be cloned to the new environment, including all service configurations & env variables, volumes are not cloned, instead
-they are recreated, so data stays separated between each environment.
+1. **Via API** — programmatically spin up previews for custom workflows. See [API guide](./create-preview-from-api).  
+2. **Via Pull Request** — automatically create a preview when opening or updating a PR. See [PR integration](./create-preview-from-pull-request).  
 
-You can customize which services are cloned using [preview templates](./preview-templates).
+---
 
+<Aside type="note" title="Good to know">
+Preview environments are temporary by design. Once the feature branch is merged, closed or deleted, the preview is cleaned up automatically to save resources.
+</Aside>
 
-
-## Creating preview environments
-
-You can create preview environments two ways, via [API](./create-preview-from-api) or [pull request](./create-preview-from-pull-request).
 
