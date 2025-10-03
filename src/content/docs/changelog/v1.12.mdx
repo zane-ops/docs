@@ -49,18 +49,31 @@ We also updated the design on the project detail page, you will now get logos fo
 
 ### Account settings
 
-...
+You can now update the user's info (firstname, lastname, username) and password :
+
+<video src="https://assets.zaneops.dev/videos/account-settings.mp4" alt="Account settings" muted controls />
 
 ### Other changes
 
-- In the next versions of ZaneOps, a persistent will be shown while updating to a new version
-    > TODO: img
+- In the next versions of ZaneOps, a persistent toast will be shown while updating to a new version:
+    <video src="https://assets.zaneops.dev/videos/auto-update-toast.mp4" alt="Auto update toast" muted controls />
+    
 - Terminals have now a light & Dark theme
-    > TODO: img
-- When selecting branch for a repository, a list of branches will be shown for autocomplete 
-    > TODO: img
-- Same for docker images in the service's settings page
-    > TODO: img
-- New them switcher to allow you to select between light & dark mode
-    > TODO: img
- 
+    <img src="/images/terminal-light.png" alt="Terminal" />
+    <img src="/images/terminal-dark.png" alt="Terminal" />
+
+- When selecting branch for a repository, a list of branches will be shown for autocomplete:
+   
+    <img className="block dark:hidden rounded-md" src="/images/repo-branch-autocomplete-light.png" alt="Autocomplete git branches for a repository" />
+    <img className="!hidden dark:!block rounded-md" src="/images/repo-branch-autocomplete-dark.png" alt="Autocomplete git branches for a repository" />
+
+- Same for docker images in the service's settings page:
+   
+    <img className="block dark:hidden rounded-md" src="/images/docker-image-autocomplete-light.png" alt="Autocomplete docker images" />
+    <img className="!hidden dark:!block rounded-md" src="/images/docker-image-autocomplete-dark.png" alt="Autocomplete docker images" />
+
+- New theme switcher to allow you to select between light & dark mode:
+    <video src="https://assets.zaneops.dev/videos/theme switcher.mp4" alt="Theme switcher" muted controls />
+
+- Starting from `v1.12`, release notes for next versions will be shown directly in ZaneOps's dashboard: 
+   <img src="/images/release-notes.png" alt="Changelog" className='rounded-md shadow-md my-4 mx-auto' />
