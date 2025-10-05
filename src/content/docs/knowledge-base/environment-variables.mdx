@@ -27,3 +27,55 @@ Each variable added to an environment is available to all services in that envir
 You can also reference them in individual services by using a placeholder `{{env.VARIABLE_NAME}}`. All 
 referenced variables are replaced at runtime when your app has been deployed. if the 
 referenced variable doesn't exist in the environment, the placeholder will not be replaced. 
+
+
+
+## System environment variables
+
+ZaneOps provides a set of predefined variables you can use in your service.
+
+- `ZANE`
+  - Example: `true`
+  - Flag indicating the service is deployed on ZaneOps.
+
+- `ZANE_DOMAINS`
+  - Example: `example.com,admin.example.com`
+  - Comma-separated list of all public domains where this service is accessible.
+
+- `ZANE_ENVIRONMENT`
+  - Example: `production`
+  - The environment name where the service is deployed (for example: `production`, `staging`).
+
+- `ZANE_PRIVATE_DOMAIN`
+  - Example: `service.project.internal.zaneops`
+  - Internal project-scoped domain used to reach this service from other services in the same project.
+
+- `ZANE_GLOBAL_PRIVATE_DOMAIN`
+  - Example: `service.global.zaneops`
+  - Global domain used to reach this service across the ZaneOps platform (across projects).
+
+- `ZANE_DEPLOYMENT_TYPE`
+  - Example: `docker` or `git`
+  - The type of deployment for the service. `docker` indicates a container image; `git` indicates a source-based deployment.
+
+- `ZANE_SERVICE_ID`
+  - Example: `srv_01F2ABC3D4`
+  - The unique identifier for the service.
+
+- `ZANE_SERVICE_NAME`
+  - Example: `my-service`
+  - The slug or short name of the service.
+
+- `ZANE_PROJECT_ID`
+  - Example: `proj_0123ABCD`
+  - The id of the project this service belongs to.
+
+- `ZANE_DEPLOYMENT_SLOT`
+  - Example: `blue` or `green`
+  - The deployment slot for the running deployment (used for blue/green deployments).
+    This is also sent as the HTTP header `x-zane-dpl-slot` on internal platform requests.
+
+- `ZANE_DEPLOYMENT_HASH`
+  - Example: `dpl_dkr_aBcDeFgHiJkLmN`
+  - The unique hash for this specific deployment. This is also sent as the HTTP header `x-zane-dpl-hash`.
+
