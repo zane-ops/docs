@@ -9,7 +9,7 @@ RUN FORCE_COLOR=true pnpm install --frozen-lockfile
 # build the app
 FROM base AS build
 COPY . .
-RUN FORCE_COLOR=true pnpm run build
+RUN --mount=type=cache,target=/app/.astro FORCE_COLOR=true pnpm run build
 
 
 # Webapp based on caddy
