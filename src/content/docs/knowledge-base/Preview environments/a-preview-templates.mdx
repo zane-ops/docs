@@ -26,8 +26,6 @@ A template can define:
 - **TTL (time-to-live)**: how long previews remain active (defaults to **infinite**).  
 - **Authentication**: enable or disable access protection for preview environments.  
 
-> TODO: architecture img
-
 
 ### Where to configure templates
 
@@ -37,7 +35,9 @@ You can create and manage templates under **Project > Settings > Preview templat
 - Only one template can be marked as the **default**.  
 - The default template is automatically used for pull requests and when you omit the `template` field in the API.  
 
-> TODO: img
+  <img className="block dark:hidden" src={`/images/preview-templates-light.png`} alt="Preview templates" />
+    <img className="!hidden dark:!block" src={`/images/preview-templates-dark.png`} alt="Preview templates" />
+  
 
 
 ### Cloning strategies
@@ -52,7 +52,9 @@ You can choose how services are cloned into a preview environment:
   This is useful for sharing heavy or persistent services across environments (e.g. reusing the same database in previews).  
   To connect across environments, use the **global network alias** of the shared service.  
 
-    > TODO: img
+
+    > TODO: architecture img
+
 ### Root domain
 
 By default, ZaneOps uses the `ROOT_DOMAIN` environment variable as the base domain for preview environments.  
