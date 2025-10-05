@@ -3,7 +3,7 @@ WORKDIR /app
 
 # install dependencies
 COPY package.json ./pnpm-lock.yaml ./
-RUN corepack enable && corepack install
+RUN npm i -g pnpm@8
 RUN FORCE_COLOR=true pnpm install --frozen-lockfile
 
 # build the app
