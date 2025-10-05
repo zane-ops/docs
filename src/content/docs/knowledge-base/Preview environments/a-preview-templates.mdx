@@ -47,13 +47,15 @@ You can choose how services are cloned into a preview environment:
 - **All services**: spin up a full copy of the base environment.  
   Use this to test features in complete isolation.  
   If your services communicate using environment network aliases, no extra configuration is required.  
+      
+      ![Clone all services strategy](/images/clone-all-strategy.png)
 
 - **Only selected services**: clone only the services you need.  
   This is useful for sharing heavy or persistent services across environments (e.g. reusing the same database in previews).  
   To connect across environments, use the **global network alias** of the shared service.  
 
 
-    > TODO: architecture img
+      ![Clone selected services strategy](/images/clone-selected-strategy.png)
 
 ### Root domain
 
