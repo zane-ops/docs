@@ -36,7 +36,7 @@ You can create and manage templates under **Project > Settings > Preview templat
 - The default template is automatically used for pull requests and when you omit the `template` field in the API.  
 
   <img className="block dark:hidden" src={`/images/preview-templates-light.png`} alt="Preview templates" />
-    <img className="!hidden dark:!block" src={`/images/preview-templates-dark.png`} alt="Preview templates" />
+  <img className="!hidden dark:!block" src={`/images/preview-templates-dark.png`} alt="Preview templates" />
   
 
 
@@ -48,14 +48,16 @@ You can choose how services are cloned into a preview environment:
   Use this to test features in complete isolation.  
   If your services communicate using environment network aliases, no extra configuration is required.  
       
-      ![Clone all services strategy](/images/clone-all-strategy.png)
+      <img className="block dark:hidden" src={`/images/clone-all-strategy-light.png`} alt="Clone all services strategy" />
+      <img className="!hidden dark:!block" src={`/images/clone-all-strategy-dark.png`} alt="Clone all services strategy" />
 
 - **Only selected services**: clone only the services you need.  
   This is useful for sharing heavy or persistent services across environments (e.g. reusing the same database in previews).  
   To connect across environments, use the **global network alias** of the shared service.  
 
+      <img className="block dark:hidden" src={`/images/clone-selected-strategy-light.png`} alt="Clone selected services strategy" />
+      <img className="!hidden dark:!block" src={`/images/clone-selected-strategy-dark.png`} alt="Clone selected services strategy" />
 
-      ![Clone selected services strategy](/images/clone-selected-strategy.png)
 
 ### Root domain
 
