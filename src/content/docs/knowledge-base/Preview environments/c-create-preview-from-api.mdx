@@ -1,0 +1,95 @@
+---
+title: Triggering preview environments via API
+description: Learn how to create and manage preview environments programmatically
+---
+
+import {Aside} from '@astrojs/starlight/components';
+
+> Introduced in [**v1.12.0**](/changelog/v112)
+
+You can use the [API](/api-reference/openapi/#tag/trigger-preview) to **programmatically trigger preview environments**.  
+This gives you more control and flexibility over how previews are created and linked to your Git workflow.  
+
+The main way to predefine preview behavior is through [preview templates](./a-preview-templates),  
+which let you configure which services are cloned, what environment variables to use, and other parameters.  
+
+You can trigger preview environments via the API and associate them with either a **branch** or a **pull request**.  
+
+---
+
+### Getting the trigger URL
+
+Preview environments are always linked to a **Git service**.  
+To find the API endpoint used to trigger a preview, go to:  
+
+**Service details → Settings → Deploy section**
+
+<img className="block dark:hidden" src={`/images/preview-deploy-url-light.png`} alt="Preview env trigger webhook URL" />
+<img className="!hidden dark:!block" src={`/images/preview-deploy-url-dark.png`} alt="Preview env trigger webhook URL" />
+
+
+
+### Triggering a preview environment from a branch
+
+You can trigger a preview for a specific branch.  
+If you set `"commit_sha": "HEAD"`, the preview will automatically update on each new push to the branch.  
+If you provide a specific commit SHA instead, future pushes to that branch will be ignored.
+
+```http
+### Request
+POST /api/trigger-preview/{deploy_token}
+Content-Type: application/json
+
+{
+  "branch_name": "feat/experiment-a",
+  "commit_sha": "HEAD"
+}
+```
+
+
+### Triggering a preview environment from a pull request
+
+You can also trigger previews tied to a pull request.
+This is commonly used to spin up an environment for review as soon as a PR is opened.
+
+```http
+### Request
+POST /api/trigger-preview/{deploy_token}
+Content-Type: application/json
+
+{
+  "pr_number": 511
+}
+```
+
+<Aside type='tip' title='PR integration'>
+When tying the preview to a pull request, you will receive the same comment appearing on the pull request as if 
+you triggered from a pull request. 
+
+<img className="block dark:hidden" src={`/images/pr-preview-comment-light.png`} alt="PR Preview comments" />
+<img className="!hidden dark:!block" src={`/images/pr-preview-comment-dark.png`} alt="PR Preview comments" />
+
+</Aside>
+
+### Common arguments
+
+You can control how previews are created by specifying a **template** and extra **environment variables**.
+If you don’t pass a `template`, ZaneOps will use the project’s default preview template.
+
+```http
+### Request
+POST /api/trigger-preview/{deploy_token}
+Content-Type: application/json
+
+{
+  "branch_name": "feat/experiment-a",
+  "template": "a-b-testing", // template slug
+  "env_variables": [
+    {
+      "key": "V3_ENABLE_SSO",
+      "value": "true"
+    }
+  ]
+}
+```
+
