@@ -1,0 +1,66 @@
+---
+title: Pull request previews
+description: Learn how ZaneOps automatically creates preview environments from pull requests.
+---
+
+import {Aside} from '@astrojs/starlight/components';
+
+> Introduced in [**v1.12.0**](/changelog/v112)
+
+When creating a service from a [Git application](/knowledge-base/git/git-apps), **pull request previews** are enabled by default.  
+You can manage this behavior in the service’s settings under **Auto-deploy options**:
+
+<div className="flex flex-col gap-2">
+  <img className="block dark:hidden" src={`/images/auto-deploy-settings-light.png`} alt="Auto-deploy settings" />
+  <img className="!hidden dark:!block" src={`/images/auto-deploy-settings-dark.png`} alt="Auto-deploy settings" />
+</div>
+
+---
+
+### How it works
+
+When a pull request is opened, ZaneOps automatically creates a **preview environment** for that PR.  
+
+The associated Git application will also post a comment on the pull request, updating you on the **status of the preview deployment**.
+
+<img className="block dark:hidden" src={`/images/pr-preview-comment-light.png`} alt="PR Preview comments" />
+<img className="!hidden dark:!block" src={`/images/pr-preview-comment-dark.png`} alt="PR Preview comments" />
+
+---
+
+### Note about preview deployments from forks
+
+When a pull request originates from a **forked repository**, ZaneOps will **create** the preview environment  but **will not automatically trigger its deployment**.  
+
+The repository owner (or ZaneOps project owner) must **approve or decline** the preview deployment manually.
+
+<div className="flex flex-col gap-2">
+  <img className="block dark:hidden" src={`/images/preview-deploy-blocked-comment-light.webp`} alt="Preview deployment blocked GitHub comment" />
+  <img className="!hidden dark:!block" src={`/images/preview-deploy-blocked-comment-dark.png`} alt="Preview deployment blocked GitHub comment" />
+  <img src={`/images/preview-deploy-blocked.png`} alt="Preview deployment blocked UI" />
+</div>
+
+### Troubleshooting
+
+#### Preview not appearing or stuck
+
+- Check that **auto-deploy for pull requests** is enabled in your service settings.  
+- Ensure the **Git app webhook** is correctly configured and hasn’t been disabled by your Git provider.  
+- If the pull request comes from a fork, the deployment may be waiting for **manual approval**.  
+
+#### No comment on the pull request
+
+- The Git app needs write access to post comments.  
+  Verify that the app has the required permissions under your repository’s **installed integrations**.  
+- Check if commenting is disabled for bots or third-party apps in your repository settings.  
+
+#### Preview not updating on new commits
+
+- Make sure the preview was created with `"commit_sha": "HEAD"` (for branch-based previews).  
+- If it was triggered manually with a specific commit SHA, new commits will be ignored.  
+
+---
+
+<Aside type="tip" title="Still stuck?">
+You can always check detailed deployment logs from the **Service > Deployments** tab or redeploy the application manually via the dashboard.
+</Aside>

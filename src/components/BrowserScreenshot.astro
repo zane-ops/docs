@@ -1,0 +1,75 @@
+---
+type Props = {
+    srcLight: string;
+    srcDark?: string;
+    alt?: string;
+};
+
+const { srcLight, srcDark, alt } = Astro.props;
+---
+
+<div class="not-prose screenshot relative breakout mx-auto">
+    <div
+        class="m-0 relative flex justify-center overflow-hidden rounded-xl shadow-sm transition-all duration-500"
+        style="aspect-ratio:5/3.5;background:radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.3), transparent 50%), radial-gradient(circle at 80% 20%, rgba(199, 210, 254, 0.3), transparent 50%), radial-gradient(circle at 40% 40%, rgba(129, 140, 248, 0.2), transparent 60%), linear-gradient(135deg, #e0e7ff, #c7d2fe)"
+    >
+        <div
+            class="pointer-events-none absolute inset-0 z-10 size-full rounded-xl"
+            style="backdrop-filter:blur(100px);-webkit-backdrop-filter:blur(100px)"
+        >
+        </div>
+
+        <div
+            class="mt-0 pointer-events-none absolute inset-0 z-30 size-full rounded-xl ring-1 ring-inset ring-black/10"
+        >
+        </div>
+
+        <div
+            class="absolute inset-x-0 -bottom-20 top-0 z-20 flex w-full justify-center p-6 sm:p-8 md:p-10"
+        >
+            <div
+                id="browser"
+                class="shadow-md h-full w-full overflow-hidden rounded-xl px-1.5 pb-1.5 ring-1 bg-white/50 ring-gray-500/10 dark:bg-slate-700/50 dark:ring-gray-700/40 backdrop-blur-xl"
+            >
+                <div id="navbar" class="flex items-center justify-between py-2">
+                    <div class="flex items-center gap-1 px-1">
+                        <div
+                            class="m-0 h-2 w-2 rounded-full border transition-colors duration-300 border-gray-950/10 bg-gray-100/30 hover:bg-red-500"
+                        >
+                        </div>
+
+                        <div
+                            class="m-0 h-2 w-2 rounded-full border transition-colors duration-300 border-gray-950/10 bg-gray-100/30 hover:bg-yellow-500"
+                        >
+                        </div>
+
+                        <div
+                            class="m-0 h-2 w-2 rounded-full border transition-colors duration-300 border-gray-950/10 bg-gray-100/30 hover:bg-green-500"
+                        >
+                        </div>
+                    </div>
+                </div>
+                <img
+                    src={srcLight}
+                    alt={alt}
+                    class:list={[
+                        "m-0 h-auto w-full max-w-full rounded-lg shadow-sm ring-1 ring-gray-500/10",
+                        "transition-opacity duration-300",
+                        srcDark && "dark:hidden",
+                    ]}
+                    loading="lazy"
+                />
+                {
+                    srcDark && (
+                        <img
+                            src={srcDark}
+                            alt={alt}
+                            class="m-0 hidden dark:inline h-auto w-full max-w-full rounded-lg shadow-sm ring-1 ring-gray-500/10 transition-opacity duration-300"
+                            loading="lazy"
+                        />
+                    )
+                }
+            </div>
+        </div>
+    </div>
+</div>

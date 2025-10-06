@@ -1,10 +1,29 @@
-@layer base, starlight, theme, components, utilities;
+@layer base;
+@layer starlight;
+@layer theme;
+@layer components;
+@layer utilities;
+
 
 @import '@astrojs/starlight-tailwind';
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities);
 
 @variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+@theme {
+	--color-border: color-mix(in oklab, var(--color-neutral-200) 80%, transparent);  /*oklch(92.2% 0 0) = #e5e5e5*/
+	--color-border-dark: color-mix(in oklab, var(--color-neutral-600)  20%, transparent); /* oklch(43.9% 0 0) = #525252 */
+	--color-bg: hsl(164 62% 99%);
+	--color-bg-dark: hsl(226 19% 13%);
+
+}
+
+@layer base {
+	video {
+		 border-radius: var(--radius-md);
+	}
+}
 
 :root[data-theme='dark'] {
 	--sl-color-accent-low: #440921;
@@ -17,7 +36,10 @@
 	--sl-color-gray-4: #57585c;
 	--sl-color-gray-5: #37383c;
 	--sl-color-gray-6:hsl(226 19% 13%);
+	--sl-color-gray-7:hsl(164 43% 2%);
 	--sl-color-black: hsl(164 43% 2%);
+	--color-border: var(--color-border-dark);
+	--color-bg: var(--color-bg-dark);
 }
 
 /* Light mode colors. */
@@ -35,4 +57,5 @@
 	--sl-color-bg-sidebar: #f6f6f7;
 	--sl-color-black: #ffffff;
 	--sl-color-bg: #ffffff;
+	
 }

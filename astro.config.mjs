@@ -59,8 +59,8 @@ export default defineConfig({
           label: "Start here",
           items: [
             {
-              label: "Welcome to zaneops",
-              slug: "welcome"
+              label: "What is ZaneOps ?",
+              slug: "introduction"
             },
             {
               label: "Installation and Setup",
