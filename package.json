@@ -18,7 +18,7 @@
     "@lucide/astro": "^0.544.0",
     "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/vite": "^4.1.13",
-    "astro": "^5.13.10",
+    "astro": "^5.15.9",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "satori": "^0.15.2",
