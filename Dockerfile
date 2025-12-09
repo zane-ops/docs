@@ -12,10 +12,13 @@ COPY . .
 RUN --mount=type=cache,target=/app/.astro FORCE_COLOR=true pnpm run build
 
 
-# Webapp based on caddy
-FROM caddy:2.9-alpine AS runtime
-WORKDIR /var/www/html
+FROM base AS runtime
+COPY --from=prod-deps /app/node_modules ./node_modules
+COPY --from=build /app/dist ./dist
 
+ENV HOST=0.0.0.0
+ENV PORT=3000
+EXPOSE 3000
+USER node
+CMD node ./dist/server/entry.mjs
 
-COPY --from=build /app/dist ./
-COPY --from=build /app/Caddyfile /etc/caddy/Caddyfile

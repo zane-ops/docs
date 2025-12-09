@@ -1,3 +1,5 @@
+// @ts-check
+import node from "@astrojs/node";
 import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
 import tailwindcss from "@tailwindcss/vite";
@@ -137,8 +139,12 @@ export default defineConfig({
 
     react()
   ],
-
+  output: "server",
+  adapter: node({
+    mode: "standalone"
+  }),
   vite: {
+    // @ts-expect-error
     plugins: [tailwindcss()]
   }
 });
