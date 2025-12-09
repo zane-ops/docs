@@ -144,7 +144,7 @@ export default defineConfig({
     mode: "standalone"
   }),
   vite: {
-    // @ts-expect-error
+    // @ts-ignore
     plugins: [tailwindcss()]
   }
 });
