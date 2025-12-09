@@ -4,10 +4,17 @@ WORKDIR /app
 # install dependencies
 COPY package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./
 RUN corepack enable && corepack install
+
+
+FROM base AS build-deps
 RUN FORCE_COLOR=true pnpm install --frozen-lockfile
 
+FROM base AS prod-deps
+RUN FORCE_COLOR=true pnpm install --frozen-lockfile --prod
+
+
 # build the app
-FROM base AS build
+FROM build-deps AS build
 COPY . .
 RUN --mount=type=cache,target=/app/.astro FORCE_COLOR=true pnpm run build
 
@@ -20,5 +27,5 @@ ENV HOST=0.0.0.0
 ENV PORT=3000
 EXPOSE 3000
 USER node
-CMD node ./dist/server/entry.mjs
+CMD ["node", "./dist/server/entry.mjs"]
 
