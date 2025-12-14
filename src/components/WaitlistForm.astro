@@ -1,0 +1,181 @@
+---
+---
+
+<div class="waitlist-form-container">
+	<form id="waitlist-form" class="flex flex-col gap-4">
+		<div class="flex flex-col gap-2">
+			<label for="email" class="text-sm font-medium">
+				Email <span class="text-red-500">*</span>
+			</label>
+			<input
+				type="email"
+				id="email"
+				name="email"
+				required
+				class="px-4 py-2 rounded-md border border-border bg-bg text-[var(--sl-color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--sl-color-accent)]"
+				placeholder="you@example.com"
+			/>
+			<span class="text-red-500 text-sm hidden error-message" data-field="email"
+			></span>
+		</div>
+
+		<div class="flex flex-col gap-2">
+			<label for="name" class="text-sm font-medium">
+				Name <span class="text-red-500">*</span>
+			</label>
+			<input
+				type="text"
+				id="name"
+				name="name"
+				required
+				class="px-4 py-2 rounded-md border border-border bg-bg text-[var(--sl-color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--sl-color-accent)]"
+				placeholder="John Doe"
+			/>
+			<span class="text-red-500 text-sm hidden error-message" data-field="name"
+			></span>
+		</div>
+
+		<div class="flex flex-col gap-2">
+			<label for="company" class="text-sm font-medium"> Company/Project </label>
+			<input
+				type="text"
+				id="company"
+				name="company"
+				class="px-4 py-2 rounded-md border border-border bg-bg text-[var(--sl-color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--sl-color-accent)]"
+				placeholder="Acme Inc"
+			/>
+		</div>
+
+		<div class="flex flex-col gap-2">
+			<label for="useCase" class="text-sm font-medium"> Use case </label>
+			<textarea
+				id="useCase"
+				name="useCase"
+				rows="3"
+				class="px-4 py-2 rounded-md border border-border bg-bg text-[var(--sl-color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--sl-color-accent)] resize-none"
+				placeholder="Tell us how you plan to use ZaneOps Cloud..."
+			></textarea>
+		</div>
+
+		<div class="flex flex-col gap-2">
+			<label for="serverCount" class="text-sm font-medium">
+				How many servers do you plan to manage?
+			</label>
+			<select
+				id="serverCount"
+				name="serverCount"
+				class="px-4 py-2 rounded-md border border-border bg-bg text-[var(--sl-color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--sl-color-accent)]"
+			>
+				<option value="">Select...</option>
+				<option value="1-2">1-2 servers</option>
+				<option value="3-5">3-5 servers</option>
+				<option value="6-10">6-10 servers</option>
+				<option value="10+">10+ servers</option>
+			</select>
+		</div>
+
+		<div class="flex flex-col gap-2">
+			<button
+				type="submit"
+				class="px-6 py-3 rounded-md bg-[var(--sl-color-accent)] text-[var(--sl-color-black)] font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+			>
+				<span class="submit-text">Join the Waitlist</span>
+				<span class="loading-text hidden">Submitting...</span>
+			</button>
+		</div>
+
+		<div class="success-message hidden">
+			<div
+				class="p-4 rounded-md bg-green-500/10 border border-green-500/50 text-green-500"
+			>
+				<p class="font-medium">Thanks for joining the waitlist!</p>
+				<p class="text-sm">We'll notify you when cloud access is available.</p>
+			</div>
+		</div>
+
+		<div class="general-error hidden">
+			<div
+				class="p-4 rounded-md bg-red-500/10 border border-red-500/50 text-red-500"
+			>
+				<p class="text-sm error-text"></p>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script>
+	const form = document.getElementById("waitlist-form") as HTMLFormElement;
+	const submitButton = form?.querySelector(
+		'button[type="submit"]',
+	) as HTMLButtonElement;
+	const submitText = submitButton?.querySelector(
+		".submit-text",
+	) as HTMLSpanElement;
+	const loadingText = submitButton?.querySelector(
+		".loading-text",
+	) as HTMLSpanElement;
+	const successMessage = form?.querySelector(
+		".success-message",
+	) as HTMLDivElement;
+	const generalError = form?.querySelector(".general-error") as HTMLDivElement;
+	const errorText = generalError?.querySelector(".error-text") as HTMLElement;
+
+	form?.addEventListener("submit", async (e) => {
+		e.preventDefault();
+
+		// Clear previous errors
+		document.querySelectorAll(".error-message").forEach((el) => {
+			el.classList.add("hidden");
+		});
+		generalError?.classList.add("hidden");
+		successMessage?.classList.add("hidden");
+
+		// Get form data
+		const formData = new FormData(form);
+		const data = {
+			email: formData.get("email"),
+			name: formData.get("name"),
+			company: formData.get("company"),
+			useCase: formData.get("useCase"),
+			serverCount: formData.get("serverCount"),
+		};
+
+		// Set loading state
+		submitButton.disabled = true;
+		submitText.classList.add("hidden");
+		loadingText.classList.remove("hidden");
+
+		try {
+			const response = await fetch("/api/signup-cloud", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(data),
+			});
+
+			const result = await response.json();
+
+			if (!response.ok) {
+				throw new Error(result.error || "Failed to submit form");
+			}
+
+			// Show success message
+			successMessage.classList.remove("hidden");
+			form.reset();
+
+			// Scroll to success message
+			successMessage.scrollIntoView({ behavior: "smooth", block: "nearest" });
+		} catch (error) {
+			// Show error message
+			generalError.classList.remove("hidden");
+			errorText.textContent =
+				error instanceof Error ? error.message : "An error occurred";
+		} finally {
+			// Reset loading state
+			submitButton.disabled = false;
+			submitText.classList.remove("hidden");
+			loadingText.classList.add("hidden");
+		}
+	});
+</script>
