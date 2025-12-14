@@ -1,139 +1,139 @@
 ---
 import { Icon, LinkButton } from "@astrojs/starlight/components";
 import {
-	CloudUpload,
-	FileText,
-	Github,
-	Heart,
-	KeyRound,
-	Lock,
-	Network,
-	Palette,
-	Server,
-	ShieldCheck,
-	Users,
-	Webhook,
+  CloudUpload,
+  FileText,
+  Github,
+  Heart,
+  KeyRound,
+  Lock,
+  Network,
+  Palette,
+  Server,
+  ShieldCheck,
+  Users,
+  Webhook
 } from "@lucide/astro";
 import Logo from "../assets/Logo.svg";
 import WaitlistForm from "./WaitlistForm.astro";
 
 type Feature = {
-	icon: any;
-	title: string;
-	description: string;
+  icon: any;
+  title: string;
+  description: string;
 };
 
 const features: Feature[] = [
-	{
-		icon: Users,
-		title: "Multi-Tenancy",
-		description:
-			"Organize projects with custom permissions for teams, groups, and workspaces",
-	},
-	{
-		icon: KeyRound,
-		title: "OIDC Authentication",
-		description: "Enterprise-grade authentication with OpenID Connect support",
-	},
-	{
-		icon: Lock,
-		title: "Service URL Protection",
-		description:
-			"Secure your services with basic auth and OIDC protection from outside access",
-	},
-	{
-		icon: Github,
-		title: "Social Authentication",
-		description:
-			"Login with Google, Github, and other providers for both dashboard and service access",
-	},
-	{
-		icon: ShieldCheck,
-		title: "Advanced Service Auth",
-		description:
-			"Protect services using social providers like GitHub and GitLab",
-	},
-	{
-		icon: Palette,
-		title: "Custom Branding",
-		description: "Customize authentication pages with your brand identity",
-	},
-	{
-		icon: FileText,
-		title: "Audit Logs",
-		description:
-			"Track all activity: logins, deployments, service changes, and more",
-	},
-	{
-		icon: Server,
-		title: "Multi-Server Cluster",
-		description:
-			"Deploy across multiple servers for high availability and failover",
-	},
-	{
-		icon: Webhook,
-		title: "Pre/Post Webhooks",
-		description:
-			"Execute custom logic before and after deployments with webhooks",
-	},
+  {
+    icon: Users,
+    title: "Multi-Tenancy",
+    description:
+      "Organize projects with custom permissions for teams, groups, and workspaces"
+  },
+  {
+    icon: KeyRound,
+    title: "OIDC Authentication",
+    description: "Enterprise-grade authentication with OpenID Connect support"
+  },
+  {
+    icon: Lock,
+    title: "Service URL Protection",
+    description:
+      "Secure your services with basic auth and OIDC protection from outside access"
+  },
+  {
+    icon: Github,
+    title: "Social Authentication",
+    description:
+      "Login with Google, Github, and other providers for both dashboard and service access"
+  },
+  {
+    icon: ShieldCheck,
+    title: "Advanced Service Auth",
+    description:
+      "Protect services using social providers like GitHub and GitLab"
+  },
+  {
+    icon: Palette,
+    title: "Custom Branding",
+    description: "Customize authentication pages with your brand identity"
+  },
+  {
+    icon: FileText,
+    title: "Audit Logs",
+    description:
+      "Track all activity: logins, deployments, service changes, and more"
+  },
+  {
+    icon: Server,
+    title: "Multi-Server Cluster",
+    description:
+      "Deploy across multiple servers for high availability and failover"
+  },
+  {
+    icon: Webhook,
+    title: "Pre/Post Webhooks",
+    description:
+      "Execute custom logic before and after deployments with webhooks"
+  }
 ];
 
 type SponsorTier = {
-	price: string;
-	features: string[];
-	highlight?: boolean;
+  price: string;
+  features: string[];
+  highlight?: boolean;
 };
 
 const sponsorTiers: SponsorTier[] = [
-	{
-		price: "$5/month",
-		features: ["Sponsor badge", "Early alpha access"],
-	},
-	{
-		price: "$25/month",
-		features: [
-			"Everything in $5",
-			"Priority bug fixes",
-			"Early access to features",
-		],
-		highlight: true,
-	},
-	{
-		price: "$100/month",
-		features: [
-			"Everything in $25",
-			"Company logo on README",
-			"Private support channel",
-		],
-	},
+  {
+    price: "$5/month",
+    features: ["Sponsor badge", "Early alpha access"]
+  },
+  {
+    price: "$25/month",
+    features: [
+      "Everything in $5",
+      "Priority bug fixes",
+      "Early access to features"
+    ],
+    highlight: true
+  },
+  {
+    price: "$100/month",
+    features: [
+      "Everything in $25",
+      "Company logo on README",
+      "Private support channel"
+    ]
+  }
 ];
 
 type FAQ = {
-	question: string;
-	answer: string;
+  question: string;
+  answer: string;
 };
 
 const faqs: FAQ[] = [
-	{
-		question: "How is ZaneOps Cloud different from other PaaS?",
-		answer:
-			"Your servers, your data. We host the control panel with enterprise features, you host your applications on your own infrastructure. This gives you the benefits of a managed platform without the lock-in or loss of control.",
-	},
-	{
-		question: "When will cloud access be available?",
-		answer:
-			"We're working toward an alpha release. Join the waitlist to be notified when access becomes available. Sponsors get priority access.",
-	},
-	{
-		question: "What about self-hosted ZaneOps?",
-		answer:
-			"Self-hosted ZaneOps remains 100% free and open source. Cloud offers additional enterprise features like multi-tenancy, OIDC auth, audit logs, and more on a managed control panel.",
-	},
-	{
-		question: "How does sponsorship work?",
-		answer:
-			"Sponsors get priority access to the cloud platform, priority bug fixes, and early access to new features. See our GitHub Sponsors page for details and to become a sponsor.",
-	},
+  {
+    question: "How is ZaneOps Cloud different from other PaaS?",
+    answer:
+      "Your servers, your data. We host the control panel with enterprise features, you host your applications on your own infrastructure. This gives you the benefits of a managed platform without the lock-in or loss of control."
+  },
+  {
+    question: "When will cloud access be available?",
+    answer:
+      "We're working toward an alpha release. Join the waitlist to be notified when access becomes available. Sponsors get priority access."
+  },
+  {
+    question: "What about self-hosted ZaneOps?",
+    answer:
+      "Self-hosted ZaneOps remains 100% free and open source. Cloud offers additional enterprise features like multi-tenancy, OIDC auth, audit logs, and more on a managed control panel."
+  },
+  {
+    question: "How does sponsorship work?",
+    answer:
+      "Sponsors get priority access to the cloud platform, priority bug fixes, and early access to new features. See our GitHub Sponsors page for details and to become a sponsor."
+  }
 ];
 ---
 
@@ -180,9 +180,9 @@ const faqs: FAQ[] = [
 				<CloudUpload class="text-[var(--sl-color-accent)] size-12" />
 				<h3 class="text-xl font-medium">Your Servers, Your Data</h3>
 				<p class="text-sm">
-					Deploy applications on your own infrastructure. You maintain complete
-					control over your data, costs, and security while we handle the
-					complexity.
+					Deploy applications on your own infrastructure. You maintain
+					complete control over your data, costs, and security while
+					we handle the complexity.
 				</p>
 			</div>
 
@@ -190,8 +190,9 @@ const faqs: FAQ[] = [
 				<ShieldCheck class="text-[var(--sl-color-accent)] size-12" />
 				<h3 class="text-xl font-medium">Managed Control Panel</h3>
 				<p class="text-sm">
-					Access your deployments through our beautifully designed, cloud-hosted
-					dashboard. No server management required for the control panel itself.
+					Access your deployments through our beautifully designed,
+					cloud-hosted dashboard. No server management required for
+					the control panel itself.
 				</p>
 			</div>
 
@@ -199,9 +200,10 @@ const faqs: FAQ[] = [
 				<Network class="text-[var(--sl-color-accent)] size-12" />
 				<h3 class="text-xl font-medium">Enterprise Features</h3>
 				<p class="text-sm">
-					Unlock advanced capabilities like multi-tenancy, OIDC authentication,
-					audit logs, and multi-server clustering - features typically reserved
-					for expensive enterprise platforms.
+					Unlock advanced capabilities like multi-tenancy, OIDC
+					authentication, audit logs, and multi-server clustering -
+					features typically reserved for expensive enterprise
+					platforms.
 				</p>
 			</div>
 		</div>
@@ -209,10 +211,12 @@ const faqs: FAQ[] = [
 
 	<section id="features" class="flex flex-col gap-8">
 		<div>
-			<h2 class="text-3xl md:text-4xl">Powerful Features for Modern Teams</h2>
+			<h2 class="text-3xl md:text-4xl">
+				Powerful Features for Modern Teams
+			</h2>
 			<p class="mt-2">
-				Everything you need to deploy, manage, and scale your applications with
-				confidence
+				Everything you need to deploy, manage, and scale your
+				applications with confidence
 			</p>
 		</div>
 
@@ -368,8 +372,8 @@ const faqs: FAQ[] = [
 		<div class="flex-1 flex flex-col gap-4 items-center text-center">
 			<h3 class="text-2xl font-medium">Join the Waitlist</h3>
 			<p class="text-sm">
-				Get notified when ZaneOps Cloud launches and be among the first to try
-				it
+				Get notified when ZaneOps Cloud launches and be among the first
+				to try it
 			</p>
 			<LinkButton variant="primary" href="#waitlist">
 				Sign Up Now
