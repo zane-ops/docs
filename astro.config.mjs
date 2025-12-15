@@ -139,7 +139,7 @@ export default defineConfig({
 
     react()
   ],
-  output: "server",
+  output: "static",
   adapter: node({
     mode: "standalone"
   }),
