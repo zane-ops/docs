@@ -1,5 +1,11 @@
 ---
-import { Icon, LinkButton } from "@astrojs/starlight/components";
+import {
+  Aside,
+  Card,
+  CardGrid,
+  Icon,
+  LinkButton
+} from "@astrojs/starlight/components";
 import {
   CloudUpload,
   FileText,
@@ -35,12 +41,12 @@ const features: Feature[] = [
     title: "OIDC Authentication",
     description: "Enterprise-grade authentication with OpenID Connect support"
   },
-  {
-    icon: Lock,
-    title: "Service URL Protection",
-    description:
-      "Secure your services with basic auth and OIDC protection from outside access"
-  },
+  //   {
+  //     icon: Lock,
+  //     title: "Service URL Protection",
+  //     description:
+  //       "Secure your services with basic auth and OIDC protection from outside access"
+  //   },
   {
     icon: Github,
     title: "Social Authentication",
@@ -145,7 +151,7 @@ const faqs: FAQ[] = [
 		class="md:col-span-2 flex flex-col gap-4 items-center text-center md:text-start md:items-start"
 	>
 		<h1 class="text-4xl md:text-5xl lg:text-6xl text-pretty">
-			ZaneOps Cloud - Enterprise Features, Your Infrastructure
+			ZaneOps Cloud 
 		</h1>
 		<p class="text-lg">
 			Deploy with confidence using enterprise-grade features while keeping
@@ -222,14 +228,31 @@ const faqs: FAQ[] = [
 
 		<div
 			class:list={[
-				"grid md:grid-cols-2 gap-8",
-				"[&>*]:py-6 [&>*]:px-6",
-				"[&>*]:border [&>*]:border-border [&>*]:rounded-lg",
+				"grid md:grid-cols-2",
 			]}
 		>
 			{
-				features.map((feature) => (
-					<div class="flex flex-col gap-3">
+				features.map((feature, index) => (
+					<div class:list={[
+						"flex flex-col gap-3 p-12",
+						"border-[var(--color-border)]",
+						// Mobile: top border for all except first item
+						index > 0 && "border-t",
+						// Mobile: bottom border for all except last item
+						index < features.length - 1 && "border-b",
+						// Desktop: top border for all except first row
+						index >= 2 && "md:border-t",
+						// Desktop: bottom border for all except last row
+						index < features.length - 2 && "md:border-b",
+						// Desktop: no top border for first row
+						index < 2 && "md:border-t-0",
+						// Desktop: no bottom border for last row
+						index >= features.length - 2 && "md:border-b-0",
+						// Desktop: left border for right column items
+						index % 2 === 1 && "md:border-l",
+						// Desktop: right border for left column items
+						index % 2 === 0 && "md:border-r",
+					]}>
 						<h3 class="text-xl font-medium flex items-center gap-3">
 							<feature.icon class="text-[var(--sl-color-accent)] size-6 flex-none" />
 							<span>{feature.title}</span>
@@ -339,7 +362,7 @@ const faqs: FAQ[] = [
 			<div class="text-center">
 				<LinkButton
 					variant="primary"
-					href="https://github.com/sponsors/zane-ops"
+					href="https://github.com/sponsors/fredkiss3"
 				>
 					Become a Sponsor
 					<Heart class="size-4" />
@@ -367,7 +390,7 @@ const faqs: FAQ[] = [
 
 	<section
 		id="final-cta"
-		class="flex flex-col md:flex-row gap-8 pb-14 border border-border rounded-lg p-8 md:p-12"
+		class="flex flex-col md:flex-row gap-8 pb-14 rounded-lg p-8 md:p-12"
 	>
 		<div class="flex-1 flex flex-col gap-4 items-center text-center">
 			<h3 class="text-2xl font-medium">Join the Waitlist</h3>
@@ -396,7 +419,7 @@ const faqs: FAQ[] = [
 			</p>
 			<LinkButton
 				variant="minimal"
-				href="https://github.com/sponsors/zane-ops"
+				href="https://github.com/sponsors/fredkiss3"
 			>
 				Sponsor Now
 				<Heart class="size-4" />
@@ -406,6 +429,10 @@ const faqs: FAQ[] = [
 </div>
 
 <style is:global>
+
+	.sl-banner {
+		padding: 0.35rem;
+	}
 	.sl-container {
 		margin-inline: auto;
 	}
