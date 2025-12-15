@@ -1,20 +1,14 @@
 ---
-import {
-  Aside,
-  Card,
-  CardGrid,
-  Icon,
-  LinkButton
-} from "@astrojs/starlight/components";
+import { Icon, LinkButton } from "@astrojs/starlight/components";
 import {
   CloudUpload,
   FileText,
   Github,
   Heart,
   KeyRound,
-  Lock,
   Network,
   Palette,
+  Plus,
   Server,
   ShieldCheck,
   Users,
@@ -32,7 +26,7 @@ type Feature = {
 const features: Feature[] = [
   {
     icon: Users,
-    title: "Multi-Tenancy",
+    title: "Multi-tenancy",
     description:
       "Organize projects with custom permissions for teams, groups, and workspaces"
   },
@@ -41,12 +35,6 @@ const features: Feature[] = [
     title: "OIDC Authentication",
     description: "Enterprise-grade authentication with OpenID Connect support"
   },
-  //   {
-  //     icon: Lock,
-  //     title: "Service URL Protection",
-  //     description:
-  //       "Secure your services with basic auth and OIDC protection from outside access"
-  //   },
   {
     icon: Github,
     title: "Social Authentication",
@@ -81,6 +69,11 @@ const features: Feature[] = [
     title: "Pre/Post Webhooks",
     description:
       "Execute custom logic before and after deployments with webhooks"
+  },
+  {
+    icon: Plus,
+    title: "And much more...",
+    description: "More features incoming for the cloud version"
   }
 ];
 
@@ -145,7 +138,7 @@ const faqs: FAQ[] = [
 
 <section
 	id="hero"
-	class="py-12 md:pt-24 grid grid-cols-1 md:grid-cols-3 gap-8 items-center"
+	class="py-12 md:pt-24 grid grid-cols-1  md:grid-cols-3 gap-8 items-center"
 >
 	<div
 		class="md:col-span-2 flex flex-col gap-4 items-center text-center md:text-start md:items-start"
@@ -153,18 +146,18 @@ const faqs: FAQ[] = [
 		<h1 class="text-4xl md:text-5xl lg:text-6xl text-pretty">
 			ZaneOps Cloud 
 		</h1>
-		<p class="text-lg">
+		<p >
 			Deploy with confidence using enterprise-grade features while keeping
-			control of your data and servers
+			control of your data and servers.
 		</p>
 		<div class="flex flex-wrap items-center gap-4">
 			<LinkButton variant="primary" href="#waitlist">
 				Join the Waitlist
 				<Icon name="right-arrow" />
 			</LinkButton>
-			<LinkButton variant="minimal" href="#sponsor">
+			<LinkButton variant="minimal" href="#sponsor" class:list={['hover:underline']}>
 				Become a Sponsor
-				<Heart class="size-4" />
+				<Heart class="size-4 fill-rose-500 text-rose-500" />
 			</LinkButton>
 		</div>
 	</div>
@@ -174,16 +167,16 @@ const faqs: FAQ[] = [
 </section>
 
 <div class="flex flex-col gap-60">
-	<section id="value-proposition" class="mt-24 flex flex-col gap-8">
+	<section id="value-proposition" class="mt-24 flex flex-col gap-24">
 		<div class="text-center">
 			<h2 class="text-3xl md:text-4xl">
-				Enterprise Features Without Enterprise Lock-in
+				Enterprise features without lock-in
 			</h2>
 		</div>
 
 		<div class="grid md:grid-cols-3 gap-8">
 			<div class="flex flex-col gap-3 items-start">
-				<CloudUpload class="text-[var(--sl-color-accent)] size-12" />
+				<CloudUpload class="text-neutral-400 size-12" />
 				<h3 class="text-xl font-medium">Your Servers, Your Data</h3>
 				<p class="text-sm">
 					Deploy applications on your own infrastructure. You maintain
@@ -193,7 +186,7 @@ const faqs: FAQ[] = [
 			</div>
 
 			<div class="flex flex-col gap-3 items-start">
-				<ShieldCheck class="text-[var(--sl-color-accent)] size-12" />
+				<ShieldCheck class="text-neutral-400 size-12" />
 				<h3 class="text-xl font-medium">Managed Control Panel</h3>
 				<p class="text-sm">
 					Access your deployments through our beautifully designed,
@@ -203,7 +196,7 @@ const faqs: FAQ[] = [
 			</div>
 
 			<div class="flex flex-col gap-3 items-start">
-				<Network class="text-[var(--sl-color-accent)] size-12" />
+				<Network class="text-neutral-400 size-12" />
 				<h3 class="text-xl font-medium">Enterprise Features</h3>
 				<p class="text-sm">
 					Unlock advanced capabilities like multi-tenancy, OIDC
@@ -215,10 +208,10 @@ const faqs: FAQ[] = [
 		</div>
 	</section>
 
-	<section id="features" class="flex flex-col gap-8">
+	<section id="features" class="flex flex-col gap-16">
 		<div>
 			<h2 class="text-3xl md:text-4xl">
-				Powerful Features for Modern Teams
+				Powerful features for modern teams
 			</h2>
 			<p class="mt-2">
 				Everything you need to deploy, manage, and scale your
@@ -228,33 +221,14 @@ const faqs: FAQ[] = [
 
 		<div
 			class:list={[
-				"grid md:grid-cols-2",
+				"grid sm:grid-cols-2 md:grid-cols-3 gap-6",
 			]}
 		>
 			{
-				features.map((feature, index) => (
-					<div class:list={[
-						"flex flex-col gap-3 p-12",
-						"border-[var(--color-border)]",
-						// Mobile: top border for all except first item
-						index > 0 && "border-t",
-						// Mobile: bottom border for all except last item
-						index < features.length - 1 && "border-b",
-						// Desktop: top border for all except first row
-						index >= 2 && "md:border-t",
-						// Desktop: bottom border for all except last row
-						index < features.length - 2 && "md:border-b",
-						// Desktop: no top border for first row
-						index < 2 && "md:border-t-0",
-						// Desktop: no bottom border for last row
-						index >= features.length - 2 && "md:border-b-0",
-						// Desktop: left border for right column items
-						index % 2 === 1 && "md:border-l",
-						// Desktop: right border for left column items
-						index % 2 === 0 && "md:border-r",
-					]}>
+				features.map((feature) => (
+					<div class="flex flex-col gap-3 p-6 border  border-border rounded-lg bg-(--sl-color-bg-nav) dark:bg-[var(--sl-color-gray-6)] ">
 						<h3 class="text-xl font-medium flex items-center gap-3">
-							<feature.icon class="text-[var(--sl-color-accent)] size-6 flex-none" />
+							<feature.icon class="text-neutral-400 size-6 flex-none" />
 							<span>{feature.title}</span>
 						</h3>
 						<p class="text-sm">{feature.description}</p>
@@ -266,7 +240,7 @@ const faqs: FAQ[] = [
 
 	<section id="waitlist" class="flex flex-col gap-8 scroll-mt-24">
 		<div class="text-center">
-			<h2 class="text-3xl md:text-4xl">Join the Waitlist</h2>
+			<h2 class="text-3xl md:text-4xl">Join the waitlist</h2>
 			<p class="mt-2">
 				Be among the first to experience ZaneOps Cloud when it launches
 			</p>
@@ -274,7 +248,7 @@ const faqs: FAQ[] = [
 
 		<div class="max-w-2xl mx-auto w-full">
 			<div
-				class="border border-border rounded-lg p-6 md:p-8 bg-[var(--sl-color-gray-6)]"
+				class="p-6 md:p-8 "
 			>
 				<WaitlistForm />
 			</div>
@@ -282,17 +256,17 @@ const faqs: FAQ[] = [
 	</section>
 
 	<section id="sponsor" class="flex flex-col gap-8 scroll-mt-24">
-		<div class="text-center">
-			<h2 class="text-3xl md:text-4xl">Want Early Access?</h2>
+		<div>
+			<h2 class="text-3xl md:text-4xl">Want early access?</h2>
 			<p class="mt-2 text-lg">
 				Sponsor ZaneOps and get cloud access before everyone else
 			</p>
 		</div>
 
 		<div class="flex flex-col gap-8">
-			<div class="text-center max-w-3xl mx-auto">
-				<h3 class="text-xl font-medium mb-4">Sponsor Benefits</h3>
-				<ul class="grid md:grid-cols-2 gap-3 text-left">
+			<div class="max-w-3xl">
+				<h3 class="text-xl font-medium mb-4">Sponsor benefits:</h3>
+				<ul class="inline-grid md:grid-cols-2 gap-x-1 gap-y-3 text-left pl-0">
 					<li class="flex items-start gap-2">
 						<Icon
 							name="approve-check"
@@ -324,15 +298,14 @@ const faqs: FAQ[] = [
 				</ul>
 			</div>
 
-			<div class="grid md:grid-cols-3 gap-6">
+			<div class="grid md:grid-cols-3 gap-16">
 				{
 					sponsorTiers.map((tier) => (
 						<div
 							class:list={[
-								"border rounded-lg p-6 flex flex-col gap-4",
+								"border-l-2 rounded-r-md border-[var(--sl-color-accent)] bg-(--sl-color-bg-nav) dark:bg-(--sl-color-bg-nav)/60 px-4 p-6 flex flex-col gap-4 ",
 								tier.highlight
-									? "border-[var(--sl-color-accent)] bg-[var(--sl-color-accent)]/5"
-									: "border-border",
+									&& "!bg-[var(--sl-color-accent)]/5"
 							]}
 						>
 							<div>
@@ -343,7 +316,7 @@ const faqs: FAQ[] = [
 									</span>
 								)}
 							</div>
-							<ul class="flex flex-col gap-2 flex-1">
+							<ul class="flex flex-col gap-2 flex-1 pl-0">
 								{tier.features.map((feature) => (
 									<li class="flex items-start gap-2 text-sm">
 										<Icon
@@ -365,7 +338,7 @@ const faqs: FAQ[] = [
 					href="https://github.com/sponsors/fredkiss3"
 				>
 					Become a Sponsor
-					<Heart class="size-4" />
+					<Heart class="size-4 text-rose-500 fill-rose-500" />
 				</LinkButton>
 			</div>
 		</div>
@@ -379,10 +352,10 @@ const faqs: FAQ[] = [
 		<div class="max-w-3xl mx-auto w-full flex flex-col gap-6">
 			{
 				faqs.map((faq) => (
-					<div class="border border-border rounded-lg p-6">
-						<h3 class="text-lg font-medium mb-2">{faq.question}</h3>
+					<details>
+						<summary>{faq.question}</summary>
 						<p class="text-sm">{faq.answer}</p>
-					</div>
+					</details>
 				))
 			}
 		</div>
@@ -390,11 +363,19 @@ const faqs: FAQ[] = [
 
 	<section
 		id="final-cta"
-		class="flex flex-col md:flex-row gap-8 pb-14 rounded-lg p-8 md:p-12"
+		class="flex flex-col gap-16 pb-14 rounded-lg p-8 md:p-12"
 	>
-		<div class="flex-1 flex flex-col gap-4 items-center text-center">
+		<div class="text-center">
+			<h2 class="text-3xl md:text-4xl">Ready to Deploy?</h2>
+			<p class="mt-2 text-lg">
+				Join our waitlist or become a sponsor to get early access
+			</p>
+		</div>
+
+		<div class=" flex flex-col md:flex-row gap-8">
+			<div class="flex-1 flex flex-col gap-4 items-center text-center">
 			<h3 class="text-2xl font-medium">Join the Waitlist</h3>
-			<p class="text-sm">
+			<p class="text-sm text-pretty max-w-80">
 				Get notified when ZaneOps Cloud launches and be among the first
 				to try it
 			</p>
@@ -413,17 +394,19 @@ const faqs: FAQ[] = [
 
 		<div class="flex-1 flex flex-col gap-4 items-center text-center">
 			<h3 class="text-2xl font-medium">Become a Sponsor</h3>
-			<p class="text-sm">
+			<p class="text-sm text-pretty max-w-80">
 				Get early access, priority support, and help shape the future of
 				ZaneOps
 			</p>
 			<LinkButton
-				variant="minimal"
+				variant="secondary"
 				href="https://github.com/sponsors/fredkiss3"
+				class:list={["border-neutral-400/60"]}
 			>
 				Sponsor Now
-				<Heart class="size-4" />
+				<Heart class="size-4 text-rose-500 fill-rose-500" />
 			</LinkButton>
+		</div>
 		</div>
 	</section>
 </div>

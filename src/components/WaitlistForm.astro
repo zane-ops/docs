@@ -1,8 +1,8 @@
 ---
 ---
 
-<div class="waitlist-form-container">
-	<form id="waitlist-form" class="flex flex-col gap-4">
+<div class="md:max-w-sm mx-auto">
+	<form id="waitlist-form" class="flex flex-col gap-4 text-sm">
 		<div class="flex flex-col gap-2">
 			<label for="email" class="text-sm font-medium">
 				Email <span class="text-red-500">*</span>
@@ -12,7 +12,7 @@
 				id="email"
 				name="email"
 				required
-				class="px-4 py-2 rounded-md border border-border bg-bg text-[var(--sl-color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--sl-color-accent)]"
+				class="px-4 py-2 rounded-md border border-border bg-bg  text-[var(--sl-color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--sl-color-accent)]"
 				placeholder="you@example.com"
 			/>
 			<span class="text-red-500 text-sm hidden error-message" data-field="email"
@@ -46,16 +46,6 @@
 			/>
 		</div>
 
-		<div class="flex flex-col gap-2">
-			<label for="useCase" class="text-sm font-medium"> Use case </label>
-			<textarea
-				id="useCase"
-				name="useCase"
-				rows="3"
-				class="px-4 py-2 rounded-md border border-border bg-bg text-[var(--sl-color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--sl-color-accent)] resize-none"
-				placeholder="Tell us how you plan to use ZaneOps Cloud..."
-			></textarea>
-		</div>
 
 		<div class="flex flex-col gap-2">
 			<label for="serverCount" class="text-sm font-medium">
@@ -136,7 +126,6 @@
 			email: formData.get("email"),
 			name: formData.get("name"),
 			company: formData.get("company"),
-			useCase: formData.get("useCase"),
 			serverCount: formData.get("serverCount"),
 		};
 

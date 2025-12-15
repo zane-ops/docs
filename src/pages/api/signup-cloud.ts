@@ -30,7 +30,6 @@ export const POST: APIRoute = async function post({ request }) {
       email: formData.email,
       name: formData.name,
       company: formData.company || null,
-      useCase: formData.useCase || null,
       serverCount: formData.serverCount || null,
       timestamp: new Date().toISOString()
     });
