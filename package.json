@@ -7,7 +7,10 @@
     "start": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.6",
@@ -16,11 +19,16 @@
     "@astrojs/starlight-tailwind": "^4.0.2",
     "@astrojs/tailwind": "^6.0.2",
     "@lucide/astro": "^0.544.0",
+    "@react-email/components": "^1.0.1",
+    "@react-email/render": "^2.0.0",
     "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/vite": "^4.1.13",
     "astro": "^5.16.4",
+    "drizzle-orm": "^0.45.1",
+    "pg": "^8.16.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "resend": "^6.6.0",
     "satori": "^0.15.2",
     "sharp": "^0.32.6",
     "typescript": "^5.8.3"
@@ -28,8 +36,10 @@
   "devDependencies": {
     "@astrojs/node": "^9.5.1",
     "@biomejs/biome": "2.1.2",
+    "@types/pg": "^8.16.0",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
+    "drizzle-kit": "^0.31.8",
     "tailwindcss": "^4.1.13"
   },
   "packageManager": "pnpm@10.14.0+sha512.ad27a79641b49c3e481a16a805baa71817a04bbe06a38d17e60e2eaee83f6a146c6a688125f5792e48dd5ba30e7da52a5cda4c3992b9ccf333f9ce223af84748"

@@ -1,0 +1,228 @@
+---
+import { db } from "../db";
+import { verificationTokens, waitlistUsers } from "../db/schema";
+import { eq, and, gt } from "drizzle-orm";
+import { sendEmail } from "../lib/email";
+import { render } from "@react-email/render";
+import ConfirmationEmail from "../emails/confirmation-email";
+
+export const prerender = false;
+
+const url = new URL(Astro.request.url);
+const token = url.searchParams.get("token");
+
+let status: "success" | "error" | "loading" = "loading";
+let message = "";
+let userName = "";
+
+if (!token) {
+	status = "error";
+	message = "No verification token provided";
+} else {
+	try {
+		const [verificationToken] = await db
+			.select({
+				token: verificationTokens,
+				user: waitlistUsers,
+			})
+			.from(verificationTokens)
+			.innerJoin(waitlistUsers, eq(verificationTokens.userId, waitlistUsers.id))
+			.where(
+				and(
+					eq(verificationTokens.token, token),
+					gt(verificationTokens.expiresAt, new Date()),
+				),
+			)
+			.limit(1);
+
+		if (!verificationToken) {
+			status = "error";
+			message = "Invalid or expired verification token";
+		} else if (verificationToken.user.emailVerified) {
+			status = "success";
+			message = "Your email has already been verified";
+			userName = verificationToken.user.name;
+		} else {
+			await db
+				.update(waitlistUsers)
+				.set({ emailVerified: true, updatedAt: new Date() })
+				.where(eq(waitlistUsers.id, verificationToken.user.id));
+
+			await db
+				.delete(verificationTokens)
+				.where(eq(verificationTokens.id, verificationToken.token.id));
+
+			userName = verificationToken.user.name;
+
+			const confirmationHtml = await render(
+				ConfirmationEmail({ name: userName }),
+			);
+
+			try {
+				await sendEmail({
+					to: verificationToken.user.email,
+					subject: "You're on the ZaneOps Waitlist!",
+					html: confirmationHtml,
+				});
+			} catch (emailError) {
+				console.error("Failed to send confirmation email:", emailError);
+			}
+
+			status = "success";
+			message = "Email verified successfully!";
+		}
+	} catch (error) {
+		console.error("Verification error:", error);
+		status = "error";
+		message = "An error occurred during verification";
+	}
+}
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Email Verification - ZaneOps</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			body {
+				font-family:
+					-apple-system,
+					BlinkMacSystemFont,
+					"Segoe UI",
+					Roboto,
+					"Helvetica Neue",
+					Arial,
+					sans-serif;
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				min-height: 100vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 20px;
+			}
+
+			.container {
+				background: white;
+				border-radius: 12px;
+				box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+				max-width: 500px;
+				width: 100%;
+				padding: 48px 32px;
+				text-align: center;
+			}
+
+			.icon {
+				width: 80px;
+				height: 80px;
+				margin: 0 auto 24px;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 48px;
+			}
+
+			.icon.success {
+				background: #d4edda;
+				color: #28a745;
+			}
+
+			.icon.error {
+				background: #f8d7da;
+				color: #dc3545;
+			}
+
+			h1 {
+				font-size: 28px;
+				color: #333;
+				margin-bottom: 16px;
+				font-weight: 600;
+			}
+
+			p {
+				font-size: 16px;
+				color: #666;
+				line-height: 1.6;
+				margin-bottom: 32px;
+			}
+
+			.user-name {
+				color: #667eea;
+				font-weight: 600;
+			}
+
+			.btn {
+				display: inline-block;
+				padding: 12px 32px;
+				background: #667eea;
+				color: white;
+				text-decoration: none;
+				border-radius: 6px;
+				font-weight: 600;
+				transition: background 0.2s;
+			}
+
+			.btn:hover {
+				background: #5568d3;
+			}
+
+			.secondary-link {
+				display: block;
+				margin-top: 16px;
+				color: #667eea;
+				text-decoration: none;
+				font-size: 14px;
+			}
+
+			.secondary-link:hover {
+				text-decoration: underline;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			{
+				status === "success" ? (
+					<>
+						<div class="icon success">✓</div>
+						<h1>Email Verified!</h1>
+						<p>
+							{userName && (
+								<>
+									Hi <span class="user-name">{userName}</span>!<br />
+								</>
+							)}
+							{message}
+							<br />
+							You're now on the waitlist. Check your inbox for a confirmation
+							email with more details.
+						</p>
+						<a href="/" class="btn">
+							Go to Homepage
+						</a>
+						<a href="/introduction" class="secondary-link">
+							Explore Documentation
+						</a>
+					</>
+				) : (
+					<>
+						<div class="icon error">✕</div>
+						<h1>Verification Failed</h1>
+						<p>{message}</p>
+						<a href="/" class="btn">
+							Go to Homepage
+						</a>
+					</>
+				)
+			}
+		</div>
+	</body>
+</html>

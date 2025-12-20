@@ -17,6 +17,23 @@ export default defineConfig({
         access: "public",
         url: true,
         default: "https://assets.zaneops.dev"
+      }),
+      DATABASE_URL: envField.string({
+        context: "server",
+        access: "secret"
+      }),
+      RESEND_API_KEY: envField.string({
+        context: "server",
+        access: "secret"
+      }),
+      VERIFICATION_EMAIL_FROM: envField.string({
+        context: "server",
+        access: "secret"
+      }),
+      BASE_URL: envField.string({
+        context: "server",
+        access: "secret",
+        url: true
       })
     }
   },

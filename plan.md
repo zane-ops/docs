@@ -200,3 +200,12 @@ Split layout with waitlist and sponsorship options side-by-side
 -  Fast page load (<3s)
 -  Waitlist connected to real storage
 
+
+## TO-DO:
+- [x] landing page
+- [ ] setup resend (using SMTP), and use react-email for templating
+- [ ] setup DB with drizzle & postgres
+- [ ] when user signs up, tell them they need to validate their email
+- [ ] send an email when the user signs up for validation
+- [ ] After the user has clicked the link, they should be sent to a page that tell them it's confirmed (and it should update the row in the DB that the user has confirmed their email)
+- [ ] Send the user another email to tell them that we will share the news about the waitlist 
