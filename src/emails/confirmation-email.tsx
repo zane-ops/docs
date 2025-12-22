@@ -55,10 +55,10 @@ export function ConfirmationEmail({
             <Text className="text-[#333] text-[14px] my-6">
               Have questions? Check out our{" "}
               <Link
-                href="https://zaneops.dev/introduction"
+                href="https://github.com/zane-ops/zane-ops"
                 className="text-brand underline"
               >
-                documentation
+                Github repository
               </Link>{" "}
               or join our{" "}
               <Link
