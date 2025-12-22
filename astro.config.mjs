@@ -59,7 +59,8 @@ export default defineConfig({
       BASE_URL: envField.string({
         context: "server",
         access: "secret",
-        url: true
+        url: true,
+        default: `https://${defaultDomain}`
       })
     }
   },
