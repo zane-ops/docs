@@ -16,7 +16,10 @@ RUN FORCE_COLOR=true pnpm install --frozen-lockfile --prod
 # build the app
 FROM build-deps AS build
 COPY . .
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
 RUN --mount=type=cache,target=/app/.astro FORCE_COLOR=true pnpm run build
+RUN --mount=type=cache,target=/app/.astro FORCE_COLOR=true pnpm run db:migrate
 
 
 FROM base AS runtime
@@ -27,5 +30,5 @@ ENV HOST=0.0.0.0
 ENV PORT=3000
 EXPOSE 3000
 USER node
-CMD node ./src/db/migrate.ts && node ./dist/server/entry.mjs
+CMD ["node", "./dist/server/entry.mjs"]
 
