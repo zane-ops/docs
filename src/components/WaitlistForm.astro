@@ -2,7 +2,7 @@
 ---
 
 <div class="md:max-w-sm mx-auto">
-	<form id="waitlist-form" class="flex flex-col gap-4 text-sm">
+	<form id="waitlist-form" class="flex flex-col gap-4 text-sm" novalidate>
 		<div class="flex flex-col gap-2">
 			<label for="email" class="text-sm font-medium">
 				Email <span class="text-red-500">*</span>
@@ -146,6 +146,22 @@
 			const result = await response.json();
 
 			if (!response.ok) {
+				// Handle validation errors
+				if (result.errors && Array.isArray(result.errors)) {
+					// Show field-specific errors
+					result.errors.forEach((err: { field: string; message: string }) => {
+						const errorElement = document.querySelector(
+							`.error-message[data-field="${err.field}"]`,
+						) as HTMLElement;
+						if (errorElement) {
+							errorElement.textContent = err.message;
+							errorElement.classList.remove("hidden");
+						}
+					});
+					// Don't throw, just show the field errors
+					return;
+				}
+				// Show general error for non-validation errors
 				throw new Error(result.error || "Failed to submit form");
 			}
 
@@ -156,7 +172,7 @@
 			// Scroll to success message
 			successMessage.scrollIntoView({ behavior: "smooth", block: "nearest" });
 		} catch (error) {
-			// Show error message
+			// Show general error message
 			generalError.classList.remove("hidden");
 			errorText.textContent =
 				error instanceof Error ? error.message : "An error occurred";

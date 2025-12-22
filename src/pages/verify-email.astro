@@ -1,10 +1,10 @@
 ---
-import { db } from "../db";
-import { verificationTokens, waitlistUsers } from "../db/schema";
-import { eq, and, gt } from "drizzle-orm";
-import { sendEmail } from "../lib/email";
 import { render } from "@react-email/render";
-import ConfirmationEmail from "../emails/confirmation-email";
+import { and, eq, gt } from "drizzle-orm";
+import { db } from "~/db";
+import { verificationTokens, waitlistUsers } from "~/db/schema";
+import ConfirmationEmail from "~/emails/confirmation-email";
+import { sendEmail } from "~/lib/email";
 
 export const prerender = false;
 
@@ -16,66 +16,66 @@ let message = "";
 let userName = "";
 
 if (!token) {
-	status = "error";
-	message = "No verification token provided";
+  status = "error";
+  message = "No verification token provided";
 } else {
-	try {
-		const [verificationToken] = await db
-			.select({
-				token: verificationTokens,
-				user: waitlistUsers,
-			})
-			.from(verificationTokens)
-			.innerJoin(waitlistUsers, eq(verificationTokens.userId, waitlistUsers.id))
-			.where(
-				and(
-					eq(verificationTokens.token, token),
-					gt(verificationTokens.expiresAt, new Date()),
-				),
-			)
-			.limit(1);
+  try {
+    const [verificationToken] = await db
+      .select({
+        token: verificationTokens,
+        user: waitlistUsers
+      })
+      .from(verificationTokens)
+      .innerJoin(waitlistUsers, eq(verificationTokens.userId, waitlistUsers.id))
+      .where(
+        and(
+          eq(verificationTokens.token, token),
+          gt(verificationTokens.expiresAt, new Date())
+        )
+      )
+      .limit(1);
 
-		if (!verificationToken) {
-			status = "error";
-			message = "Invalid or expired verification token";
-		} else if (verificationToken.user.emailVerified) {
-			status = "success";
-			message = "Your email has already been verified";
-			userName = verificationToken.user.name;
-		} else {
-			await db
-				.update(waitlistUsers)
-				.set({ emailVerified: true, updatedAt: new Date() })
-				.where(eq(waitlistUsers.id, verificationToken.user.id));
+    if (!verificationToken) {
+      status = "error";
+      message = "Invalid or expired verification token";
+    } else if (verificationToken.user.emailVerified) {
+      status = "success";
+      message = "Your email has already been verified";
+      userName = verificationToken.user.name;
+    } else {
+      await db
+        .update(waitlistUsers)
+        .set({ emailVerified: true, updatedAt: new Date() })
+        .where(eq(waitlistUsers.id, verificationToken.user.id));
 
-			await db
-				.delete(verificationTokens)
-				.where(eq(verificationTokens.id, verificationToken.token.id));
+      await db
+        .delete(verificationTokens)
+        .where(eq(verificationTokens.id, verificationToken.token.id));
 
-			userName = verificationToken.user.name;
+      userName = verificationToken.user.name;
 
-			const confirmationHtml = await render(
-				ConfirmationEmail({ name: userName }),
-			);
+      const confirmationHtml = await render(
+        ConfirmationEmail({ name: userName })
+      );
 
-			try {
-				await sendEmail({
-					to: verificationToken.user.email,
-					subject: "You're on the ZaneOps Waitlist!",
-					html: confirmationHtml,
-				});
-			} catch (emailError) {
-				console.error("Failed to send confirmation email:", emailError);
-			}
+      try {
+        await sendEmail({
+          to: verificationToken.user.email,
+          subject: "You're on the ZaneOps Waitlist!",
+          html: confirmationHtml
+        });
+      } catch (emailError) {
+        console.error("Failed to send confirmation email:", emailError);
+      }
 
-			status = "success";
-			message = "Email verified successfully!";
-		}
-	} catch (error) {
-		console.error("Verification error:", error);
-		status = "error";
-		message = "An error occurred during verification";
-	}
+      status = "success";
+      message = "Email verified successfully!";
+    }
+  } catch (error) {
+    console.error("Verification error:", error);
+    status = "error";
+    message = "An error occurred during verification";
+  }
 }
 ---
 
