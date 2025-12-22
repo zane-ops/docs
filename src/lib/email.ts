@@ -1,4 +1,11 @@
-import { VERIFICATION_EMAIL_FROM } from "astro:env/server";
+import {
+  SMTP_HOST,
+  SMTP_PASSWORD,
+  SMTP_PORT,
+  SMTP_SECURE,
+  SMTP_USER,
+  VERIFICATION_EMAIL_FROM
+} from "astro:env/server";
 import nodemailer from "nodemailer";
 
 export interface SendEmailOptions {
@@ -12,13 +19,13 @@ export async function sendEmail(options: SendEmailOptions) {
   const { to, subject, html, text } = options;
 
   const params = {
-    host: import.meta.env.SMTP_HOST || "localhost",
-    port: Number(import.meta.env.SMTP_PORT) || 1025,
-    secure: import.meta.env.SMTP_SECURE === "true",
-    auth: import.meta.env.SMTP_USER
+    host: SMTP_HOST || "localhost",
+    port: Number(SMTP_PORT) || 1025,
+    secure: SMTP_SECURE === "true",
+    auth: SMTP_USER
       ? {
-          user: import.meta.env.SMTP_USER,
-          pass: import.meta.env.SMTP_PASSWORD
+          user: SMTP_USER,
+          pass: SMTP_PASSWORD
         }
       : undefined
   };
