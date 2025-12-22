@@ -1,15 +1,15 @@
 ---
 import { Code, Icon, LinkButton } from "@astrojs/starlight/components";
 import {
-    CloudUpload,
-    FlaskConical,
-    GitCompareArrows,
-    Globe,
-    Heart,
-    Network,
-    Rocket,
-    ShieldCheck,
-    Split,
+  CloudUpload,
+  FlaskConical,
+  GitCompareArrows,
+  Globe,
+  Heart,
+  Network,
+  Rocket,
+  ShieldCheck,
+  Split
 } from "@lucide/astro";
 import AhmedBasetPFP from "../assets/ahmedbaset.jpg";
 import AwahPFP from "../assets/awah.jpeg";
@@ -32,50 +32,50 @@ import BrowserScreenshot from "./BrowserScreenshot.astro";
 import LogSectionHome from "./LogSectionHome.astro";
 
 type Testimonial = {
-    avatarUrl?: string;
-    name: string;
-    occupation: string;
-    message: string[];
+  avatarUrl?: string;
+  name: string;
+  occupation: string;
+  message: string[];
 };
 
 const testimonials: Testimonial[] = [
-    {
-        name: " Enzo",
-        occupation: "Hobbyist",
-        avatarUrl: EdhPFP.src,
-        message: [
-            `I really enjoy ZaneOps.`,
-            `It makes it easy to deploy full-stack applications without needing to spend endless amounts of money on proprietary hosting.`,
-        ],
-    },
-    {
-        name: "Awa",
-        occupation: "Fullstack Developer",
-        avatarUrl: AwahPFP.src,
-        message: [
-            "It’s made in France 🇫🇷, easy to use, well documented and the main contributor closely listens to feedback",
-        ],
-    },
-    {
-        name: "Mohamed Cherif",
-        occupation: "Product and AI engineer | ZaneOps core team",
-        avatarUrl: MocherifPFP.src,
-        message: [
-            "I’ve had the chance to contribute to ZaneOps while also using it for many of my clients.",
-            "What I really like about it is how straightforward it is, you don’t get lost in complexity, it just works. From development all the way to production, it helps manage and deploy services smoothly. We built it with care to make things easier for teams, and it really shows.",
-            "I’m proud to recommend ZaneOps because it’s a tool that actually makes life simpler.",
-        ],
-    },
-    {
-        name: "Ahmed Abdelbaset",
-        occupation: "Full-stack Developer",
-        avatarUrl: AhmedBasetPFP.src,
-        message: [
-            "We tried many hosting setups, from expensive managed services to the endless pain of building CI pipelines, Docker, and Nginx configs by hand.",
-            "Moving to ZaneOps changed everything: a couple of commands on our VPS and we were up and running with multi-environment hosting, preview deployments, domain management, a beautiful dashboard, and persistent runtime logs.",
-            "So glad we made the switch.",
-        ],
-    },
+  {
+    name: " Enzo",
+    occupation: "Hobbyist",
+    avatarUrl: EdhPFP.src,
+    message: [
+      `I really enjoy ZaneOps.`,
+      `It makes it easy to deploy full-stack applications without needing to spend endless amounts of money on proprietary hosting.`
+    ]
+  },
+  {
+    name: "Awa",
+    occupation: "Fullstack Developer",
+    avatarUrl: AwahPFP.src,
+    message: [
+      "It’s made in France 🇫🇷, easy to use, well documented and the main contributor closely listens to feedback"
+    ]
+  },
+  {
+    name: "Mohamed Cherif",
+    occupation: "Product and AI engineer | ZaneOps core team",
+    avatarUrl: MocherifPFP.src,
+    message: [
+      "I’ve had the chance to contribute to ZaneOps while also using it for many of my clients.",
+      "What I really like about it is how straightforward it is, you don’t get lost in complexity, it just works. From development all the way to production, it helps manage and deploy services smoothly. We built it with care to make things easier for teams, and it really shows.",
+      "I’m proud to recommend ZaneOps because it’s a tool that actually makes life simpler."
+    ]
+  },
+  {
+    name: "Ahmed Abdelbaset",
+    occupation: "Full-stack Developer",
+    avatarUrl: AhmedBasetPFP.src,
+    message: [
+      "We tried many hosting setups, from expensive managed services to the endless pain of building CI pipelines, Docker, and Nginx configs by hand.",
+      "Moving to ZaneOps changed everything: a couple of commands on our VPS and we were up and running with multi-environment hosting, preview deployments, domain management, a beautiful dashboard, and persistent runtime logs.",
+      "So glad we made the switch."
+    ]
+  }
 ];
 ---
 

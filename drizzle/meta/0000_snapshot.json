@@ -47,12 +47,8 @@
           "name": "verification_tokens_user_id_waitlist_users_id_fk",
           "tableFrom": "verification_tokens",
           "tableTo": "waitlist_users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -62,9 +58,7 @@
         "verification_tokens_token_unique": {
           "name": "verification_tokens_token_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "token"
-          ]
+          "columns": ["token"]
         }
       },
       "policies": {},
@@ -135,9 +129,7 @@
         "waitlist_users_email_unique": {
           "name": "waitlist_users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},

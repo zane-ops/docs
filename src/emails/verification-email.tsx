@@ -1,131 +1,87 @@
 import {
-	Body,
-	Button,
-	Container,
-	Head,
-	Heading,
-	Html,
-	Link,
-	Preview,
-	Section,
-	Text,
+  Body,
+  Container,
+  Head,
+  Heading,
+  Html,
+  Img,
+  Link,
+  Preview,
+  Tailwind,
+  Text
 } from "@react-email/components";
+import { tailwindConfig } from "./config";
 
-interface VerificationEmailProps {
-	name: string;
-	verificationUrl: string;
-}
+type VerificationEmailProps = {
+  name: string;
+  verificationUrl: string;
+};
 
 export function VerificationEmail({
-	name,
-	verificationUrl,
+  name,
+  verificationUrl
 }: VerificationEmailProps) {
-	return (
-		<Html>
-			<Head />
-			<Preview>Verify your email for ZaneOps Waitlist</Preview>
-			<Body style={main}>
-				<Container style={container}>
-					<Heading style={h1}>ZaneOps</Heading>
-					<Heading style={h2}>Verify your email address</Heading>
-					<Text style={text}>Hi {name},</Text>
-					<Text style={text}>
-						Thank you for joining the ZaneOps waitlist! To complete your
-						registration, please verify your email address by clicking the button
-						below.
-					</Text>
-					<Section style={buttonContainer}>
-						<Button style={button} href={verificationUrl}>
-							Verify Email
-						</Button>
-					</Section>
-					<Text style={text}>
-						Or copy and paste this URL into your browser:
-					</Text>
-					<Link href={verificationUrl} style={link}>
-						{verificationUrl}
-					</Link>
-					<Text style={footer}>
-						This link will expire in 24 hours. If you didn't sign up for
-						ZaneOps, you can safely ignore this email.
-					</Text>
-					<Text style={footer}>
-						— The ZaneOps Team
-						<br />
-						<Link href="https://zaneops.dev" style={link}>
-							zaneops.dev
-						</Link>
-					</Text>
-				</Container>
-			</Body>
-		</Html>
-	);
+  return (
+    <Html>
+      <Head />
+      <Tailwind config={tailwindConfig}>
+        <Body className="bg-white font-sans">
+          <Preview>Verify your email for ZaneOps Waitlist</Preview>
+          <Container className="px-3 mx-auto">
+            <Heading className="text-[#333] text-[24px] my-10 mx-0 p-0">
+              Verify your email address
+            </Heading>
+            <Text className="text-[#333] text-[16px] my-6">Hi {name},</Text>
+            <Text className="text-[#333] text-[14px] my-6">
+              Thank you for joining the ZaneOps waitlist! To complete your
+              registration, please verify your email address by clicking the
+              link below.
+            </Text>
+            <Link
+              href={verificationUrl}
+              className="text-brand text-[14px] underline mb-4 block"
+            >
+              Click here to verify your email
+            </Link>
+            <Text className="text-[#333] text-[14px] my-6 mb-3.5">
+              Or, copy and paste this verification link:
+            </Text>
+            <code className="inline-block py-4 px-[4.5%] w-9/10 bg-[#f4f4f4] rounded-md border border-solid border-[#eee] text-[#333] break-all">
+              {verificationUrl}
+            </code>
+            <Text className="text-[#ababab] text-[14px] mt-3.5 mb-4">
+              This link will expire in 24 hours. If you didn&apos;t sign up for
+              ZaneOps, you can safely ignore this email.
+            </Text>
+
+            <Img
+              src={`https://zaneops.dev/favicon.svg`}
+              width="42"
+              height="42"
+              alt="Notion's Logo"
+            />
+            <Text className="text-[#898989] text-[12px] leading-[22px] mt-3 mb-6">
+              <Link
+                href="https://zaneops.dev"
+                className="text-[#898989] text-[14px] underline"
+              >
+                ZaneOps.dev
+              </Link>
+              , the best open-source platform
+              <br />
+              for deploying and managing your applications.
+            </Text>
+          </Container>
+        </Body>
+      </Tailwind>
+    </Html>
+  );
 }
 
+VerificationEmail.PreviewProps = {
+  name: "Fred",
+  verificationUrl:
+    "https://zaneops.dev/verify-email?token=7F3E9A2B8D1C4F6E5A9B2C8D1E4F7A3B6C9D2E5F8A1B4C7D0E3F6A9B2C5D8E1F4"
+} satisfies VerificationEmailProps;
+
 export default VerificationEmail;
-
-const main = {
-	backgroundColor: "#f6f9fc",
-	fontFamily:
-		'-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
-};
-
-const container = {
-	backgroundColor: "#ffffff",
-	margin: "0 auto",
-	padding: "20px 0 48px",
-	marginBottom: "64px",
-	maxWidth: "600px",
-};
-
-const h1 = {
-	color: "#333",
-	fontSize: "24px",
-	fontWeight: "bold",
-	margin: "40px 0",
-	padding: "0 40px",
-};
-
-const h2 = {
-	color: "#333",
-	fontSize: "20px",
-	fontWeight: "600",
-	margin: "0 0 15px",
-	padding: "0 40px",
-};
-
-const text = {
-	color: "#333",
-	fontSize: "16px",
-	lineHeight: "26px",
-	padding: "0 40px",
-};
-
-const buttonContainer = {
-	padding: "27px 40px",
-};
-
-const button = {
-	backgroundColor: "#5469d4",
-	borderRadius: "5px",
-	color: "#fff",
-	fontSize: "16px",
-	fontWeight: "bold",
-	textDecoration: "none",
-	textAlign: "center" as const,
-	display: "block",
-	padding: "12px 20px",
-};
-
-const link = {
-	color: "#5469d4",
-	textDecoration: "underline",
-};
-
-const footer = {
-	color: "#8898aa",
-	fontSize: "14px",
-	lineHeight: "24px",
-	padding: "0 40px",
-	marginTop: "20px",
-};

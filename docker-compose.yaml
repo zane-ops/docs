@@ -21,6 +21,17 @@ services:
       - DATABASE_URL=postgresql://postgres:password@db:5432/zane
     volumes:
       - drizzle-gateway-data:/app
+  mailhog:
+    image: mailhog/mailhog:latest
+    restart: unless-stopped
+    ports:
+      - "1025:1025" # SMTP server
+      - "8025:8025" # Web UI
+    environment:
+      MH_STORAGE: maildir # switch from in-memory to maildir on disk :contentReference[oaicite:0]{index=0}
+      MH_MAILDIR_PATH: /mailhog/data # where on the container to store the maildir
+    volumes:
+      - ./mailhog_data:/mailhog/data
 
 volumes:
   db-data:

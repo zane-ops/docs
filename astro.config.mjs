@@ -22,9 +22,35 @@ export default defineConfig({
         context: "server",
         access: "secret"
       }),
-      RESEND_API_KEY: envField.string({
+      SMTP_HOST: envField.string({
         context: "server",
-        access: "secret"
+        access: "secret",
+        optional: true,
+        default: "localhost"
+      }),
+      SMTP_PORT: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+        default: "1025"
+      }),
+      SMTP_SECURE: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+        default: "false"
+      }),
+      SMTP_USER: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+        default: ""
+      }),
+      SMTP_PASSWORD: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+        default: ""
       }),
       VERIFICATION_EMAIL_FROM: envField.string({
         context: "server",

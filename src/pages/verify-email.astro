@@ -1,5 +1,7 @@
 ---
-import { render } from "@react-email/render";
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import { BadgeCheckIcon, CircleXIcon } from "@lucide/astro";
+import { render, toPlainText } from "@react-email/render";
 import { and, eq, gt } from "drizzle-orm";
 import { db } from "~/db";
 import { verificationTokens, waitlistUsers } from "~/db/schema";
@@ -57,12 +59,14 @@ if (!token) {
       const confirmationHtml = await render(
         ConfirmationEmail({ name: userName })
       );
+      const confirmationText = toPlainText(confirmationHtml);
 
       try {
         await sendEmail({
           to: verificationToken.user.email,
           subject: "You're on the ZaneOps Waitlist!",
-          html: confirmationHtml
+          html: confirmationHtml,
+          text: confirmationText
         });
       } catch (emailError) {
         console.error("Failed to send confirmation email:", emailError);
@@ -79,150 +83,101 @@ if (!token) {
 }
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Email Verification - ZaneOps</title>
-		<style>
-			* {
-				margin: 0;
-				padding: 0;
-				box-sizing: border-box;
-			}
+<StarlightPage
+	frontmatter={{
+		title: "Email Verification",
+		template: "splash",
+		banner: {
+			content: "",
+		},
+		hero: {
+			title: "",
+		},
+	}}
+>
+	<div class="container flex flex-col gap-4">
+		{
+			status === "success" ? (
+				<>
+					<h1 class="flex items-center gap-2">
+						Email verified!{" "}
+						<BadgeCheckIcon class="size-8 text-(--sl-color-accent)" />{" "}
+					</h1>
 
-			body {
-				font-family:
-					-apple-system,
-					BlinkMacSystemFont,
-					"Segoe UI",
-					Roboto,
-					"Helvetica Neue",
-					Arial,
-					sans-serif;
-				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-				min-height: 100vh;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				padding: 20px;
-			}
-
-			.container {
-				background: white;
-				border-radius: 12px;
-				box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-				max-width: 500px;
-				width: 100%;
-				padding: 48px 32px;
-				text-align: center;
-			}
-
-			.icon {
-				width: 80px;
-				height: 80px;
-				margin: 0 auto 24px;
-				border-radius: 50%;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				font-size: 48px;
-			}
-
-			.icon.success {
-				background: #d4edda;
-				color: #28a745;
-			}
-
-			.icon.error {
-				background: #f8d7da;
-				color: #dc3545;
-			}
-
-			h1 {
-				font-size: 28px;
-				color: #333;
-				margin-bottom: 16px;
-				font-weight: 600;
-			}
-
-			p {
-				font-size: 16px;
-				color: #666;
-				line-height: 1.6;
-				margin-bottom: 32px;
-			}
-
-			.user-name {
-				color: #667eea;
-				font-weight: 600;
-			}
-
-			.btn {
-				display: inline-block;
-				padding: 12px 32px;
-				background: #667eea;
-				color: white;
-				text-decoration: none;
-				border-radius: 6px;
-				font-weight: 600;
-				transition: background 0.2s;
-			}
-
-			.btn:hover {
-				background: #5568d3;
-			}
-
-			.secondary-link {
-				display: block;
-				margin-top: 16px;
-				color: #667eea;
-				text-decoration: none;
-				font-size: 14px;
-			}
-
-			.secondary-link:hover {
-				text-decoration: underline;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="container">
-			{
-				status === "success" ? (
-					<>
-						<div class="icon success">✓</div>
-						<h1>Email Verified!</h1>
-						<p>
+					<div class="p-4 self-start flex flex-col gap-1 rounded-md bg-green-500/10 border border-teal-500/50 text-teal-700 dark:text-teal-200">
+						<p class="font-medium">
 							{userName && (
 								<>
-									Hi <span class="user-name">{userName}</span>!<br />
+									Hi <span class="user-name">{userName}</span>
+									!<br />
 								</>
 							)}
-							{message}
-							<br />
-							You're now on the waitlist. Check your inbox for a confirmation
-							email with more details.
 						</p>
+						<p class="text-sm my-0">
+							You're now on the waitlist. Check your inbox for a
+							confirmation email with more details.
+						</p>
+					</div>
+
+					<div class="grid">
 						<a href="/" class="btn">
 							Go to Homepage
 						</a>
 						<a href="/introduction" class="secondary-link">
 							Explore Documentation
 						</a>
-					</>
-				) : (
-					<>
-						<div class="icon error">✕</div>
-						<h1>Verification Failed</h1>
-						<p>{message}</p>
-						<a href="/" class="btn">
-							Go to Homepage
-						</a>
-					</>
-				)
-			}
-		</div>
-	</body>
-</html>
+					</div>
+				</>
+			) : (
+				<>
+					<h1 class="flex items-center gap-2">
+						Verification failed{" "}
+						<CircleXIcon class="size-8 text-red-400" />
+					</h1>
+
+					<div class="p-4 rounded-md self-start inline-block bg-red-500/10 border border-red-500/50 text-red-700 dark:text-red-200">
+						<p class="inline-block">{message}</p>
+					</div>
+					<a href="/" class="btn">
+						Go to Homepage
+					</a>
+				</>
+			)
+		}
+	</div>
+</StarlightPage>
+
+<style is:global>
+	.sl-banner {
+		padding: 0.35rem;
+	}
+	.sl-container {
+		margin-inline: auto;
+	}
+	.hero {
+		display: none;
+	}
+	.sl-markdown-content {
+		margin-top: 0;
+	}
+	.sl-markdown-content
+		section
+		:not(a, strong, em, del, span, input, code, br)
+		+ :not(
+			a,
+			strong,
+			em,
+			del,
+			span,
+			input,
+			code,
+			br,
+			:where(.not-content *)
+		) {
+		margin-top: 0;
+	}
+
+	html {
+		scroll-behavior: smooth;
+	}
+</style>

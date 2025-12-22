@@ -1,16 +1,17 @@
+import { z } from "astro:content";
 import { BASE_URL } from "astro:env/server";
-import { render } from "@react-email/render";
+import { render, toPlainText } from "@react-email/render";
 import type { APIRoute } from "astro";
 import { randomBytes } from "crypto";
 import { eq } from "drizzle-orm";
-import { z } from "zod";
+
 import { db } from "~/db";
 import { verificationTokens, waitlistUsers } from "~/db/schema";
 import VerificationEmail from "~/emails/verification-email";
 import { sendEmail } from "~/lib/email";
 
 const signupSchema = z.object({
-  email: z.email("Please provide a valid email address"),
+  email: z.string().email("Please provide a valid email address"),
   name: z.string().min(1, "Name is required"),
   company: z.string().optional(),
   serverCount: z.string().optional()
@@ -78,12 +79,14 @@ export const POST: APIRoute = async function post({ request }) {
         verificationUrl
       })
     );
+    const emailText = toPlainText(emailHtml);
 
     try {
       await sendEmail({
         to: user.email,
         subject: "Verify your email for ZaneOps Waitlist",
-        html: emailHtml
+        html: emailHtml,
+        text: emailText
       });
     } catch (emailError) {
       console.error("Failed to send verification email:", emailError);
