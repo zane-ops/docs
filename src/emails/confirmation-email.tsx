@@ -38,8 +38,9 @@ export function ConfirmationEmail({
             </Text>
             <Text className="text-[#333] text-[14px] my-6">
               We'll keep you updated on our progress and let you know as soon as
-              we're ready to launch. In the meantime, feel free to explore our
-              documentation to learn more about what ZaneOps can do.
+              we're ready to launch. In the meantime, you can also use ZaneOps
+              self-hosted or explore our documentation to learn more about what
+              ZaneOps can do.
             </Text>
             <Link
               href="https://zaneops.dev/introduction"
