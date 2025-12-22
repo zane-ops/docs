@@ -6,7 +6,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, envField } from "astro/config";
 
 // https://astro.build/config
-const defaultDomain = process.env.ZANE_DOMAINS?.split(",")[0] ?? "zaneops.dev";
+const defaultDomain = process.env.ZANE_DOMAINS?.split(",")[0] || "zaneops.dev";
 const scheme = process.env.NODE_ENV === "production" ? "https" : "http";
 export default defineConfig({
   site: `${scheme}://${defaultDomain}`,

@@ -16,10 +16,10 @@ RUN FORCE_COLOR=true pnpm install --frozen-lockfile --prod
 # build the app
 FROM build-deps AS build
 COPY . .
-ARG BASE_URL
+ARG ZANE_DOMAINS
 ARG DATABASE_URL
 ENV DATABASE_URL=${DATABASE_URL}
-ENV BASE_URL=${BASE_URL}
+ENV ZANE_DOMAINS=${ZANE_DOMAINS}
 RUN --mount=type=cache,target=/app/.astro FORCE_COLOR=true pnpm run build
 RUN --mount=type=cache,target=/app/.astro FORCE_COLOR=true pnpm run db:migrate
 
