@@ -14,13 +14,16 @@ import { tailwindConfig } from "./config";
 
 type VerificationEmailProps = {
   name: string;
-  verificationUrl: string;
+  token: string;
+  baseUrl?: string;
 };
 
 export function VerificationEmail({
   name,
-  verificationUrl
+  token,
+  baseUrl = "https://zaneops.dev"
 }: VerificationEmailProps) {
+  const verificationUrl = `${baseUrl}/verify-email?token=${token}`;
   return (
     <Html>
       <Head />
@@ -55,14 +58,14 @@ export function VerificationEmail({
             </Text>
 
             <Img
-              src={`https://zaneops.dev/favicon.svg`}
+              src={`${baseUrl}/logo.png`}
               width="42"
               height="42"
-              alt="Notion's Logo"
+              alt="ZaneOps's Logo"
             />
             <Text className="text-[#898989] text-[12px] leading-[22px] mt-3 mb-6">
               <Link
-                href="https://zaneops.dev"
+                href={baseUrl}
                 className="text-[#898989] text-[14px] underline"
               >
                 ZaneOps.dev
@@ -80,8 +83,8 @@ export function VerificationEmail({
 
 VerificationEmail.PreviewProps = {
   name: "Fred",
-  verificationUrl:
-    "https://zaneops.dev/verify-email?token=7F3E9A2B8D1C4F6E5A9B2C8D1E4F7A3B6C9D2E5F8A1B4C7D0E3F6A9B2C5D8E1F4"
+  baseUrl: "http://localhost:3000",
+  token: "7F3E9A2B8D1C4F6E5A9B2C8D1E4F7A3B6C9D2E5F8A1B4C7D0E3F6A9B2C5D8E1F4"
 } satisfies VerificationEmailProps;
 
 export default VerificationEmail;

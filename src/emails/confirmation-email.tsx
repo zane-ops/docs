@@ -14,9 +14,13 @@ import { tailwindConfig } from "./config";
 
 type ConfirmationEmailProps = {
   name: string;
+  baseUrl?: string;
 };
 
-export function ConfirmationEmail({ name }: ConfirmationEmailProps) {
+export function ConfirmationEmail({
+  name,
+  baseUrl = "https://zaneops.dev"
+}: ConfirmationEmailProps) {
   return (
     <Html>
       <Head />
@@ -66,10 +70,10 @@ export function ConfirmationEmail({ name }: ConfirmationEmailProps) {
             </Text>
 
             <Img
-              src={`https://zaneops.dev/favicon.svg`}
+              src={`${baseUrl}/logo.png`}
               width="42"
               height="42"
-              alt="Notion's Logo"
+              alt="ZaneOps's Logo"
             />
 
             <Text className="text-[#898989] text-[12px] leading-[22px] mt-3 mb-6">
@@ -92,7 +96,8 @@ export function ConfirmationEmail({ name }: ConfirmationEmailProps) {
 }
 
 ConfirmationEmail.PreviewProps = {
-  name: "Fred"
+  name: "Fred",
+  baseUrl: "http://localhost:3000"
 } satisfies ConfirmationEmailProps;
 
 export default ConfirmationEmail;

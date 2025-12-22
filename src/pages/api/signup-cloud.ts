@@ -72,11 +72,11 @@ export const POST: APIRoute = async function post({ request }) {
       expiresAt
     });
 
-    const verificationUrl = `${BASE_URL}/verify-email?token=${token}`;
     const emailHtml = await render(
       VerificationEmail({
         name: user.name,
-        verificationUrl
+        baseUrl: BASE_URL,
+        token
       })
     );
     const emailText = toPlainText(emailHtml);
