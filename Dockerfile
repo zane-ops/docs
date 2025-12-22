@@ -27,5 +27,5 @@ ENV HOST=0.0.0.0
 ENV PORT=3000
 EXPOSE 3000
 USER node
-CMD ["node", "./dist/server/entry.mjs"]
+CMD node --run db:migrate && node ./dist/server/entry.mjs
 
