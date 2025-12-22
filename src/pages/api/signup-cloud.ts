@@ -1,5 +1,5 @@
+import { site } from "astro:config/server";
 import { z } from "astro:content";
-import { BASE_URL } from "astro:env/server";
 import { render, toPlainText } from "@react-email/render";
 import type { APIRoute } from "astro";
 import { randomBytes } from "crypto";
@@ -75,7 +75,7 @@ export const POST: APIRoute = async function post({ request }) {
     const emailHtml = await render(
       VerificationEmail({
         name: user.name,
-        baseUrl: BASE_URL,
+        baseUrl: site,
         token
       })
     );

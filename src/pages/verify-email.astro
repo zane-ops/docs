@@ -1,5 +1,4 @@
 ---
-import { BASE_URL } from "astro:env/server";
 import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
 import { BadgeCheckIcon, CircleXIcon } from "@lucide/astro";
 import { render, toPlainText } from "@react-email/render";
@@ -58,7 +57,7 @@ if (!token) {
       userName = verificationToken.user.name;
 
       const confirmationHtml = await render(
-        ConfirmationEmail({ name: userName, baseUrl: BASE_URL })
+        ConfirmationEmail({ name: userName, baseUrl: Astro.site?.toString() })
       );
       const confirmationText = toPlainText(confirmationHtml);
 

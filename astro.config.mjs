@@ -7,8 +7,9 @@ import { defineConfig, envField } from "astro/config";
 
 // https://astro.build/config
 const defaultDomain = process.env.ZANE_DOMAINS?.split(",")[0] ?? "zaneops.dev";
+const scheme = process.env.NODE_ENV === "production" ? "https" : "http";
 export default defineConfig({
-  site: `https://${defaultDomain}`,
+  site: `${scheme}://${defaultDomain}`,
 
   env: {
     schema: {
@@ -55,12 +56,6 @@ export default defineConfig({
       VERIFICATION_EMAIL_FROM: envField.string({
         context: "server",
         access: "secret"
-      }),
-      BASE_URL: envField.string({
-        context: "server",
-        access: "secret",
-        url: true,
-        default: `https://${defaultDomain}`
       })
     }
   },

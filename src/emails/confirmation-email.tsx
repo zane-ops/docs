@@ -21,6 +21,9 @@ export function ConfirmationEmail({
   name,
   baseUrl = "https://zaneops.dev"
 }: ConfirmationEmailProps) {
+  if (baseUrl.endsWith("/")) {
+    baseUrl = baseUrl.substring(0, baseUrl.length - 1);
+  }
   return (
     <Html>
       <Head />
