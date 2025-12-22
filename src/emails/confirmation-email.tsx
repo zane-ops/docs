@@ -13,12 +13,10 @@ import {
 import { tailwindConfig } from "./config";
 
 type ConfirmationEmailProps = {
-  name: string;
   baseUrl?: string;
 };
 
 export function ConfirmationEmail({
-  name,
   baseUrl = "https://zaneops.dev"
 }: ConfirmationEmailProps) {
   if (baseUrl.endsWith("/")) {
@@ -34,7 +32,6 @@ export function ConfirmationEmail({
             <Heading className="text-[#333] text-[24px] my-10 mx-0 p-0">
               Welcome to the Cloud waitlist!
             </Heading>
-            <Text className="text-[#333] text-[16px] my-6">Hi {name},</Text>
             <Text className="text-[#333] text-[14px] my-6">
               Your email has been verified successfully! You're now officially
               on the ZaneOps Cloud waitlist.
@@ -100,7 +97,6 @@ export function ConfirmationEmail({
 }
 
 ConfirmationEmail.PreviewProps = {
-  name: "Fred",
   baseUrl: "http://localhost:3000"
 } satisfies ConfirmationEmailProps;
 

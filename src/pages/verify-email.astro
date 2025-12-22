@@ -15,7 +15,6 @@ const token = url.searchParams.get("token");
 
 let status: "success" | "error" | "loading" = "loading";
 let message = "";
-let userName = "";
 
 if (!token) {
   status = "error";
@@ -43,7 +42,6 @@ if (!token) {
     } else if (verificationToken.user.emailVerified) {
       status = "success";
       message = "Your email has already been verified";
-      userName = verificationToken.user.name;
     } else {
       await db
         .update(waitlistUsers)
@@ -54,10 +52,8 @@ if (!token) {
         .delete(verificationTokens)
         .where(eq(verificationTokens.id, verificationToken.token.id));
 
-      userName = verificationToken.user.name;
-
       const confirmationHtml = await render(
-        ConfirmationEmail({ name: userName, baseUrl: Astro.site?.toString() })
+        ConfirmationEmail({ baseUrl: Astro.site?.toString() })
       );
       const confirmationText = toPlainText(confirmationHtml);
 
@@ -106,12 +102,7 @@ if (!token) {
 
 					<div class="p-4 self-start flex flex-col gap-1 rounded-md bg-green-500/10 border border-teal-500/50 text-teal-700 dark:text-teal-200">
 						<p class="font-medium">
-							{userName && (
-								<>
-									Hi <span class="user-name">{userName}</span>
-									!<br />
-								</>
-							)}
+							Congratulations!
 						</p>
 						<p class="text-sm my-0">
 							You're now on the waitlist. Check your inbox for a

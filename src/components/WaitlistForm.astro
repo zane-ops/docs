@@ -2,10 +2,10 @@
 ---
 
 <div class="md:max-w-sm mx-auto">
-	<form id="waitlist-form" class="flex flex-col gap-4 text-sm" novalidate>
+	<form id="waitlist-form" class="flex flex-col gap-4 text-sm">
 		<div class="flex flex-col gap-2">
 			<label for="email" class="text-sm font-medium">
-				Email <span class="text-red-500">*</span>
+				Email 
 			</label>
 			<input
 				type="email"
@@ -17,51 +17,6 @@
 			/>
 			<span class="text-red-500 text-sm hidden error-message" data-field="email"
 			></span>
-		</div>
-
-		<div class="flex flex-col gap-2">
-			<label for="name" class="text-sm font-medium">
-				Name <span class="text-red-500">*</span>
-			</label>
-			<input
-				type="text"
-				id="name"
-				name="name"
-				required
-				class="px-4 py-2 rounded-md border border-border bg-bg text-[var(--sl-color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--sl-color-accent)]"
-				placeholder="John Doe"
-			/>
-			<span class="text-red-500 text-sm hidden error-message" data-field="name"
-			></span>
-		</div>
-
-		<div class="flex flex-col gap-2">
-			<label for="company" class="text-sm font-medium"> Company/Project </label>
-			<input
-				type="text"
-				id="company"
-				name="company"
-				class="px-4 py-2 rounded-md border border-border bg-bg text-[var(--sl-color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--sl-color-accent)]"
-				placeholder="Acme Inc"
-			/>
-		</div>
-
-
-		<div class="flex flex-col gap-2">
-			<label for="serverCount" class="text-sm font-medium">
-				How many servers do you plan to manage?
-			</label>
-			<select
-				id="serverCount"
-				name="serverCount"
-				class="px-4 py-2 rounded-md border border-border bg-bg text-[var(--sl-color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--sl-color-accent)]"
-			>
-				<option value="">Select...</option>
-				<option value="1-2">1-2 servers</option>
-				<option value="3-5">3-5 servers</option>
-				<option value="6-10">6-10 servers</option>
-				<option value="10+">10+ servers</option>
-			</select>
 		</div>
 
 		<div class="flex flex-col gap-2">
@@ -126,10 +81,7 @@
 		// Get form data
 		const formData = new FormData(form);
 		const data = {
-			email: formData.get("email"),
-			name: formData.get("name"),
-			company: formData.get("company"),
-			serverCount: formData.get("serverCount"),
+			email: formData.get("email")
 		};
 
 		// Set loading state

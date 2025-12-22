@@ -13,13 +13,11 @@ import {
 import { tailwindConfig } from "./config";
 
 type VerificationEmailProps = {
-  name: string;
   token: string;
   baseUrl?: string;
 };
 
 export function VerificationEmail({
-  name,
   token,
   baseUrl = "https://zaneops.dev"
 }: VerificationEmailProps) {
@@ -34,7 +32,6 @@ export function VerificationEmail({
             <Heading className="text-[#333] text-[24px] my-10 mx-0 p-0">
               Verify your email address
             </Heading>
-            <Text className="text-[#333] text-[16px] my-6">Hi {name},</Text>
             <Text className="text-[#333] text-[14px] my-6">
               Thank you for joining the ZaneOps Cloud waitlist! To complete your
               registration, please verify your email address by clicking the
@@ -82,7 +79,6 @@ export function VerificationEmail({
 }
 
 VerificationEmail.PreviewProps = {
-  name: "Fred",
   baseUrl: "http://localhost:3000",
   token: "7F3E9A2B8D1C4F6E5A9B2C8D1E4F7A3B6C9D2E5F8A1B4C7D0E3F6A9B2C5D8E1F4"
 } satisfies VerificationEmailProps;

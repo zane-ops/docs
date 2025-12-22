@@ -11,10 +11,7 @@ import VerificationEmail from "~/emails/verification-email";
 import { sendEmail } from "~/lib/email";
 
 const signupSchema = z.object({
-  email: z.string().email("Please provide a valid email address"),
-  name: z.string().min(1, "Name is required"),
-  company: z.string().optional(),
-  serverCount: z.string().optional()
+  email: z.string().email("Please provide a valid email address")
 });
 
 export const prerender = false;
@@ -55,10 +52,7 @@ export const POST: APIRoute = async function post({ request }) {
     const [user] = await db
       .insert(waitlistUsers)
       .values({
-        email: formData.email,
-        name: formData.name,
-        company: formData.company || null,
-        serverCount: formData.serverCount || null
+        email: formData.email
       })
       .returning();
 
@@ -74,7 +68,6 @@ export const POST: APIRoute = async function post({ request }) {
 
     const emailHtml = await render(
       VerificationEmail({
-        name: user.name,
         baseUrl: site,
         token
       })
