@@ -84,7 +84,7 @@ export const POST: APIRoute = async function post({ request }) {
     try {
       await sendEmail({
         to: user.email,
-        subject: "Verify your email for ZaneOps Waitlist",
+        subject: "Verify your email for ZaneOps Cloud Waitlist",
         html: emailHtml,
         text: emailText
       });

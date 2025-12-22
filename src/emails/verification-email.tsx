@@ -26,14 +26,14 @@ export function VerificationEmail({
       <Head />
       <Tailwind config={tailwindConfig}>
         <Body className="bg-white font-sans">
-          <Preview>Verify your email for ZaneOps Waitlist</Preview>
+          <Preview>Verify your email for ZaneOps Cloud Waitlist</Preview>
           <Container className="px-3 mx-auto">
             <Heading className="text-[#333] text-[24px] my-10 mx-0 p-0">
               Verify your email address
             </Heading>
             <Text className="text-[#333] text-[16px] my-6">Hi {name},</Text>
             <Text className="text-[#333] text-[14px] my-6">
-              Thank you for joining the ZaneOps waitlist! To complete your
+              Thank you for joining the ZaneOps Cloud waitlist! To complete your
               registration, please verify your email address by clicking the
               link below.
             </Text>
