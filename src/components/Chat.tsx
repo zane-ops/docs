@@ -237,7 +237,7 @@ export function Chat() {
             className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all"
             style={{
               backgroundColor: "var(--sl-color-bg)",
-              border: "1px solid var(--sl-color-gray-4)"
+              border: "1px solid var(--color-border)"
             }}
           >
             <svg
@@ -311,7 +311,7 @@ export function Chat() {
           }`}
           style={{
             backgroundColor: "var(--sl-color-bg)",
-            border: "1px solid var(--sl-color-gray-4)",
+            border: "1px solid var(--color-border)",
             boxShadow: "0 10px 40px rgba(0, 0, 0, 0.1)"
           }}
         >
