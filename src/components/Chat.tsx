@@ -317,7 +317,7 @@ export function Chat() {
           }`}
           style={{
             backgroundColor: "var(--sl-color-bg)",
-            border: "1px solid var(--sl-color-gray-5)",
+            border: "1px solid var(--sl-color-gray-4)",
             boxShadow: "0 10px 40px rgba(0, 0, 0, 0.1)"
           }}
         >
