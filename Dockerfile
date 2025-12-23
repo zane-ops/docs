@@ -21,7 +21,6 @@ ARG DATABASE_URL
 ARG ANTHROPIC_API_KEY
 ENV DATABASE_URL=${DATABASE_URL}
 ENV ZANE_DOMAINS=${ZANE_DOMAINS}
-ENV ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
 RUN --mount=type=cache,target=/app/.astro FORCE_COLOR=true pnpm run build
 RUN --mount=type=cache,target=/app/.astro FORCE_COLOR=true pnpm run db:migrate
 
