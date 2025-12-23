@@ -1,6 +1,6 @@
 import { migrate } from "drizzle-orm/node-postgres/migrator";
-import { db } from "./index.ts";
 import path from "path";
+import { db } from "./index.ts";
 
 const migrationsFolder = path.join("./drizzle");
 

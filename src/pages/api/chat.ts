@@ -1,6 +1,6 @@
+import { getCollection } from "astro:content";
 import Anthropic from "@anthropic-ai/sdk";
 import type { APIRoute } from "astro";
-import { getCollection } from "astro:content";
 
 export const prerender = false;
 
