@@ -668,7 +668,7 @@ export function Chat() {
                 onKeyDown={handleKeyDown}
                 placeholder="Ask AI..."
                 rows={1}
-                className="w-full px-4 py-4 pr-12 rounded-lg text-sm outline-none focus:ring-2 transition-shadow resize-none overflow-hidden"
+                className="w-full px-4 py-4 pr-12 rounded-lg outline-none focus:ring-2 transition-shadow resize-none overflow-hidden"
                 style={{
                   backgroundColor: "var(--sl-color-gray-6)",
                   color: "var(--sl-color-white)",
@@ -677,7 +677,8 @@ export function Chat() {
                   maxHeight: "150px",
                   minHeight: "56px",
                   maxWidth: "100%",
-                  boxSizing: "border-box"
+                  boxSizing: "border-box",
+                  fontSize: "16px"
                 }}
                 disabled={isLoading}
               />
