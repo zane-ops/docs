@@ -18,7 +18,6 @@ FROM build-deps AS build
 COPY . .
 ARG ZANE_DOMAINS
 ARG DATABASE_URL
-ARG ANTHROPIC_API_KEY
 ENV DATABASE_URL=${DATABASE_URL}
 ENV ZANE_DOMAINS=${ZANE_DOMAINS}
 RUN --mount=type=cache,target=/app/.astro FORCE_COLOR=true pnpm run build
