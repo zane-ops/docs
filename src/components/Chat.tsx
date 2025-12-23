@@ -309,14 +309,15 @@ export function Chat() {
 
       {isOpen && (
         <div
-          className={`fixed bottom-6 right-6 w-96 h-[80vh] max-h-[800px] rounded-lg shadow-2xl flex flex-col z-50 transition-all duration-300 ease-out ${
+          className={`fixed bottom-6 right-6 w-96 h-[80vh] max-h-[800px] rounded-lg flex flex-col z-50 transition-all duration-300 ease-out ${
             isClosing
               ? "opacity-0 translate-y-2 scale-98"
               : "opacity-100 translate-y-0 scale-100"
           }`}
           style={{
             backgroundColor: "var(--sl-color-bg)",
-            border: "1px solid var(--sl-color-gray-5)"
+            border: "1px solid var(--sl-color-gray-5)",
+            boxShadow: "0 10px 40px rgba(0, 0, 0, 0.1)"
           }}
         >
           <div
