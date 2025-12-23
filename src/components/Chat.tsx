@@ -232,12 +232,7 @@ export function Chat() {
   return (
     <>
       {!isOpen && (
-        <div
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-2 duration-300"
-          style={{
-            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)"
-          }}
-        >
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div
             className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all"
             style={{
