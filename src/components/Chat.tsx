@@ -14,11 +14,32 @@ export function Chat() {
   const [widgetInput, setWidgetInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const widgetInputRef = useRef<HTMLInputElement>(null);
+  const shouldAutoScrollRef = useRef(true);
+  const userScrolledRef = useRef(false);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current && shouldAutoScrollRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "instant" });
+    }
+  };
+
+  const handleScroll = () => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+
+    const threshold = 100;
+    const scrollBottom =
+      container.scrollHeight - container.scrollTop - container.clientHeight;
+    const isAtBottom = scrollBottom < threshold;
+
+    shouldAutoScrollRef.current = isAtBottom;
+
+    if (!isAtBottom) {
+      userScrolledRef.current = true;
+    }
   };
 
   useEffect(() => {
@@ -40,6 +61,8 @@ export function Chat() {
     const messageInput = input;
     setInput("");
     setIsLoading(true);
+    shouldAutoScrollRef.current = true;
+    userScrolledRef.current = false;
 
     const assistantMessageIndex = messages.length + 1;
     setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
@@ -145,6 +168,8 @@ export function Chat() {
     setWidgetInput("");
     setIsOpen(true);
     setIsLoading(true);
+    shouldAutoScrollRef.current = true;
+    userScrolledRef.current = false;
 
     setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
@@ -380,7 +405,11 @@ export function Chat() {
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <div
+            ref={messagesContainerRef}
+            onScroll={handleScroll}
+            className="flex-1 overflow-y-auto p-4 space-y-4"
+          >
             {messages.length === 0 && (
               <div
                 className="text-center text-sm p-4"
