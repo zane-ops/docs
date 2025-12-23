@@ -536,6 +536,17 @@ export function Chat() {
                             <em style={{ color: "var(--sl-color-gray-2)" }}>
                               {children}
                             </em>
+                          ),
+                          img: ({ src, alt }) => (
+                            <img
+                              src={src}
+                              alt={alt || ""}
+                              className="rounded-lg my-3 max-w-full h-auto border"
+                              style={{
+                                borderColor: "var(--sl-color-gray-5)"
+                              }}
+                              loading="lazy"
+                            />
                           )
                         }}
                       >
