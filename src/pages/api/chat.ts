@@ -1,7 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { APIRoute } from "astro";
-import fs from "fs/promises";
-import path from "path";
+import { getCollection } from "astro:content";
 
 export const prerender = false;
 
@@ -9,31 +8,11 @@ const anthropic = new Anthropic({
   apiKey: import.meta.env.ANTHROPIC_API_KEY
 });
 
-async function getAllDocsRecursive(
-  dir: string,
-  baseDir: string
-): Promise<string[]> {
-  const entries = await fs.readdir(dir, { withFileTypes: true });
-  const docContents: string[] = [];
-
-  for (const entry of entries) {
-    const fullPath = path.join(dir, entry.name);
-    if (entry.isDirectory()) {
-      const subDocs = await getAllDocsRecursive(fullPath, baseDir);
-      docContents.push(...subDocs);
-    } else if (entry.name.endsWith(".mdx") || entry.name.endsWith(".md")) {
-      const relativePath = path.relative(baseDir, fullPath);
-      const content = await fs.readFile(fullPath, "utf-8");
-      docContents.push(`## File: ${relativePath}\n\n${content}\n\n---\n`);
-    }
-  }
-
-  return docContents;
-}
-
 async function getAllDocs(): Promise<string> {
-  const docsDir = path.join(process.cwd(), "src/content/docs");
-  const docContents = await getAllDocsRecursive(docsDir, docsDir);
+  const docs = await getCollection("docs");
+  const docContents = docs.map((doc) => {
+    return `## File: ${doc.id}\n\n${doc.body}\n\n---\n`;
+  });
   return docContents.join("\n");
 }
 
