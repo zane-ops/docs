@@ -1,3 +1,4 @@
+import node from "@astrojs/node";
 import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
 import tailwind from "@astrojs/tailwind";
@@ -7,6 +8,10 @@ import { defineConfig } from "astro/config";
 const defaultDomain = process.env.ZANE_DOMAINS?.split(",")[0] ?? "zaneops.dev";
 export default defineConfig({
   site: `https://${defaultDomain}`,
+  output: "server",
+  adapter: node({
+    mode: "standalone"
+  }),
   devToolbar: {
     enabled: false
   },
@@ -32,7 +37,8 @@ export default defineConfig({
       },
       components: {
         Footer: "./src/components/Footer.astro",
-        Head: "./src/components/Head.astro"
+        Head: "./src/components/Head.astro",
+        PageFrame: "./src/components/PageFrame.astro"
       },
       sidebar: [
         {
