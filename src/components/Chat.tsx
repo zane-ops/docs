@@ -675,7 +675,9 @@ export function Chat() {
                   border: "1px solid var(--sl-color-gray-5)",
                   outlineColor: "var(--sl-color-accent)",
                   maxHeight: "150px",
-                  minHeight: "56px"
+                  minHeight: "56px",
+                  maxWidth: "100%",
+                  boxSizing: "border-box"
                 }}
                 disabled={isLoading}
               />
