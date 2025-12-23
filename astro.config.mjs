@@ -60,6 +60,10 @@ export default defineConfig({
       VERIFICATION_EMAIL_FROM: envField.string({
         context: "server",
         access: "secret"
+      }),
+      ANTHROPIC_API_KEY: envField.string({
+        context: "server",
+        access: "secret"
       })
     }
   },
