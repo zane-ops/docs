@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 
 interface Message {
@@ -18,7 +18,7 @@ export function Chat() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const widgetInputRef = useRef<HTMLInputElement>(null);
   const shouldAutoScrollRef = useRef(true);
-  const userScrolledRef = useRef(false);
+  const lastScrollTopRef = useRef(0);
 
   const scrollToBottom = () => {
     if (messagesEndRef.current && shouldAutoScrollRef.current) {
@@ -30,16 +30,20 @@ export function Chat() {
     const container = messagesContainerRef.current;
     if (!container) return;
 
-    const threshold = 100;
+    const currentScrollTop = container.scrollTop;
     const scrollBottom =
       container.scrollHeight - container.scrollTop - container.clientHeight;
-    const isAtBottom = scrollBottom < threshold;
 
-    shouldAutoScrollRef.current = isAtBottom;
-
-    if (!isAtBottom) {
-      userScrolledRef.current = true;
+    // If user scrolled up (manually), disable auto-scroll
+    if (currentScrollTop < lastScrollTopRef.current) {
+      shouldAutoScrollRef.current = false;
     }
+    // If user is at the bottom, enable auto-scroll
+    else if (scrollBottom < 50) {
+      shouldAutoScrollRef.current = true;
+    }
+
+    lastScrollTopRef.current = currentScrollTop;
   };
 
   useEffect(() => {
@@ -62,7 +66,6 @@ export function Chat() {
     setInput("");
     setIsLoading(true);
     shouldAutoScrollRef.current = true;
-    userScrolledRef.current = false;
 
     const assistantMessageIndex = messages.length + 1;
     setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
@@ -169,7 +172,6 @@ export function Chat() {
     setIsOpen(true);
     setIsLoading(true);
     shouldAutoScrollRef.current = true;
-    userScrolledRef.current = false;
 
     setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
