@@ -1,0 +1,174 @@
+---
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import { BadgeCheckIcon, CircleXIcon } from "@lucide/astro";
+import { render, toPlainText } from "@react-email/render";
+import { and, eq, gt } from "drizzle-orm";
+import { db } from "~/db";
+import { verificationTokens, waitlistUsers } from "~/db/schema";
+import ConfirmationEmail from "~/emails/confirmation-email";
+import { sendEmail } from "~/lib/email";
+
+export const prerender = false;
+
+const url = new URL(Astro.request.url);
+const token = url.searchParams.get("token");
+
+let status: "success" | "error" | "loading" = "loading";
+let message = "";
+
+if (!token) {
+  status = "error";
+  message = "No verification token provided";
+} else {
+  try {
+    const [verificationToken] = await db
+      .select({
+        token: verificationTokens,
+        user: waitlistUsers
+      })
+      .from(verificationTokens)
+      .innerJoin(waitlistUsers, eq(verificationTokens.userId, waitlistUsers.id))
+      .where(
+        and(
+          eq(verificationTokens.token, token),
+          gt(verificationTokens.expiresAt, new Date())
+        )
+      )
+      .limit(1);
+
+    if (!verificationToken) {
+      status = "error";
+      message = "Invalid or expired verification token";
+    } else if (verificationToken.user.emailVerified) {
+      status = "success";
+      message = "Your email has already been verified";
+    } else {
+      await db
+        .update(waitlistUsers)
+        .set({ emailVerified: true, updatedAt: new Date() })
+        .where(eq(waitlistUsers.id, verificationToken.user.id));
+
+      await db
+        .delete(verificationTokens)
+        .where(eq(verificationTokens.id, verificationToken.token.id));
+
+      const confirmationHtml = await render(
+        ConfirmationEmail({ baseUrl: Astro.site?.toString() })
+      );
+      const confirmationText = toPlainText(confirmationHtml);
+
+      try {
+        await sendEmail({
+          to: verificationToken.user.email,
+          subject: "You're on the ZaneOps Cloud Waitlist!",
+          html: confirmationHtml,
+          text: confirmationText
+        });
+      } catch (emailError) {
+        console.error("Failed to send confirmation email:", emailError);
+      }
+
+      status = "success";
+      message = "Email verified successfully!";
+    }
+  } catch (error) {
+    console.error("Verification error:", error);
+    status = "error";
+    message = "An error occurred during verification";
+  }
+}
+---
+
+<StarlightPage
+	frontmatter={{
+		title: "Email Verification",
+		template: "splash",
+		banner: {
+			content: "",
+		},
+		hero: {
+			title: "",
+		},
+	}}
+>
+	<div class="container flex flex-col gap-4">
+		{
+			status === "success" ? (
+				<>
+					<h1 class="flex items-center gap-2">
+						Email verified!{" "}
+						<BadgeCheckIcon class="size-8 text-(--sl-color-accent)" />{" "}
+					</h1>
+
+					<div class="p-4 self-start flex flex-col gap-1 rounded-md bg-green-500/10 border border-teal-500/50 text-teal-700 dark:text-teal-200">
+						<p class="font-medium">
+							Congratulations!
+						</p>
+						<p class="text-sm my-0">
+							You're now on the waitlist. Check your inbox for a
+							confirmation email with more details.
+						</p>
+					</div>
+
+					<div class="grid">
+						<a href="/" class="btn">
+							Go to Homepage
+						</a>
+						<a href="/introduction" class="secondary-link">
+							Explore Documentation
+						</a>
+					</div>
+				</>
+			) : (
+				<>
+					<h1 class="flex items-center gap-2">
+						Verification failed{" "}
+						<CircleXIcon class="size-8 text-red-400" />
+					</h1>
+
+					<div class="p-4 rounded-md self-start inline-block bg-red-500/10 border border-red-500/50 text-red-700 dark:text-red-200">
+						<p class="inline-block">{message}</p>
+					</div>
+					<a href="/" class="btn">
+						Go to Homepage
+					</a>
+				</>
+			)
+		}
+	</div>
+</StarlightPage>
+
+<style is:global>
+	.sl-banner {
+		padding: 0.35rem;
+	}
+	.sl-container {
+		margin-inline: auto;
+	}
+	.hero {
+		display: none;
+	}
+	.sl-markdown-content {
+		margin-top: 0;
+	}
+	.sl-markdown-content
+		section
+		:not(a, strong, em, del, span, input, code, br)
+		+ :not(
+			a,
+			strong,
+			em,
+			del,
+			span,
+			input,
+			code,
+			br,
+			:where(.not-content *)
+		) {
+		margin-top: 0;
+	}
+
+	html {
+		scroll-behavior: smooth;
+	}
+</style>

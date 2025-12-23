@@ -1,0 +1,102 @@
+import { site } from "astro:config/server";
+import { z } from "astro:content";
+import { render, toPlainText } from "@react-email/render";
+import type { APIRoute } from "astro";
+import { randomBytes } from "crypto";
+import { eq } from "drizzle-orm";
+
+import { db } from "~/db";
+import { verificationTokens, waitlistUsers } from "~/db/schema";
+import VerificationEmail from "~/emails/verification-email";
+import { sendEmail } from "~/lib/email";
+
+const signupSchema = z.object({
+  email: z.string().email("Please provide a valid email address")
+});
+
+export const prerender = false;
+
+export const POST: APIRoute = async function post({ request }) {
+  try {
+    const body = await request.json();
+
+    const result = signupSchema.safeParse(body);
+    if (!result.success) {
+      return new Response(
+        JSON.stringify({
+          error: "Validation failed",
+          errors: result.error.issues.map((issue) => ({
+            field: issue.path.join("."),
+            message: issue.message
+          }))
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    const formData = result.data;
+
+    const existingUser = await db
+      .select()
+      .from(waitlistUsers)
+      .where(eq(waitlistUsers.email, formData.email))
+      .limit(1);
+
+    if (existingUser.length > 0) {
+      return new Response(
+        JSON.stringify({ error: "Email already registered" }),
+        { status: 409, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    const [user] = await db
+      .insert(waitlistUsers)
+      .values({
+        email: formData.email
+      })
+      .returning();
+
+    const token = randomBytes(32).toString("hex");
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + 24);
+
+    await db.insert(verificationTokens).values({
+      userId: user.id,
+      token,
+      expiresAt
+    });
+
+    const emailHtml = await render(
+      VerificationEmail({
+        baseUrl: site,
+        token
+      })
+    );
+    const emailText = toPlainText(emailHtml);
+
+    try {
+      await sendEmail({
+        to: user.email,
+        subject: "Verify your email for ZaneOps Cloud Waitlist",
+        html: emailHtml,
+        text: emailText
+      });
+    } catch (emailError) {
+      console.error("Failed to send verification email:", emailError);
+    }
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: "Please check your email to verify your address"
+      }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
+    );
+  } catch (error) {
+    console.error("Signup error:", error);
+    return new Response(JSON.stringify({ error: "Failed to process signup" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" }
+    });
+  }
+};

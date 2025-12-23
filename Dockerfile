@@ -4,18 +4,33 @@ WORKDIR /app
 # install dependencies
 COPY package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./
 RUN corepack enable && corepack install
+
+
+FROM base AS build-deps
 RUN FORCE_COLOR=true pnpm install --frozen-lockfile
 
+FROM base AS prod-deps
+RUN FORCE_COLOR=true pnpm install --frozen-lockfile --prod
+
+
 # build the app
-FROM base AS build
+FROM build-deps AS build
 COPY . .
+ARG ZANE_DOMAINS
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
+ENV ZANE_DOMAINS=${ZANE_DOMAINS}
 RUN --mount=type=cache,target=/app/.astro FORCE_COLOR=true pnpm run build
+RUN --mount=type=cache,target=/app/.astro FORCE_COLOR=true pnpm run db:migrate
 
 
-# Webapp based on caddy
-FROM caddy:2.9-alpine AS runtime
-WORKDIR /var/www/html
+FROM base AS runtime
+COPY --from=prod-deps /app/node_modules ./node_modules
+COPY --from=build /app/dist ./dist
 
+ENV HOST=0.0.0.0
+ENV PORT=3000
+EXPOSE 3000
+USER node
+CMD ["node", "./dist/server/entry.mjs"]
 
-COPY --from=build /app/dist ./
-COPY --from=build /app/Caddyfile /etc/caddy/Caddyfile

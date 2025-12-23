@@ -1,0 +1,448 @@
+---
+import { Icon, LinkButton } from "@astrojs/starlight/components";
+import {
+  CloudUpload,
+  FileText,
+  Github,
+  Heart,
+  KeyRound,
+  Network,
+  Palette,
+  Plus,
+  Server,
+  ShieldCheck,
+  Users,
+  Webhook
+} from "@lucide/astro";
+import Logo from "../assets/Logo.svg";
+import WaitlistForm from "./WaitlistForm.astro";
+
+type Feature = {
+  icon: any;
+  title: string;
+  description: string;
+};
+
+const features: Feature[] = [
+  {
+    icon: Users,
+    title: "Multi-tenancy",
+    description:
+      "Organize projects with custom permissions for teams, groups, and workspaces"
+  },
+  {
+    icon: KeyRound,
+    title: "OIDC Authentication",
+    description: "Enterprise-grade authentication with OpenID Connect support"
+  },
+  {
+    icon: Github,
+    title: "Social Authentication",
+    description:
+      "Login with Google, Github, and other providers for both dashboard and service access"
+  },
+  {
+    icon: ShieldCheck,
+    title: "Advanced Service Auth",
+    description:
+      "Protect services using social providers like GitHub and GitLab"
+  },
+  {
+    icon: Palette,
+    title: "Custom Branding",
+    description: "Customize authentication pages with your brand identity"
+  },
+  {
+    icon: FileText,
+    title: "Audit Logs",
+    description:
+      "Track all activity: logins, deployments, service changes, and more"
+  },
+  {
+    icon: Server,
+    title: "Multi-Server Cluster",
+    description:
+      "Deploy across multiple servers for high availability and failover"
+  },
+  {
+    icon: Webhook,
+    title: "Pre/Post Webhooks",
+    description:
+      "Execute custom logic before and after deployments with webhooks"
+  },
+  {
+    icon: Plus,
+    title: "And much more...",
+    description: "More features incoming for the cloud version"
+  }
+];
+
+type SponsorTier = {
+  price: string;
+  features: string[];
+  highlight?: boolean;
+};
+
+const sponsorTiers: SponsorTier[] = [
+  {
+    price: "$5/month",
+    features: ["Sponsor badge", "Early alpha access"]
+  },
+  {
+    price: "$25/month",
+    features: [
+      "Everything in $5",
+      "Priority bug fixes",
+      "Early access to features"
+    ],
+    highlight: true
+  },
+  {
+    price: "$100/month",
+    features: [
+      "Everything in $25",
+      "Company logo on README",
+      "Private support channel"
+    ]
+  }
+];
+
+type FAQ = {
+  question: string;
+  answer: string;
+};
+
+const faqs: FAQ[] = [
+  {
+    question: "How is ZaneOps Cloud different from other PaaS?",
+    answer:
+      "Your servers, your data. We host the control panel with enterprise features, you host your applications on your own infrastructure. This gives you the benefits of a managed platform without the lock-in or loss of control."
+  },
+  {
+    question: "When will cloud access be available?",
+    answer:
+      "We're working toward an alpha release. Join the waitlist to be notified when access becomes available. Sponsors get priority access."
+  },
+  {
+    question: "What about self-hosted ZaneOps?",
+    answer:
+      "Self-hosted ZaneOps remains 100% free and open source. Cloud offers additional enterprise features like multi-tenancy, OIDC auth, audit logs, and more on a managed control panel."
+  },
+  {
+    question: "How does sponsorship work?",
+    answer:
+      "Sponsors get priority access to the cloud platform, priority bug fixes, and early access to new features. See our GitHub Sponsors page for details and to become a sponsor."
+  }
+];
+---
+
+<section
+	id="hero"
+	class="py-12 md:pt-24 grid grid-cols-1  md:grid-cols-3 gap-8 items-center"
+>
+	<div
+		class="md:col-span-2 flex flex-col gap-4 items-center text-center md:text-start md:items-start"
+	>
+		<h1 class="text-4xl md:text-5xl lg:text-6xl text-pretty">
+			ZaneOps Cloud 
+		</h1>
+		<p >
+			Deploy with confidence using enterprise-grade features while keeping
+			control of your data and servers.
+		</p>
+		<div class="flex flex-wrap items-center gap-4">
+			<LinkButton variant="primary" href="#waitlist">
+				Join the Waitlist
+				<Icon name="right-arrow" />
+			</LinkButton>
+			<LinkButton variant="minimal" href="#sponsor" class:list={['hover:underline']}>
+				Become a Sponsor
+				<Heart class="size-4 fill-rose-500 text-rose-500" />
+			</LinkButton>
+		</div>
+	</div>
+	<div class="order-first md:order-last flex justify-center md:justify-start">
+		<Logo class="w-52 sm:w-80" />
+	</div>
+</section>
+
+<div class="flex flex-col gap-52">
+	<section id="value-proposition" class="mt-16 gap-16 flex flex-col">
+		<div class="text-center">
+			<h2 class="text-3xl md:text-4xl">
+				Enterprise features without lock-in
+			</h2>
+		</div>
+
+		<div class="grid md:grid-cols-3 gap-8">
+			<div class="flex flex-col gap-3 items-start">
+				<CloudUpload class="text-neutral-400 size-12" />
+				<h3 class="text-xl font-medium">Your servers, your data</h3>
+				<p class="text-sm text-pretty">
+					Deploy applications on your own infrastructure. You maintain
+					complete control over your data, costs, and security while
+					we handle the complexity.
+				</p>
+			</div>
+
+			<div class="flex flex-col gap-3 items-start">
+				<ShieldCheck class="text-neutral-400 size-12" />
+				<h3 class="text-xl font-medium">Managed control panel</h3>
+				<p class="text-sm text-pretty">
+					Access your deployments through our beautifully designed,
+					cloud-hosted dashboard. No server management required for
+					the control panel itself.
+				</p>
+			</div>
+
+			<div class="flex flex-col gap-3 items-start">
+				<Network class="text-neutral-400 size-12" />
+				<h3 class="text-xl font-medium">Enterprise features</h3>
+				<p class="text-sm text-pretty">
+					Unlock advanced capabilities like multi-tenancy, OIDC
+					authentication, audit logs, and multi-server clustering -
+					features typically reserved for expensive enterprise
+					platforms.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section id="features" class="flex flex-col gap-16">
+		<div>
+			<h2 class="text-3xl md:text-4xl">
+				Powerful features for modern teams
+			</h2>
+			<p class="mt-2">
+				Everything you need to deploy, manage, and scale your
+				applications with confidence
+			</p>
+		</div>
+
+		<div
+			class:list={[
+				"grid sm:grid-cols-2 md:grid-cols-3 gap-6",
+			]}
+		>
+			{
+				features.map((feature) => (
+					<div class="flex flex-col gap-3 p-6 border  border-border rounded-lg bg-(--sl-color-bg-nav) dark:bg-[var(--sl-color-gray-6)] ">
+						<h3 class="text-xl font-medium flex items-center gap-3">
+							<feature.icon class="text-neutral-400 size-6 flex-none" />
+							<span>{feature.title}</span>
+						</h3>
+						<p class="text-sm">{feature.description}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section id="waitlist" class="flex flex-col gap-8 scroll-mt-24">
+		<div class="text-center">
+			<h2 class="text-3xl md:text-4xl">Join the waitlist</h2>
+			<p class="mt-2">
+				Be among the first to experience ZaneOps Cloud when it launches
+			</p>
+		</div>
+
+		<div class="max-w-2xl mx-auto w-full">
+			<div
+				class="p-6 md:p-8 "
+			>
+				<WaitlistForm />
+			</div>
+		</div>
+	</section>
+
+	<section id="sponsor" class="flex flex-col gap-8 scroll-mt-24">
+		<div>
+			<h2 class="text-3xl md:text-4xl">Want early access?</h2>
+			<p class="mt-2 text-lg">
+				Sponsor ZaneOps and get cloud access before everyone else
+			</p>
+		</div>
+
+		<div class="flex flex-col gap-8">
+			<div class="max-w-3xl">
+				<h3 class="text-xl font-medium mb-4">Sponsor benefits</h3>
+				<ul class="inline-grid md:grid-cols-2 gap-x-1 gap-y-3 text-left pl-0">
+					<li class="flex items-start gap-2">
+						<Icon
+							name="approve-check"
+							class="text-[var(--sl-color-accent)] flex-none mt-1"
+						/>
+						<span>Free cloud access for 1 year</span>
+					</li>
+					<li class="flex items-start gap-2">
+						<Icon
+							name="approve-check"
+							class="text-[var(--sl-color-accent)] flex-none mt-1"
+						/>
+						<span>Priority bug fixes and support</span>
+					</li>
+					<li class="flex items-start gap-2">
+						<Icon
+							name="approve-check"
+							class="text-[var(--sl-color-accent)] flex-none mt-1"
+						/>
+						<span>Early access to new features</span>
+					</li>
+					<li class="flex items-start gap-2">
+						<Icon
+							name="approve-check"
+							class="text-[var(--sl-color-accent)] flex-none mt-1"
+						/>
+						<span>Sponsor badge on your profile</span>
+					</li>
+				</ul>
+			</div>
+
+			<div class="grid md:grid-cols-3 gap-16">
+				{
+					sponsorTiers.map((tier) => (
+						<div
+							class:list={[
+								"border-l-2 rounded-r-md border-[var(--sl-color-accent)] bg-(--sl-color-bg-nav) dark:bg-(--sl-color-bg-nav)/60 px-4 p-6 flex flex-col gap-4 ",
+								tier.highlight
+									&& "!bg-[var(--sl-color-accent)]/5"
+							]}
+						>
+							<div>
+								<h4 class="text-2xl font-bold">{tier.price}</h4>
+								{tier.highlight && (
+									<span class="text-sm text-[var(--sl-color-accent)] font-medium">
+										Most Popular
+									</span>
+								)}
+							</div>
+							<ul class="flex flex-col gap-2 flex-1 pl-0">
+								{tier.features.map((feature) => (
+									<li class="flex items-start gap-2 text-sm">
+										<Icon
+											name="approve-check"
+											class="text-[var(--sl-color-accent)] flex-none mt-0.5"
+										/>
+										<span>{feature}</span>
+									</li>
+								))}
+							</ul>
+						</div>
+					))
+				}
+			</div>
+
+			<div class="text-center">
+				<LinkButton
+					variant="primary"
+					href="https://github.com/sponsors/fredkiss3"
+				>
+					Become a Sponsor
+					<Heart class="size-4 text-rose-500 fill-rose-500" />
+				</LinkButton>
+			</div>
+		</div>
+	</section>
+
+	<section id="faq" class="flex flex-col gap-8">
+		<div class="text-center">
+			<h2 class="text-3xl md:text-4xl">Frequently asked questions</h2>
+		</div>
+
+		<div class="max-w-3xl mx-auto w-full flex flex-col gap-6">
+			{
+				faqs.map((faq) => (
+					<details>
+						<summary>{faq.question}</summary>
+						<p class="text-sm">{faq.answer}</p>
+					</details>
+				))
+			}
+		</div>
+	</section>
+
+	<section
+		id="final-cta"
+		class="flex flex-col gap-16 pb-14 rounded-lg p-8 md:p-12"
+	>
+		<div class="text-center">
+			<h2 class="text-3xl md:text-4xl">Ready to deploy?</h2>
+			<p class="mt-2 text-lg">
+				Join our waitlist or become a sponsor to get early access
+			</p>
+		</div>
+
+		<div class=" flex flex-col md:flex-row gap-8">
+			<div class="flex-1 flex flex-col gap-4 items-center text-center">
+			<h3 class="text-2xl font-medium">Join the waitlist</h3>
+			<p class="text-sm text-pretty max-w-80">
+				Get notified when ZaneOps Cloud launches and be among the first
+				to try it
+			</p>
+			<LinkButton variant="primary" href="#waitlist">
+				Sign Up Now
+				<Icon name="right-arrow" />
+			</LinkButton>
+		</div>
+
+		<div
+			class="hidden md:block w-px bg-border flex-none"
+			aria-hidden="true"
+		>
+		</div>
+		<div class="block md:hidden h-px bg-border" aria-hidden="true"></div>
+
+		<div class="flex-1 flex flex-col gap-4 items-center text-center">
+			<h3 class="text-2xl font-medium">Become a sponsor</h3>
+			<p class="text-sm text-pretty max-w-80">
+				Get early access, priority support, and help shape the future of
+				ZaneOps
+			</p>
+			<LinkButton
+				variant="secondary"
+				href="https://github.com/sponsors/fredkiss3"
+				class:list={["border-neutral-400/60"]}
+			>
+				Sponsor Now
+				<Heart class="size-4 text-rose-500 fill-rose-500" />
+			</LinkButton>
+		</div>
+		</div>
+	</section>
+</div>
+
+<style is:global>
+
+	.sl-banner {
+		padding: 0.35rem;
+	}
+	.sl-container {
+		margin-inline: auto;
+	}
+	.hero {
+		display: none;
+	}
+	.sl-markdown-content {
+		margin-top: 0;
+	}
+	.sl-markdown-content
+		section
+		:not(a, strong, em, del, span, input, code, br)
+		+ :not(
+			a,
+			strong,
+			em,
+			del,
+			span,
+			input,
+			code,
+			br,
+			:where(.not-content *)
+		) {
+		margin-top: 0;
+	}
+
+	html {
+		scroll-behavior: smooth;
+	}
+</style>

@@ -1,0 +1,1 @@
+ALTER TABLE "waitlist_users" DROP COLUMN "name";
