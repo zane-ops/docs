@@ -259,9 +259,9 @@ export function Chat() {
   return (
     <>
       {!isOpen && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-2 duration-300">
+        <div className="fixed bottom-4 sm:bottom-6 left-4 right-4 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-2 duration-300 max-w-full sm:max-w-md">
           <div
-            className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all"
+            className="flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-full w-full"
             style={{
               backgroundColor: "var(--sl-color-bg)",
               border: "1px solid var(--color-border)"
@@ -292,46 +292,52 @@ export function Chat() {
               onChange={(e) => setWidgetInput(e.target.value)}
               onKeyDown={handleWidgetKeyDown}
               placeholder="Ask AI..."
-              className="text-sm outline-none bg-transparent min-w-[150px]"
+              className="text-sm outline-none bg-transparent flex-1 min-w-0"
               style={{
-                color: "var(--sl-color-white)"
+                color: "var(--sl-color-white)",
+                fontSize: "16px"
               }}
             />
-            {widgetInput.trim() && (
-              <button
-                onClick={handleWidgetSubmit}
-                className="flex items-center justify-center w-7 h-7 rounded-full transition-all hover:scale-110 hover:shadow-lg group"
-                style={{
-                  backgroundColor: "var(--sl-color-accent)",
-                  color: "var(--sl-color-black)",
-                  flexShrink: 0
-                }}
-                aria-label="Send message"
+            <button
+              onClick={handleWidgetSubmit}
+              className={`flex items-center justify-center rounded-full transition-all hover:shadow-lg group ${
+                widgetInput.trim()
+                  ? "w-7 h-7 opacity-100 scale-100 hover:scale-110"
+                  : "w-0 h-7 opacity-0 scale-75"
+              }`}
+              style={{
+                backgroundColor: "var(--sl-color-accent)",
+                color: "var(--sl-color-black)",
+                flexShrink: 0,
+                transitionDuration: "200ms",
+                overflow: "hidden"
+              }}
+              aria-label="Send message"
+              disabled={!widgetInput.trim()}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="group-hover:-translate-y-0.5 transition-transform duration-200"
+                style={{ display: "block" }}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="group-hover:-translate-y-0.5 transition-transform duration-200"
-                  style={{ display: "block" }}
-                >
-                  <path d="M12 19V5M5 12l7-7 7 7" />
-                </svg>
-              </button>
-            )}
+                <path d="M12 19V5M5 12l7-7 7 7" />
+              </svg>
+            </button>
           </div>
         </div>
       )}
 
       {isOpen && (
         <div
-          className={`fixed bottom-6 right-6 w-96 h-[80vh] max-h-[800px] rounded-lg flex flex-col z-50 transition-all duration-300 ease-out ${
+          className={`fixed inset-4 sm:inset-auto sm:bottom-6 sm:right-6 sm:w-96 h-[calc(100vh-2rem)] sm:h-[80vh] sm:max-h-[800px] rounded-lg flex flex-col z-50 transition-all duration-300 ease-out ${
             isClosing
               ? "opacity-0 translate-y-2 scale-98"
               : "opacity-100 translate-y-0 scale-100"
