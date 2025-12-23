@@ -33,15 +33,15 @@ This application showcases several key features:
 - **Data persistence**: Message storage in PostgreSQL with Drizzle ORM
 - **Modern architecture**: Full server-side rendering with progressive enhancement (works even with JavaScript disabled)
 
-![Guestbook in action](/images/guestbook-screenshot.png)
+![Guestbook in action](https://assets.zaneops.dev/images/guestbook-screenshot.png)
 
 
 ### Creating a ZaneOps Project
 
 Log in to your ZaneOps dashboard and create a new project named **guestbook**:
 
-![Creating a new project in ZaneOps](/images/tuto-rr7-new-project.png)
-![Successfully created project](/images/tuto-rr7-project-created.png)
+![Creating a new project in ZaneOps](https://assets.zaneops.dev/images/tuto-rr7-new-project.png)
+![Successfully created project](https://assets.zaneops.dev/images/tuto-rr7-project-created.png)
 
 ### Configuring Database and Caching Services
 
@@ -51,11 +51,11 @@ First, we'll create a Redis-compatible service using [Valkey](https://valkey.io/
 
 <Steps>
 1. Create a Docker service with the `valkey/valkey` image:
-    ![Creating a Valkey service](/images/tuto-rr7-create-valkey.png)
+    ![Creating a Valkey service](https://assets.zaneops.dev/images/tuto-rr7-create-valkey.png)
 2. Deploy the service:
-    ![Valkey service created](/images/tuto-rr7-valkey-created.png)
+    ![Valkey service created](https://assets.zaneops.dev/images/tuto-rr7-valkey-created.png)
 3. Verify the deployment status on the service details page:
-    ![Successful Valkey deployment](/images/tuto-rr7-valkey-deployed.png)
+    ![Successful Valkey deployment](https://assets.zaneops.dev/images/tuto-rr7-valkey-deployed.png)
 </Steps>
 
 #### Setting up PostgreSQL
@@ -64,10 +64,10 @@ Next, let's configure a PostgreSQL database service:
 
 <Steps>
 1. Create a Docker service using the official `postgres` image:
-    ![Creating a PostgreSQL service](/images/tuto-rr7-create-pg.png)
+    ![Creating a PostgreSQL service](https://assets.zaneops.dev/images/tuto-rr7-create-pg.png)
 
 2. Configure the necessary environment variables by navigating to the service details page and selecting the environment variables tab:
-    ![PostgreSQL environment configuration](/images/tuto-rr7-pg-env-tab.png)
+    ![PostgreSQL environment configuration](https://assets.zaneops.dev/images/tuto-rr7-pg-env-tab.png)
 
 3. Click **Add from .env** and enter these database credentials:
    ```shell
@@ -75,15 +75,15 @@ Next, let's configure a PostgreSQL database service:
     POSTGRES_USER="guestbook"
     POSTGRES_PASSWORD="guestbook"
    ```
-    ![Adding PostgreSQL environment variables](/images/tuto-rr7-pg-env-modal.png)
-    ![Environment variables successfully added](/images/tuto-rr7-pg-env-added.png)
+    ![Adding PostgreSQL environment variables](https://assets.zaneops.dev/images/tuto-rr7-pg-env-modal.png)
+    ![Environment variables successfully added](https://assets.zaneops.dev/images/tuto-rr7-pg-env-added.png)
 
 4. Configure data persistence by adding a volume in the settings tab set it's **container path** to `/var/lib/postgresql/data` :
-    ![Adding a volume for PostgreSQL data](/images/tuto-rr7-pg-add-volume.png)
+    ![Adding a volume for PostgreSQL data](https://assets.zaneops.dev/images/tuto-rr7-pg-add-volume.png)
 
 5. Review your configuration and deploy the service:
-    ![Reviewing PostgreSQL configuration changes](/images/tuto-rr7-pg-changes.png)
-    ![PostgreSQL service successfully deployed](/images/tuto-rr7-pg-deployed.png)
+    ![Reviewing PostgreSQL configuration changes](https://assets.zaneops.dev/images/tuto-rr7-pg-changes.png)
+    ![PostgreSQL service successfully deployed](https://assets.zaneops.dev/images/tuto-rr7-pg-deployed.png)
 </Steps>
 
 ### Deploying the Main Application
@@ -92,7 +92,7 @@ Now let's deploy the guestbook application itself:
 
 <Steps>
 1. Create a new Git service using the repository url `https://github.com/zane-ops/guestbook`:
-    ![Creating the main application service](/images/tuto-rr7-create-gb-app.png)
+    ![Creating the main application service](https://assets.zaneops.dev/images/tuto-rr7-create-gb-app.png)
     
 2. Configure the authentication environment variables:
     ```shell
@@ -100,7 +100,7 @@ Now let's deploy the guestbook application itself:
     SESSION_SECRET="yoursupersecretvalue"
     SESSION_SECURE="false"
    ``` 
-   ![Adding authentication environment variables](/images/tuto-rr7-gb-env-1.png)
+   ![Adding authentication environment variables](https://assets.zaneops.dev/images/tuto-rr7-gb-env-1.png)
    <Aside type='note'>
    For production environments, always set `SESSION_SECURE` to `true` to enforce HTTPS for session authentication.
    </Aside>
@@ -108,29 +108,29 @@ Now let's deploy the guestbook application itself:
 3. Configure database and cache connection strings using service network aliases:
 
    First, locate the Redis network alias on the **Redis service details page > settings > Networking section**:
-   ![Finding the Redis network alias](/images/tuto-rr7-alias-redis.png)
+   ![Finding the Redis network alias](https://assets.zaneops.dev/images/tuto-rr7-alias-redis.png)
 
    Add the Redis connection string as an environment variable:
    ```shell
    REDIS_URL="redis://<redis_network_alias>:6379"
    ```
-   ![Adding Redis connection environment variable](/images/tuto-rr7-gb-env-2.png)
+   ![Adding Redis connection environment variable](https://assets.zaneops.dev/images/tuto-rr7-gb-env-2.png)
 
    Next, locate the PostgreSQL network alias on the **PostgreSQL service details page > settings > Networking section**:
-   ![Finding the PostgreSQL network alias](/images/tuto-rr7-alias-pg.png)
+   ![Finding the PostgreSQL network alias](https://assets.zaneops.dev/images/tuto-rr7-alias-pg.png)
 
    Add the PostgreSQL connection string as an environment variable:
    ```shell
    DATABASE_URL="postgresql://guestbook:guestbook@<postgres_network_alias>:5432/guestbook"
    ```
-   ![Adding PostgreSQL connection environment variable](/images/tuto-rr7-gb-env-3.png)
+   ![Adding PostgreSQL connection environment variable](https://assets.zaneops.dev/images/tuto-rr7-gb-env-3.png)
    
 4. Configure public access by adding a domain:
     Navigate to the **service details page > settings > Networking section > URLS** and create a URL entry with:
     - Domain: `guestbook.127-0-0-1.sslip.io`
     - Forwarded port: `3000` (the application's listening port)
 
-    ![Configuring public access](/images/tuto-rr7-gb-add-url.png)
+    ![Configuring public access](https://assets.zaneops.dev/images/tuto-rr7-gb-add-url.png)
 
 5. Implement a health check to ensure reliable deployments:
    Navigate to **service details page > settings > Deploy section > Healthcheck** and configure:
@@ -138,17 +138,17 @@ Now let's deploy the guestbook application itself:
    - Value: `/api/health`
    - Listening port: `3000`
 
-   ![Adding a health check](/images/tuto-rr7-gb-add-healthcheck.png)
+   ![Adding a health check](https://assets.zaneops.dev/images/tuto-rr7-gb-add-healthcheck.png)
 
 6. Review all configuration changes and deploy the service:
-   ![Reviewing the application configuration](/images/tuto-rr7-gb-changes-modal.png)
+   ![Reviewing the application configuration](https://assets.zaneops.dev/images/tuto-rr7-gb-changes-modal.png)
 
 7. Monitor the deployment logs to ensure everything is working correctly:
-   ![Deployment completion status](/images/tuto-rr7-gb-deployed.png)
-   ![Checking deployment logs](/images/tuto-rr7-gb-logs.png)
+   ![Deployment completion status](https://assets.zaneops.dev/images/tuto-rr7-gb-deployed.png)
+   ![Checking deployment logs](https://assets.zaneops.dev/images/tuto-rr7-gb-logs.png)
    
 8. Once deployed successfully, your application will be available at http://guestbook.127-0-0-1.sslip.io
-   ![Guestbook application running](/images/tuto-rr7-gb-demo.png)
+   ![Guestbook application running](https://assets.zaneops.dev/images/tuto-rr7-gb-demo.png)
 </Steps>
 
 ### Setting Up Continuous Deployment
@@ -158,12 +158,12 @@ Automate your deployment workflow with GitHub Actions to update your application
 <Steps>
 1. Get your ZaneOps deployment webhook URL:
    Navigate to **main app service details page > settings > Deploy section > deploy webhook url**
-   ![Locating the deployment webhook URL](/images/tuto-rr7-webhook-url.png)
+   ![Locating the deployment webhook URL](https://assets.zaneops.dev/images/tuto-rr7-webhook-url.png)
    
 2. Store your secrets in GitHub:
    Navigate to **GitHub repository > settings > secrets and variables > actions** and add:
    - `DEPLOY_WEBHOOK_URL`: Your ZaneOps webhook URL
-   ![Adding repository secrets](/images/tuto-rr7-secrets.png)
+   ![Adding repository secrets](https://assets.zaneops.dev/images/tuto-rr7-secrets.png)
    
 3. Create a GitHub Actions workflow file in your repository:
     ```yaml
@@ -183,5 +183,5 @@ Automate your deployment workflow with GitHub Actions to update your application
               run: curl -f -o /dev/null -X PUT "${{ secrets.DEPLOY_WEBHOOK_URL }}" 
     ```
 5. With this workflow in place, changes pushed to your main branch will automatically trigger a new build and deployment
-    ![Service deployed via github](/images/tuto-rr7-github-deploy.png)
+    ![Service deployed via github](https://assets.zaneops.dev/images/tuto-rr7-github-deploy.png)
 </Steps>

@@ -7,7 +7,10 @@ const anthropic = new Anthropic({
   apiKey: import.meta.env.ANTHROPIC_API_KEY
 });
 
-async function getAllDocsRecursive(dir: string, baseDir: string): Promise<string[]> {
+async function getAllDocsRecursive(
+  dir: string,
+  baseDir: string
+): Promise<string[]> {
   const entries = await fs.readdir(dir, { withFileTypes: true });
   const docContents: string[] = [];
 
@@ -37,13 +40,10 @@ export const POST: APIRoute = async function post({ request }) {
     const { message, history } = await request.json();
 
     if (!message || typeof message !== "string") {
-      return new Response(
-        JSON.stringify({ error: "Message is required" }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" }
-        }
-      );
+      return new Response(JSON.stringify({ error: "Message is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" }
+      });
     }
 
     const docs = await getAllDocs();
@@ -62,7 +62,20 @@ export const POST: APIRoute = async function post({ request }) {
       system: [
         {
           type: "text",
-          text: "You are a helpful assistant for ZaneOps documentation. Answer questions based on the documentation provided. Be concise and direct. If you don't know something, say so.",
+          text: `You are a friendly and helpful assistant for ZaneOps documentation. 
+
+Your communication style:
+- Be conversational and natural, like chatting with a colleague
+- Use a warm, approachable tone without being overly formal
+- Break down complex topics into digestible explanations
+- Summarize longer documentation sections instead of quoting them verbatim
+- Use bullet points or numbered lists for clarity when listing multiple items
+- When referencing specific features or commands, be concise but accurate
+- If a topic is extensive, offer a summary first and ask if they want more details
+- Use examples when they help clarify concepts
+- Avoid walls of text - keep responses focused and scannable
+
+Answer questions based on the documentation provided. If you don't know something, be honest about it and suggest where they might find more information.`,
           cache_control: { type: "ephemeral" }
         },
         {
@@ -84,7 +97,9 @@ export const POST: APIRoute = async function post({ request }) {
               chunk.delta.type === "text_delta"
             ) {
               const text = chunk.delta.text;
-              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text })}\n\n`));
+              controller.enqueue(
+                encoder.encode(`data: ${JSON.stringify({ text })}\n\n`)
+              );
             }
           }
           controller.enqueue(encoder.encode("data: [DONE]\n\n"));
@@ -105,12 +120,9 @@ export const POST: APIRoute = async function post({ request }) {
     });
   } catch (error) {
     console.error("Chat API error:", error);
-    return new Response(
-      JSON.stringify({ error: "Internal server error" }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" }
-      }
-    );
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" }
+    });
   }
 };

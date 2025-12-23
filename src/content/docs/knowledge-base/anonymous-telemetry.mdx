@@ -1,0 +1,29 @@
+---
+title: Anonymous Telemetry
+description: Learn how and what ZaneOps collects with telemetry
+---
+
+> Since [**v1.10**](/changelog/v110)
+
+## How does it work?
+
+The anonymous telemetry feature helps us better understand how ZaneOps is actually used in production environments.
+
+It works by sending a simple `PING` request at most every 30 minutes to the ZaneOps CDN ([cdn.zaneops.dev](https://cdn.zaneops.dev)).
+
+The complete source code of the CDN can be found [here](https://github.com/zane-ops/cdn/tree/main/src/index.ts).
+
+## How to disable?
+
+You can easily disable anonymous telemetry by modifying the environment variable in your `.env` file:
+
+```shell
+# /var/www/zaneops/.env
+TELEMETRY_ENABLED=false # or true
+```
+
+## What does it collect?
+
+When a PING request is sent to the CDN, we capture the requester's IP address and hash it twice: first using a SHA-256 hash, then a second time using HMAC-256 with a secret key that only the CDN knows. This process is irreversible, ensuring the data remains completely anonymous.
+
+You can review the hashing implementation [here](https://github.com/zane-ops/cdn/blob/ab602e62e7013b3dc55c60eb29b5312e847c93fc/src/index.ts#L67-L79).

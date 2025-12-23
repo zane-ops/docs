@@ -1,0 +1,78 @@
+---
+title: ZaneOps v1.11
+description: 'Private repos, auto-deploy on Git push'
+---
+
+import {Aside} from '@astrojs/starlight/components';
+import { ASSETS_SERVER_DOMAIN } from "astro:env/client"
+
+<span className='text-gray-600 dark:text-gray-400'>22 July 2025</span> by [**Fred KISSIE**](https://github.com/Fredkiss3)
+
+
+Today we release zaneOps v1.11 introducing support for private **GitHub** and **Gitlab** repositories as well as auto-deploy on git push
+all via [Git apps](/knowledge-base/git/git-apps).
+
+**To install :**
+
+
+1. via the UI:
+    <img className="block dark:hidden" src={`${ASSETS_SERVER_DOMAIN}/images/new-version-toast-light.png`} alt="clone environment modal" />
+    <img className="!hidden dark:!block" src={`${ASSETS_SERVER_DOMAIN}/images/new-version-toast-dark.png`} alt="clone environment modal" />
+    <img className="block dark:hidden" src={`${ASSETS_SERVER_DOMAIN}/images/new-version-modal-light.png`} alt="project environments page" />
+    <img className="!hidden dark:!block" src={`${ASSETS_SERVER_DOMAIN}/images/new-version-modal-dark.png`} alt="project environments page" />
+
+2. via the shell:
+    ```shell
+    # assuming you are at /var/www/zaneops
+    curl https://cdn.zaneops.dev/makefile > Makefile
+    make setup
+    make deploy
+    ```
+
+
+<Aside type="note" title='Important'>
+This version includes changes to the `Makefile`, please re-download the up-to-date `Makefile`:
+```shell
+# assuming you are at `/var/www/zaneops`
+curl https://cdn.zaneops.dev/makefile > Makefile
+```
+</Aside>
+
+### Git apps
+
+
+[Git apps](/knowledge-base/git/git-apps) are integrations with [**GitHub**](/knowledge-base/git/github) and [**GitLab**](/knowledge-base/git/github) that allow you to
+listen to Git events from your repositories and perform actions on your behalf.
+They can be installed either on your personal profile or within an organization you’re a member of.
+
+With Git apps on ZaneOps, you get:
+
+- Support for private GitHub and GitLab repositories.
+    <video src={`${ASSETS_SERVER_DOMAIN}/videos/private-github-repos.mp4`} controls muted></video>
+- [Auto-deploy on Git push](/knowledge-base/git/auto-deploy):
+    <video src={`${ASSETS_SERVER_DOMAIN}/videos/auto-deploy-github-gitlab.mp4`} controls muted></video>
+
+
+<Aside type="note" title='supported providers'>
+Currently, only **GitHub** and **GitLab** apps are supported.
+</Aside>
+
+### Cleanup deploy queue
+
+You can now clean up the deployment queue when triggering a new deployment.
+For example, if multiple deployments are queued, only the latest one will be kept, the others will be canceled.
+
+- Choose to clean up the queue while preserving the latest deployment:
+    <video src={`${ASSETS_SERVER_DOMAIN}/videos/cleanup-queue-preserve-latest.mp4`} controls muted></video>
+- Or clean up all deployments in the queue:
+    <video src={`${ASSETS_SERVER_DOMAIN}/videos/cleanup-deploy-queue.mp4`} controls muted></video>
+
+
+### Your PaaS is ready for AI ✨
+
+We added both [llms.txt](/llms.txt) and [llms-full.txt](/llms-full.txt) endpoints to the documentation for easier digest from chatGPT, Claude and Cursor.
+
+### Thank you 💖
+
+We just reached **900 stars** on GitHub, it's thanks to supporters like you that this project is getting traction. 
+Slowly but surely we are getting progress.

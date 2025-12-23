@@ -1,0 +1,61 @@
+@layer base;
+@layer starlight;
+@layer theme;
+@layer components;
+@layer utilities;
+
+
+@import '@astrojs/starlight-tailwind';
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+@variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+@theme {
+	--color-border: color-mix(in oklab, var(--color-neutral-200) 80%, transparent);  /*oklch(92.2% 0 0) = #e5e5e5*/
+	--color-border-dark: color-mix(in oklab, var(--color-neutral-600)  20%, transparent); /* oklch(43.9% 0 0) = #525252 */
+	--color-bg: hsl(164 62% 99%);
+	--color-bg-dark: hsl(226 19% 13%);
+
+}
+
+@layer base {
+	video {
+		 border-radius: var(--radius-md);
+	}
+}
+
+:root[data-theme='dark'] {
+	--sl-color-accent-low: #440921;
+	--sl-color-accent: hsl(164 61% 70%);
+	--sl-color-accent-high: hsl(164 61% 70%);
+	--sl-color-white: #ffffff;
+	--sl-color-gray-1: #ededef;
+	--sl-color-gray-2: #c1c2c4;
+	--sl-color-gray-3: #8a8b90;
+	--sl-color-gray-4: #57585c;
+	--sl-color-gray-5: #37383c;
+	--sl-color-gray-6:hsl(226 19% 13%);
+	--sl-color-gray-7:hsl(164 43% 2%);
+	--sl-color-black: hsl(164 43% 2%);
+	--color-border: var(--color-border-dark);
+	--color-bg: var(--color-bg-dark);
+}
+
+/* Light mode colors. */
+:root[data-theme='light'] {
+	--sl-color-accent: hsl(164, 61%, 45%);
+	--sl-color-accent-high: hsl(164, 61%, 50%);
+	--sl-color-white: #18181a;
+	--sl-color-gray-1: #26262a;
+	--sl-color-gray-2: #37383c;
+	--sl-color-gray-3: #57585c;
+	--sl-color-gray-4: #8a8b90;
+	--sl-color-gray-5: #c1c2c4;
+	--sl-color-gray-7: #f6f6f7;
+	--sl-color-bg-nav: #f6f6f7;
+	--sl-color-bg-sidebar: #f6f6f7;
+	--sl-color-black: #ffffff;
+	--sl-color-bg: #ffffff;
+	
+}

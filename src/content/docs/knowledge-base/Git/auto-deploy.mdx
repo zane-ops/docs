@@ -1,0 +1,76 @@
+---
+title: Auto-deploy
+description: Learn how to deploy on git push
+---
+
+import { ASSETS_SERVER_DOMAIN } from "astro:env/client"
+import {Aside, Steps} from '@astrojs/starlight/components';
+
+### Auto-deploy with Git apps
+
+
+When creating a service from a [Git app](../git-apps), **auto-deploy on Git push is enabled by default**.
+
+You can customize this behavior:
+
+- **Disable auto-deploy** if you don’t want deployments triggered on every push
+    <Aside type="note" title="On every push ?">
+      Deployments are only triggered when the push is made to the same branch configured for the service.
+    </Aside>
+- **Automatically clean up the deployment queue** (enabled by default), this ensures that if multiple pushes happen in quick succession, only the latest one is deployed.
+- **Add watch paths** to restrict auto-deploys to changes in specific files or directories.  
+  These are defined using [Glob patterns](https://en.wikipedia.org/wiki/Glob_(programming)) (e.g., `frontend/**`, `{packages/trpc,packages/db,apps/web}/**`).
+
+<img src={`${ASSETS_SERVER_DOMAIN}/images/auto-deploy-options.png`} alt="Service Auto-deploy options" />
+
+Deployments triggered by a Git push will appear with the label `git push`:
+
+<img src={`${ASSETS_SERVER_DOMAIN}/images/git-push-deployment.png`} alt="Git push deployment" />
+
+
+### Auto-deploy via API
+
+Using the API, you can trigger a new deployment for a service without needing to create a git apps. 
+This can be used to trigger a deployment in a Continuous Integration script after a git push.
+
+#### Example usage: Github actions
+
+Automate your deployment workflow with GitHub Actions to update your application whenever changes are pushed to your repository:
+
+<Steps>
+1. Get your ZaneOps deployment webhook URL:
+   Navigate to **service details page > settings > Deploy section > deploy webhook url**
+   ![Locating the deployment webhook URL](https://assets.zaneops.dev/images/tuto-rr7-webhook-url.png)
+   
+2. Store your secrets in GitHub:
+   Navigate to **GitHub repository > settings > secrets and variables > actions** and add:
+   - `DEPLOY_WEBHOOK_URL`: Your ZaneOps webhook URL
+   ![Adding repository secrets](https://assets.zaneops.dev/images/tuto-rr7-secrets.png)
+   
+3. Create a GitHub Actions workflow file in your repository:
+    ```yaml
+    # .github/workflows/ci.yaml
+    name: Deploy
+    on:
+      push:
+        branches: [main] # customize as needed
+    jobs:
+      build-push-app:
+        name: Build and Deploy Guestbook
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Deploy to ZaneOps
+              run: curl -f -o /dev/null -X PUT "${{ secrets.DEPLOY_WEBHOOK_URL }}" 
+    ```
+5. With this workflow in place, changes pushed to your main branch will automatically trigger a new deployment, 
+   it will show in the list with the label `API` :
+    
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/deploy-via-api.png`} alt="Service deployed via API" />
+
+</Steps>
+
+<Aside type="note" title="API reference">
+More information in the API documentation for the [deployment endpoint](/api-reference/openapi/#tag/deploy-service/put/api/deploy-service/git/{deploy_token}/).
+</Aside>

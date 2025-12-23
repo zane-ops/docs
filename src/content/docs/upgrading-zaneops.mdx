@@ -16,11 +16,11 @@ While zaneops is being upgraded, all your services will still be available, incl
 When a new version of ZaneOps is available, you will get a toast notification in the dashboard, allowing you to 
 update via the UI :
 
-<img className="block dark:hidden" src="/images/new-version-toast-light.png" alt="clone environment modal" />
-<img className="!hidden dark:!block" src="/images/new-version-toast-dark.png" alt="clone environment modal" />
+<img className="block dark:hidden" src="https://assets.zaneops.dev/images/new-version-toast-light.png" alt="clone environment modal" />
+<img className="!hidden dark:!block" src="https://assets.zaneops.dev/images/new-version-toast-dark.png" alt="clone environment modal" />
 
-<img className="block dark:hidden" src="/images/new-version-modal-light.png" alt="project environments page" />
-<img className="!hidden dark:!block" src="/images/new-version-modal-dark.png" alt="project environments page" />
+<img className="block dark:hidden" src="https://assets.zaneops.dev/images/new-version-modal-light.png" alt="project environments page" />
+<img className="!hidden dark:!block" src="https://assets.zaneops.dev/images/new-version-modal-dark.png" alt="project environments page" />
 
 
 
@@ -33,7 +33,7 @@ To update the version, change it in `.env` :
 
 ```shell
 # /var/www/zaneops/.env
-IMAGE_VERSION="v2"
+IMAGE_VERSION="v1.11.1"
 # ... other env variables
 ```
 
@@ -44,3 +44,14 @@ make setup # re-download configuration files to run zaneops
 make deploy
 ```
 
+<Aside type="caution" title='Auto update'>
+  When switching to `canary` if your env file, you don't get notification popups for when there are new versions.
+  You need to manually upgrade the version in the `.env` file if you want to get new versions popups.
+
+```shell
+# /var/www/zaneops/.env
+IMAGE_VERSION="v1" # automatically the latest `v1.x` version
+# ... other env variables
+```
+
+</Aside>

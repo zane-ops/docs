@@ -9,7 +9,7 @@ import {Aside} from '@astrojs/starlight/components';
 ZaneOps automatically attempts to deploy your app using the [blue/green deployment](https://en.wikipedia.org/wiki/Blue%E2%80%93green_deployment) strategy.
 This ensures that your current version remains running and accessible while the new version is being deployed.
 
-![New deployment starting](/images/new-deployment.png)
+![New deployment starting](https://assets.zaneops.dev/images/new-deployment.png)
 
 ## Health Checks
 
@@ -21,13 +21,13 @@ You can define a health check using either:
 
 - **Path**: ZaneOps will check that the specified endpoint returns a response with a succesful status code (`2xx`) during deployment.
 
-    <img className="block dark:hidden" src="/images/healthcheck-path-light.png" alt="Service settings page - Healthcheck path section" />
-    <img className="!hidden dark:!block" src="/images/healthcheck-path-dark.png" alt="Service settings page - Healthcheck path section" />
+    <img className="block dark:hidden" src="https://assets.zaneops.dev/images/healthcheck-path-light.png" alt="Service settings page - Healthcheck path section" />
+    <img className="!hidden dark:!block" src="https://assets.zaneops.dev/images/healthcheck-path-dark.png" alt="Service settings page - Healthcheck path section" />
 
 - **Command**: ZaneOps will execute the specified command and ensure it exits with code `0`.
 
-    <img className="block dark:hidden" src="/images/healthcheck-cmd-light.png" alt="Service settings page - Healthcheck command section" />
-    <img className="!hidden dark:!block" src="/images/healthcheck-cmd-dark.png" alt="Service settings page - Healthcheck command section" />
+    <img className="block dark:hidden" src="https://assets.zaneops.dev/images/healthcheck-cmd-light.png" alt="Service settings page - Healthcheck command section" />
+    <img className="!hidden dark:!block" src="https://assets.zaneops.dev/images/healthcheck-cmd-dark.png" alt="Service settings page - Healthcheck command section" />
 
 For each new deployment, ZaneOps creates a monitoring job with the following settings:
 
@@ -49,19 +49,19 @@ Zero-downtime deployment is disabled in two cases:
 
 1. **When exposing ports**: To prevent conflicts with already exposed ports.
 
-    <img className="block dark:hidden" src="/images/zero-downtime-warning-port-light.png" alt="Warning for exposed ports disabling zero-downtime deployment" />
-    <img className="!hidden dark:!block" src="/images/zero-downtime-warning-port-dark.png" alt="Warning for exposed ports disabling zero-downtime deployment" />
+    <img className="block dark:hidden" src="https://assets.zaneops.dev/images/zero-downtime-warning-port-light.png" alt="Warning for exposed ports disabling zero-downtime deployment" />
+    <img className="!hidden dark:!block" src="https://assets.zaneops.dev/images/zero-downtime-warning-port-dark.png" alt="Warning for exposed ports disabling zero-downtime deployment" />
 
 2. **When adding volumes without a host path**: To prevent conflicting writes to the same path.
 
-    <img className="block dark:hidden" src="/images/zero-downtime-warning-volume-light.png" alt="Warning for volume configuration disabling zero-downtime deployment" />
-    <img className="!hidden dark:!block" src="/images/zero-downtime-warning-volume-dark.png" alt="Warning for volume configuration disabling zero-downtime deployment" />
+    <img className="block dark:hidden" src="https://assets.zaneops.dev/images/zero-downtime-warning-volume-light.png" alt="Warning for volume configuration disabling zero-downtime deployment" />
+    <img className="!hidden dark:!block" src="https://assets.zaneops.dev/images/zero-downtime-warning-volume-dark.png" alt="Warning for volume configuration disabling zero-downtime deployment" />
 
     However, volumes with a **host path** still allow zero-downtime deployments, as ZaneOps mounts them in **read-only** mode.
 
 If zero-downtime deployment is disabled for a service, ZaneOps will put the previous version to sleep while deploying the new version, making it temporarily inaccessible.
 
-![Zero downtime disabled](/images/zero-downtime-disabled.png)
+![Zero downtime disabled](https://assets.zaneops.dev/images/zero-downtime-disabled.png)
 
 <Aside type="tip" title="Good to Know">  
 If the new version of the service fails the health check, ZaneOps will restart the previous version if it was put to sleep.

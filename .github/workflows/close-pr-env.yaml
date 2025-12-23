@@ -1,0 +1,31 @@
+name: Close PR environment (DEV)
+on:
+  # pull_request:
+  #   types: [closed]
+  workflow_dispatch:
+
+jobs:
+    do_work:
+        runs-on: ubuntu-latest
+        name: Close
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v4
+          
+          - uses: oven-sh/setup-bun@v2
+            with:
+              bun-version: latest
+
+          - name: Close PR
+            shell: bash
+            run: |
+              cd scripts
+              bun install
+              bun run close-pr.ts
+            env:
+              CF_CLIENT_ID: ${{ secrets.CF_CLIENT_ID }}
+              CF_CLIENT_SECRET: ${{ secrets.CF_CLIENT_SECRET }}
+              PR_NUMBER: ${{ github.event.pull_request.number }}
+              PR_BRANCH_NAME: ${{ github.head_ref }}
+              ZANE_USERNAME: ${{ secrets.ZANE_USERNAME }}
+              ZANE_PASSWORD: ${{ secrets.ZANE_PASSWORD }}

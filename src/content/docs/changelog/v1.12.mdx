@@ -1,0 +1,96 @@
+---
+title: ZaneOps v1.12
+description: Preview environments, new design, account settings and more
+---
+
+import {Aside} from '@astrojs/starlight/components';
+import { ASSETS_SERVER_DOMAIN } from "astro:env/client"
+
+
+<span className='text-gray-600 dark:text-gray-400'>7 October 2025</span> by [**Fred KISSIE**](https://github.com/Fredkiss3)
+
+
+Today we release zaneOps v1.12 introducing support for [preview environments](/knowledge-base/preview-environments), a new design for the homepage, account settings and more.
+
+**To install :**
+
+
+1. via the UI:
+    <img className="block dark:hidden" src={`${ASSETS_SERVER_DOMAIN}/images/new-version-toast-light.png`} alt="clone environment modal" />
+    <img className="!hidden dark:!block" src={`${ASSETS_SERVER_DOMAIN}/images/new-version-toast-dark.png`} alt="clone environment modal" />
+    <img className="block dark:hidden" src={`${ASSETS_SERVER_DOMAIN}/images/new-version-modal-light.png`} alt="project environments page" />
+    <img className="!hidden dark:!block" src={`${ASSETS_SERVER_DOMAIN}/images/new-version-modal-dark.png`} alt="project environments page" />
+
+2. via the shell:
+    ```shell
+    # assuming you are at /var/www/zaneops
+    curl https://cdn.zaneops.dev/makefile > Makefile
+    make setup
+    make deploy
+    ```
+
+
+### Preview environments
+
+The major feature for this version is [preview environments](/knowledge-base/preview-environments). They allow you to test a feature in 
+a branch or pull request on your app before merging to production. 
+
+For services created via [Git applications](/knowledge-base/git/git-apps/), Pull request preview environments are activated by default.
+You can create preview environments via API or Pull Request (GitHub)/Merge Request (GitLab).
+
+#### GitHub PR preview environments
+<video src="https://assets.zaneops.dev/videos/pull request preview with comment.mp4" alt="GitHub pull request preview deployments" muted controls />
+
+#### GitLab MR preview environments
+
+<Aside type="caution" title='Resync gitlab app'>
+There was a bug with GitLab application webhooks where 
+it didn't subscribe to merge request events, you need to resync repositories to fix this. 
+</Aside>
+
+<video src="https://assets.zaneops.dev/videos/giltab-merge-request.mp4" alt="GitLab merge request preview deployments" muted controls />
+
+
+### New dashboard design
+
+We revamped the dashboard with a nicer design. In this new dashboard, there is also a list of the 6 most recent deployments:
+
+<img className="block dark:hidden" src="/images/new-dashboard-light.png" alt="New Dashboard page" />
+<img className="!hidden dark:!block" src="/images/new-dashboard-dark.png" alt="New Dashboard page" />
+
+We also updated the design on the project detail page, you will now get logos for services created from Docker images.
+
+<img className="block dark:hidden" src="/images/new-project-detail-light.png" alt="New project detail page" />
+<img className="!hidden dark:!block" src="/images/new-project-detail-dark.png" alt="New project detail page" />
+
+
+### Account settings
+
+You can now update the user's info (firstname, lastname, username) and password :
+
+<video src="https://assets.zaneops.dev/videos/account-settings.mp4" alt="Account settings" muted controls />
+
+### Other changes
+
+- In the next versions of ZaneOps, a persistent toast will be shown while updating to a new version:
+    <video src="https://assets.zaneops.dev/videos/auto-update-toast.mp4" alt="Auto update toast" muted controls />
+    
+- Terminals have now a light & Dark theme
+    <img src="/images/terminal-light.png" alt="Terminal" />
+    <img src="/images/terminal-dark.png" alt="Terminal" />
+
+- When selecting branch for a repository, a list of branches will be shown for autocomplete:
+   
+    <img className="block dark:hidden rounded-md" src="/images/repo-branch-autocomplete-light.png" alt="Autocomplete git branches for a repository" />
+    <img className="!hidden dark:!block rounded-md" src="/images/repo-branch-autocomplete-dark.png" alt="Autocomplete git branches for a repository" />
+
+- Same for docker images in the service's settings page:
+   
+    <img className="block dark:hidden rounded-md" src="/images/docker-image-autocomplete-light.png" alt="Autocomplete docker images" />
+    <img className="!hidden dark:!block rounded-md" src="/images/docker-image-autocomplete-dark.png" alt="Autocomplete docker images" />
+
+- New theme switcher to allow you to select between light, dark mode or following the system's preferences:
+    <video src="https://assets.zaneops.dev/videos/theme switcher.mp4" alt="Theme switcher" muted controls />
+
+- Starting from `v1.12`, release notes for next versions will be shown directly in ZaneOps's dashboard: 
+   <img src="/images/release-notes.png" alt="Changelog" className='rounded-md shadow-md my-4 mx-auto' />

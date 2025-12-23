@@ -13,7 +13,7 @@
   },
   "editor.defaultFormatter": "biomejs.biome",
   "typescript.preferences.importModuleSpecifier": "non-relative",
-  "typescript.tsdk": "frontend/node_modules/typescript/lib",
+  "typescript.tsdk": "node_modules/typescript/lib",
   "[json]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
@@ -22,5 +22,9 @@
   },
   "github-actions.workflows.pinned.workflows": [
     ".github/workflows/build-push-images.yaml"
-  ]
+  ],
+  "biome.lsp.bin": "node_modules/.bin/biome",
+  "[astro]": {
+    "editor.defaultFormatter": "astro-build.astro-vscode"
+  }
 }

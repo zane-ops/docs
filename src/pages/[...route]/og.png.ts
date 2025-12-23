@@ -31,7 +31,7 @@ async function SVG(props: OpenGraphProps) {
 export const GET: APIRoute = async function get({ props }) {
   const resvg = new Resvg(
     await SVG({
-      title: props.title ?? "Zaneops documentation",
+      title: props.title ?? "ZaneOps documentation",
       description: props.description ?? "zaneops.dev"
     }),
     {
@@ -43,7 +43,7 @@ export const GET: APIRoute = async function get({ props }) {
     }
   );
 
-  return new Response(resvg.render().asPng(), {
+  return new Response(new Uint8Array(resvg.render().asPng()), {
     status: 200,
     headers: {
       "Content-Type": "image/png"
@@ -57,25 +57,25 @@ export async function getStaticPaths() {
   return [
     ...docs,
     {
-      slug: "api-reference/openapi",
+      id: "api-reference/openapi",
       data: {
         title: "API Reference",
         description: "full open api reference for zaneops."
       }
     }
   ].map((doc) => {
-    if (doc.slug === "index") {
+    if (doc.id === "index") {
       return {
         params: { route: undefined },
         props: {
-          title: "Zaneops",
+          title: "ZaneOps",
           description:
-            "A self-hosted platform for deploying web apps, databases, workers, CRONS, and more..."
+            "A self-hosted platform for managing and deploying web apps, static sites, databases, workers, and more..."
         }
       };
     }
     return {
-      params: { route: doc.slug },
+      params: { route: doc.id },
       props: { title: doc.data.title, description: doc.data.description }
     };
   });

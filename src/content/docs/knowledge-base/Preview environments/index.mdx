@@ -1,0 +1,46 @@
+---
+title: Overview
+description: Learn how preview environments and deployments work on ZaneOps.
+---
+
+import { ASSETS_SERVER_DOMAIN } from "astro:env/client"
+import {Aside} from '@astrojs/starlight/components';
+
+> Introduced in [**v1.12.0**](/changelog/v112)
+
+Preview environments let you spin up **ephemeral copies of your apps** for testing and review.  
+They are ideal when you want to:  
+
+- Test features in isolation before merging to production  
+- Run product experiments or proofs of concept  
+- Conduct A/B testing with real services  
+- Share a working feature branch with your team or stakeholders  
+
+---
+
+### How do they work?
+
+When you create a preview environment:  
+
+- All services from a **base environment** (production by default) are **cloned** into a new environment.  
+- Service configuration and environment variables are preserved.  
+- **Volumes are not cloned**. Instead, fresh volumes are created to ensure data stays isolated between environments.  
+
+You can control which services get cloned by defining a [preview template](./a-preview-templates).  
+This allows you to include only the services needed for your feature or experiment.  
+
+
+### Creating preview environments
+
+There are two ways to create a preview environment:  
+
+1. **Via API** — programmatically spin up previews for custom workflows. See [API guide](./c-create-preview-from-api).  
+2. **Via Pull Request** — automatically create a preview when opening or updating a PR. See [PR integration](./b-create-preview-from-pull-request).  
+
+---
+
+<Aside type="note" title="Good to know">
+Preview environments are temporary by design. Once the feature branch is merged, closed or deleted, the preview is cleaned up automatically to save resources.
+</Aside>
+
+

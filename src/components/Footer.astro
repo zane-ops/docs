@@ -1,83 +1,86 @@
 ---
 import { Icon } from "@astrojs/starlight/components";
 import DefaultFooter from "@astrojs/starlight/components/Footer.astro";
-import type { Props } from "@astrojs/starlight/props";
 ---
 
 <DefaultFooter {...Astro.props} />
+
 <div class="custom-meta sl-flex my-3">
-  <div class="flex  flex-col">
-    <a href={`https://github.com/zane-ops/zane-ops/issues/new?template=bug_report.md`} class="flex gap-1">
-      <Icon name="github" size="1em" />
-      Found a bug? Open an issue
-    </a>
-    <a href={`https://github.com/sponsors/Fredkiss3`} class="flex gap-1">
-      <Icon name="heart" size="1em" />
-      Sponsor this project
-    </a>
-    <a href={`https://discord.gg/DUdz2vrh9y`} class="flex gap-1">
-      <Icon name="discord" size="1em" />
-      Community
-    </a>
-  </div>
-  <div>
-    <p>
-      Built with Astro &amp; deployed on ZaneOps
-    </p>
-  </div>
+    <div class="flex flex-col">
+        <a
+            href={`https://github.com/zane-ops/zane-ops/issues/new?template=bug_report.md`}
+            class="flex gap-1"
+        >
+            <Icon name="github" size="1em" />
+            Found a bug? Open an issue
+        </a>
+        <a href={`https://github.com/sponsors/Fredkiss3`} class="flex gap-1">
+            <Icon name="heart" size="1em" />
+            Sponsor this project
+        </a>
+        <a href={`https://discord.gg/DUdz2vrh9y`} class="flex gap-1">
+            <Icon name="discord" size="1em" />
+            Community
+        </a>
+    </div>
+    <div>
+        <p>Built with Astro &amp; deployed on ZaneOps</p>
+    </div>
 </div>
-  
+
 <style is:global>
-   .meta {
-      border-top: 1px solid var(--sl-color-hairline) !important;
-      padding-top: 1rem;
+    .meta {
+        border-top: 1px solid var(--sl-color-hairline) !important;
+        padding-top: 1rem;
     }
     .link-title {
-      font-size: var(--sl-text-xl);
+        font-size: var(--sl-text-xl);
     }
-    a[rel="next"], a[rel="prev"] {
-      padding: 1rem;
+    a[rel="next"],
+    a[rel="prev"] {
+        padding: 1rem;
     }
 </style>
 
 <style>
     .custom-meta {
-      gap: 0.75rem 3rem;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      /* margin-block: 3rem 1.5rem; */
-      font-size: var(--sl-text-sm);
+        gap: 0.75rem 3rem;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        /* margin-block: 3rem 1.5rem; */
+        font-size: var(--sl-text-sm);
     }
     @media (min-width: 30rem) {
-      .custom-meta {
-        flex-direction: row;
-      }
+        .custom-meta {
+            flex-direction: row;
+        }
     }
-    a, p {
-      padding-block: 0.125rem;
+    a,
+    p {
+        padding-block: 0.125rem;
     }
     a {
-      gap: 0.4375rem;
-      align-items: center;
-      text-decoration: none;
-      color: var(--color-text);
-      font-size: var(--sl-text-sm);
+        gap: 0.4375rem;
+        align-items: center;
+        text-decoration: none;
+        color: var(--color-text);
+        font-size: var(--sl-text-sm);
     }
     a svg {
-      opacity: var(--icon-opacity);
+        opacity: var(--icon-opacity);
     }
     a:hover {
-      color: var(--sl-color-text-accent);
+        color: var(--sl-color-text-accent);
     }
     p {
-      color: var(--color-text-dimmed);
+        color: var(--color-text-dimmed);
     }
     @media (min-width: 30rem) {
-      p {
-        text-align: right;
-      }
+        p {
+            text-align: right;
+        }
     }
     p a {
-      color: var(--color-text-dimmed);
+        color: var(--color-text-dimmed);
     }
-  </style>
+</style>

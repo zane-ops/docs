@@ -42,10 +42,7 @@ export function Chat() {
     setIsLoading(true);
 
     const assistantMessageIndex = messages.length + 1;
-    setMessages((prev) => [
-      ...prev,
-      { role: "assistant", content: "" }
-    ]);
+    setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
     const history = messages.map((msg) => ({
       role: msg.role,
@@ -141,7 +138,7 @@ export function Chat() {
 
   const handleWidgetSubmit = async () => {
     if (!widgetInput.trim()) return;
-    
+
     const userMessage: Message = { role: "user", content: widgetInput };
     setMessages([userMessage]);
     const messageInput = widgetInput;
@@ -149,10 +146,7 @@ export function Chat() {
     setIsOpen(true);
     setIsLoading(true);
 
-    setMessages((prev) => [
-      ...prev,
-      { role: "assistant", content: "" }
-    ]);
+    setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
     const assistantMessageIndex = 1;
 
@@ -263,7 +257,11 @@ export function Chat() {
               strokeLinejoin="round"
               style={{ color: "var(--sl-color-accent)", flexShrink: 0 }}
             >
-              <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" />
+              <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+              <path d="M20 3v4" />
+              <path d="M22 5h-4" />
+              <path d="M4 17v2" />
+              <path d="M5 18H3" />
             </svg>
             <input
               ref={widgetInputRef}
@@ -280,7 +278,7 @@ export function Chat() {
             {widgetInput.trim() && (
               <button
                 onClick={handleWidgetSubmit}
-                className="flex items-center justify-center w-6 h-6 rounded-full transition-all hover:opacity-80"
+                className="flex items-center justify-center w-7 h-7 rounded-full transition-all hover:scale-110 hover:shadow-lg group"
                 style={{
                   backgroundColor: "var(--sl-color-accent)",
                   color: "var(--sl-color-black)",
@@ -290,18 +288,18 @@ export function Chat() {
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
+                  width="16"
+                  height="16"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                  className="group-hover:-translate-y-0.5 transition-transform duration-200"
                   style={{ display: "block" }}
                 >
-                  <line x1="12" y1="19" x2="12" y2="5" />
-                  <polyline points="5 12 12 5 19 12" />
+                  <path d="M12 19V5M5 12l7-7 7 7" />
                 </svg>
               </button>
             )}
@@ -341,7 +339,11 @@ export function Chat() {
                 strokeLinejoin="round"
                 style={{ color: "var(--sl-color-accent)" }}
               >
-                <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" />
+                <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+                <path d="M20 3v4" />
+                <path d="M22 5h-4" />
+                <path d="M4 17v2" />
+                <path d="M5 18H3" />
               </svg>
               <h3
                 className="font-semibold text-sm"
@@ -352,23 +354,32 @@ export function Chat() {
             </div>
             <button
               onClick={handleClose}
-              className="p-1.5 rounded-md hover:bg-opacity-10 hover:bg-white transition-all flex items-center justify-center"
-              style={{ color: "var(--sl-color-gray-3)" }}
+              className="p-2 rounded-lg transition-all flex items-center justify-center group border border-transparent hover:border-[var(--sl-color-gray-5)]"
+              style={{
+                color: "var(--sl-color-gray-3)",
+                backgroundColor: "transparent"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "var(--sl-color-bg)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "transparent";
+              }}
               aria-label="Close chat"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="2.5"
+                strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                className="group-hover:rotate-90 transition-transform duration-200"
               >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
+                <path d="M18 6L6 18M6 6l12 12" />
               </svg>
             </button>
           </div>
@@ -405,11 +416,11 @@ export function Chat() {
                   }
                 >
                   {msg.role === "assistant" ? (
-                    <div className="space-y-3 leading-relaxed">
+                    <div className="prose prose-sm max-w-none">
                       <ReactMarkdown
                         components={{
                           p: ({ children }) => (
-                            <p className="mb-3 last:mb-0 leading-relaxed">
+                            <p className="mb-4 last:mb-0 leading-7 text-[0.9rem]">
                               {children}
                             </p>
                           ),
@@ -417,52 +428,77 @@ export function Chat() {
                             const isInline = !className;
                             return isInline ? (
                               <code
-                                className="px-1.5 py-0.5 rounded text-xs"
+                                className="px-2 py-0.5 rounded-md text-xs font-mono"
                                 style={{
                                   backgroundColor: "var(--sl-color-gray-6)",
-                                  color: "var(--sl-color-accent)"
+                                  color: "var(--sl-color-accent)",
+                                  border: "1px solid var(--sl-color-gray-5)"
                                 }}
                               >
                                 {children}
                               </code>
                             ) : (
-                              <code
-                                className="block p-3 rounded text-xs overflow-x-auto my-2"
+                              <pre
+                                className="p-4 rounded-lg overflow-x-auto my-3 border"
                                 style={{
                                   backgroundColor: "var(--sl-color-gray-6)",
-                                  color: "var(--sl-color-white)",
-                                  lineHeight: "1.6"
+                                  borderColor: "var(--sl-color-gray-5)"
                                 }}
                               >
-                                {children}
-                              </code>
+                                <code
+                                  className="text-xs font-mono block"
+                                  style={{
+                                    color: "var(--sl-color-white)",
+                                    lineHeight: "1.7"
+                                  }}
+                                >
+                                  {children}
+                                </code>
+                              </pre>
                             );
                           },
                           ul: ({ children }) => (
-                            <ul className="list-disc list-inside mb-3 space-y-2">
+                            <ul
+                              className="my-3 space-y-2 pl-5"
+                              style={{ listStyleType: "disc" }}
+                            >
                               {children}
                             </ul>
                           ),
                           ol: ({ children }) => (
-                            <ol className="list-decimal list-inside mb-3 space-y-2">
+                            <ol
+                              className="my-3 space-y-2 pl-5"
+                              style={{ listStyleType: "decimal" }}
+                            >
                               {children}
                             </ol>
                           ),
                           li: ({ children }) => (
-                            <li className="leading-relaxed">{children}</li>
+                            <li className="leading-7 text-[0.9rem] pl-1">
+                              {children}
+                            </li>
                           ),
                           h1: ({ children }) => (
-                            <h1 className="text-base font-semibold mb-2 mt-3">
+                            <h1
+                              className="text-lg font-bold mb-3 mt-4 first:mt-0"
+                              style={{ color: "var(--sl-color-white)" }}
+                            >
                               {children}
                             </h1>
                           ),
                           h2: ({ children }) => (
-                            <h2 className="text-base font-semibold mb-2 mt-3">
+                            <h2
+                              className="text-base font-bold mb-3 mt-4 first:mt-0"
+                              style={{ color: "var(--sl-color-white)" }}
+                            >
                               {children}
                             </h2>
                           ),
                           h3: ({ children }) => (
-                            <h3 className="text-sm font-semibold mb-2 mt-3">
+                            <h3
+                              className="text-sm font-semibold mb-2 mt-3 first:mt-0"
+                              style={{ color: "var(--sl-color-white)" }}
+                            >
                               {children}
                             </h3>
                           ),
@@ -472,10 +508,34 @@ export function Chat() {
                               target="_blank"
                               rel="noopener noreferrer"
                               style={{ color: "var(--sl-color-accent)" }}
-                              className="underline hover:opacity-80"
+                              className="underline hover:opacity-80 transition-opacity font-medium"
                             >
                               {children}
                             </a>
+                          ),
+                          blockquote: ({ children }) => (
+                            <blockquote
+                              className="border-l-4 pl-4 my-3 italic"
+                              style={{
+                                borderColor: "var(--sl-color-accent)",
+                                color: "var(--sl-color-gray-2)"
+                              }}
+                            >
+                              {children}
+                            </blockquote>
+                          ),
+                          strong: ({ children }) => (
+                            <strong
+                              className="font-semibold"
+                              style={{ color: "var(--sl-color-white)" }}
+                            >
+                              {children}
+                            </strong>
+                          ),
+                          em: ({ children }) => (
+                            <em style={{ color: "var(--sl-color-gray-2)" }}>
+                              {children}
+                            </em>
                           )
                         }}
                       >
@@ -492,33 +552,55 @@ export function Chat() {
             ))}
             {isLoading && messages[messages.length - 1]?.content === "" && (
               <div className="flex justify-start">
-                <div className="rounded-lg rounded-bl-none p-3 text-sm">
-                  <div className="flex gap-1">
-                    <div
-                      className="w-2 h-2 rounded-full animate-bounce"
-                      style={{
-                        backgroundColor: "var(--sl-color-gray-3)",
-                        animationDelay: "0ms"
-                      }}
-                    />
-                    <div
-                      className="w-2 h-2 rounded-full animate-bounce"
-                      style={{
-                        backgroundColor: "var(--sl-color-gray-3)",
-                        animationDelay: "150ms"
-                      }}
-                    />
-                    <div
-                      className="w-2 h-2 rounded-full animate-bounce"
-                      style={{
-                        backgroundColor: "var(--sl-color-gray-3)",
-                        animationDelay: "300ms"
-                      }}
-                    />
+                <div className="rounded-lg p-4 text-sm">
+                  <div className="flex items-center gap-3">
+                    <div className="flex gap-1.5">
+                      <div
+                        className="w-2 h-2 rounded-full"
+                        style={{
+                          backgroundColor: "var(--sl-color-accent)",
+                          animation: "pulse 1.5s ease-in-out infinite"
+                        }}
+                      />
+                      <div
+                        className="w-2 h-2 rounded-full"
+                        style={{
+                          backgroundColor: "var(--sl-color-accent)",
+                          animation: "pulse 1.5s ease-in-out infinite 0.2s"
+                        }}
+                      />
+                      <div
+                        className="w-2 h-2 rounded-full"
+                        style={{
+                          backgroundColor: "var(--sl-color-accent)",
+                          animation: "pulse 1.5s ease-in-out infinite 0.4s"
+                        }}
+                      />
+                    </div>
+                    <span
+                      className="text-xs"
+                      style={{ color: "var(--sl-color-gray-3)" }}
+                    >
+                      Thinking...
+                    </span>
                   </div>
                 </div>
               </div>
             )}
+            <style>
+              {`
+                @keyframes pulse {
+                  0%, 100% {
+                    opacity: 0.3;
+                    transform: scale(0.8);
+                  }
+                  50% {
+                    opacity: 1;
+                    transform: scale(1.2);
+                  }
+                }
+              `}
+            </style>
             <div ref={messagesEndRef} />
           </div>
 
@@ -550,29 +632,32 @@ export function Chat() {
               <button
                 onClick={sendMessage}
                 disabled={!input.trim() || isLoading}
-                className="absolute right-4 bottom-4 w-7 h-7 rounded-md transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-80 flex items-center justify-center"
+                className="absolute right-4 bottom-4 w-9 h-9 rounded-full transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:scale-110 hover:shadow-lg flex items-center justify-center group"
                 style={{
-                  backgroundColor: input.trim() && !isLoading
-                    ? "var(--sl-color-accent)"
-                    : "var(--sl-color-gray-5)",
-                  color: "var(--sl-color-black)"
+                  backgroundColor:
+                    input.trim() && !isLoading
+                      ? "var(--sl-color-accent)"
+                      : "var(--sl-color-gray-5)",
+                  color:
+                    input.trim() && !isLoading
+                      ? "var(--sl-color-black)"
+                      : "var(--sl-color-gray-3)"
                 }}
                 aria-label="Send message"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
+                  width="18"
+                  height="18"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  style={{ display: "block" }}
+                  className="group-hover:-translate-y-0.5 transition-transform duration-200"
                 >
-                  <line x1="12" y1="19" x2="12" y2="5" />
-                  <polyline points="5 12 12 5 19 12" />
+                  <path d="M12 19V5M5 12l7-7 7 7" />
                 </svg>
               </button>
             </div>

@@ -1,8 +1,8 @@
 import node from "@astrojs/node";
 import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
-import tailwind from "@astrojs/tailwind";
-import { defineConfig } from "astro/config";
+import tailwindcss from "@tailwindcss/vite";
+import { defineConfig, envField } from "astro/config";
 
 // https://astro.build/config
 const defaultDomain = process.env.ZANE_DOMAINS?.split(",")[0] ?? "zaneops.dev";
@@ -12,9 +12,22 @@ export default defineConfig({
   adapter: node({
     mode: "standalone"
   }),
+
+  env: {
+    schema: {
+      ASSETS_SERVER_DOMAIN: envField.string({
+        context: "client",
+        access: "public",
+        url: true,
+        default: "https://assets.zaneops.dev"
+      })
+    }
+  },
+
   devToolbar: {
     enabled: false
   },
+
   integrations: [
     starlight({
       title: "ZaneOps documentation",
@@ -27,14 +40,21 @@ export default defineConfig({
         baseUrl: "https://github.com/zane-ops/docs/edit/main/"
       },
       customCss: [
-        "./src/tailwind.css",
-        "./src/assets/theme.css",
+        "./src/assets/global.css",
         "./src/assets/fonts/font-face.css"
       ],
-      social: {
-        github: "https://github.com/zane-ops/zane-ops",
-        discord: "https://discord.gg/DUdz2vrh9y"
-      },
+      social: [
+        {
+          label: "Github",
+          icon: "github",
+          href: "https://github.com/zane-ops/zane-ops"
+        },
+        {
+          label: "Discord",
+          icon: "discord",
+          href: "https://zaneops.dev/discord"
+        }
+      ],
       components: {
         Footer: "./src/components/Footer.astro",
         Head: "./src/components/Head.astro",
@@ -45,16 +65,26 @@ export default defineConfig({
           label: "Start here",
           items: [
             {
-              label: "Welcome to zaneops",
-              slug: "welcome"
+              label: "What is ZaneOps ?",
+              slug: "introduction"
             },
             {
               label: "Installation and Setup",
               slug: "installation"
             },
+
+            {
+              label: "Troubleshooting",
+              slug: "troubleshooting"
+            },
+
             {
               label: "Upgrading ZaneOps",
               slug: "upgrading-zaneops"
+            },
+            {
+              label: "Architecture",
+              slug: "architecture"
             },
             {
               label: "Domain configuration for ZaneOps",
@@ -110,9 +140,11 @@ export default defineConfig({
         }
       ]
     }),
-    tailwind({
-      applyBaseStyles: false
-    }),
+
     react()
-  ]
+  ],
+
+  vite: {
+    plugins: [tailwindcss()]
+  }
 });

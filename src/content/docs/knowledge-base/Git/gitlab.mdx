@@ -1,0 +1,81 @@
+---
+title: GitLab apps
+description: Learn how to connect your GitLab account to ZaneOps
+---
+import { ASSETS_SERVER_DOMAIN } from "astro:env/client"
+import {Steps, Aside} from '@astrojs/starlight/components';
+
+> Introduced in [**v1.11.0**](/changelog/v11)
+
+<Aside title="Version support">
+ZaneOps supports both [gitlab.com](https://gitlab.com) and self-managed GitLab instances from version `16.9.0` or higher.
+</Aside>
+
+To connect your GitLab account to ZaneOps, you use GitLab apps. 
+
+### How to create a GitLab app
+
+<Steps>
+1. Go to **Settings > Git**: 
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/settings-git.png`} alt="Git settings" />
+2. Choose Create GitHub app: 
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/create-gitlab-app.png`} alt="Create GitLab app" />
+
+   <Aside type="caution" title="Redirect URI">
+    The **Redirect URI** should be on a publicly accessible domain, 
+    no need for https absolutely, but it is strongly recommended.
+    
+    If testing ZaneOps locally, you can use a service like https://webhook.site/ for forwarding webhooks 
+    to your local instance.
+   </Aside>
+
+3. To get the credentials for the new app (`Application ID` and `Application Secret`) you need to create the app on your Gitlab instance: 
+    
+    At [https://\{your-gitlab-instance\}/-/profile/applications](https://{your-gitlab-instance}/-/profile/applications) click on 
+   ** Add new application**:
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/gitlab-app-list-gitlab.com.png`} alt="List gitlab apps" />
+    
+    Create a new application, with the scopes `api`, `read_user` and `read_repository`, 
+    and use the same value for the Redirect URI as in the previous step:
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/add-new-gitlab-app-gitlab.com.png`} alt="Add new gitlab app on gitlab.com" />
+
+4. After submitting, you will be redirected to your GitLab instance and asked to authorize the application:
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/authorize-gitlab-app-on-gitlab.com.png`} alt="Authorize gitlab app on gitlab.com" />
+
+5. Once authorized, you will be redirected back to ZaneOps where you will see the newly created app.
+   
+   you can test the application installation to make sure it has access to your repositories: 
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/test-gitlab-app.png`} alt="Test GitLab app" />
+</Steps>
+
+### How to deploy a service from a GitLab app
+
+<Steps>
+1. Go to your **project > new service** and choose **Create from Git Provider**:
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/create-from-git-provider.png`} alt="New service page" />
+2. Choose the newly created GitLab app in the list of available apps:
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/select-gitlab-app.png`} alt="Select Git app" />
+3. There you can select the repository you want to deploy:
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/choose-gitlab-repo.png`} alt="Create new Gitlab service" />
+4. Once deployed, you will notice in the logs, that your app is cloned using the Gitlab access token, meaning that it worked !
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/gitlab-access-token.png`} alt="Git clone with access token" />
+</Steps>
+
+
+### Synchronize New repositories
+
+Newly created repositories are not Synchronized by default with Gitlab apps, instead you need to manually synchronize 
+them from the dashboard:
+
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/sync-gitlab-repos.png`} alt="Sync GitLab repositories" />
+
+### Updating GitLab app
+
+If you rotated the secret or updated the redirect URI of your application on your GitLab instance, you can edit the gitlab app 
+and paste in the new credentials:
+
+<img src={`${ASSETS_SERVER_DOMAIN}/images/edit-gitlab-app.png`} alt="Edit Gitlab app" />
+
+Once done, you will be redirected to your gitlab instance and will need to authorize the app again:
+
+<img src={`${ASSETS_SERVER_DOMAIN}/images/authorize-gitlab-app-on-gitlab.com.png`} alt="Authorize gitlab app on gitlab.com" />

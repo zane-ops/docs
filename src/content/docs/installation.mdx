@@ -5,7 +5,14 @@ description: 'Step-by-step guide to install and set up ZaneOps'
 
 import {FileTree, Steps, Aside} from '@astrojs/starlight/components';
 
-ZaneOps is a deployment platform that simplifies the process of managing and deploying web applications. This guide will walk you through the steps to install ZaneOps either locally or on a remote server with minimal configuration.
+
+## Quick-start
+
+You can install ZaneOps with one script:
+
+```shell
+curl -fsSL https://cdn.zaneops.dev/install.sh | sudo bash
+```
 
 
 ## System requirements
@@ -25,25 +32,43 @@ you might need a bigger server, if you want to host static sites though, these r
 As of now ZaneOps has been tested on these platforms : 
 
 - Debian-based Linux distributions (e.g., Debian, Ubuntu)
+- Red Hat-based distributions (e.g., CentOS, Fedora)
 - Raspberry Pi OS 64-bit (Raspbian) using ARM architecture
 - MacOs Mx series
+- Alpine Linux
+- NixOS
+- Arch Linux
 
 We can't assure you that zaneops will work on other platforms, but if you try and succeed, we are more than happy to add 
 it to our supported OS.
 
-## Prerequisites
+
+
+## Manual installation
+
+### Prerequisites
 
 - Ensure you have [Docker >= `v27.0.3`](https://docs.docker.com/engine/install/) installed and are using a Unix-based machine. It's recommended to use the latest version of Docker to avoid compatibility issues.
 - Ensure you have `make`, `curl`, `jq` and `openssl` installed : 
   ```shell
-  # on Linux
+  # on Debian based distributions
   sudo apt install make curl jq openssl
+
+  # on Red Hat-based distributions
+  sudo dnf install -y make curl jq openssl
+
+  # on Alpine Linux
+  sudo apk add make curl jq openssl
+
+  # on NixOS
+  nix-shell -p gnumake curl jq openssl
+
+  # on Arch Linux
+  sudo pacman -S --noconfirm make curl jq openssl
 
   # on Mac
   brew install make curl jq openssl
   ```
-
-## Process
 
 <Steps>
 1. **Initialize Docker Swarm**:
@@ -99,13 +124,13 @@ it to our supported OS.
     </FileTree>
 
 5. **Review environment variables in `.env`** :
-    The setup process will generate sane defaults for environment variables, 
-    but you can modify the contents to better suit your needs ([see here for how to customize](#environment-variables-explained)):
+    The setup process will generate sane defaults for environment variables, the main variables you might want 
+    to modify are `ROOT_DOMAIN` and `ZANE_APP_DOMAIN` and they can be set to the same value if desired. See [How to configure DNS records for ZaneOps ?](/configuring-zaneops)
     
     ```shell
     # /var/www/zaneops/.env
     # ...other variables 
-    ROOT_DOMAIN="<YOUR-IP>.sslip.io" # Root domain for generating app domains
+    ROOT_DOMAIN="<YOUR-IP>.sslip.io" # Root domain for generating app subdomains
     ZANE_APP_DOMAIN="<YOUR-IP>.sslip.io" # Domain for ZaneOps dashboard
     ```
 
@@ -119,12 +144,18 @@ it to our supported OS.
 7. Access the dashboard by connecting to the domain specified in `ZANE_APP_DOMAIN` in the `.env` file. Once the app is up, you will 
    see a **welcome** page asking you to create your first user :
    
-   <img className="block dark:hidden" src="/images/create-user-light.png" alt="onboarding page with a form for creating the first user" />
-   <img className="!hidden dark:!block" src="/images/create-user-dark.png" alt="onboarding page with a form for creating the first user" />
-
+   <img className="block dark:hidden" src="https://assets.zaneops.dev/images/create-user-light.png" alt="onboarding page with a form for creating the first user" />
+   <img className="!hidden dark:!block" src="https://assets.zaneops.dev/images/create-user-dark.png" alt="onboarding page with a form for creating the first user" />
+   
+   Alternatively, you can create your first user by running this command in the terminal :
+   ```shell
+   make create-user
+   ```
+   
    <Aside type="note" title='Installing locally'>
     Please [continue with the instructions below](#installing-locally) if you are installing ZaneOps locally.
    </Aside>
+
 </Steps>
 
 
