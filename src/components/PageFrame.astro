@@ -5,22 +5,7 @@ import { Chat } from "./Chat";
 const { hasSidebar } = Astro.locals.starlightRoute || Astro.props;
 ---
 
-<div class="page sl-flex">
-	<header class="header"><slot name="header" /></header>
-	{
-		hasSidebar && (
-			<nav class="sidebar print:hidden" aria-label={Astro.locals.t('sidebarNav.accessibleLabel')}>
-				<MobileMenuToggle />
-				<div id="starlight__sidebar" class="sidebar-pane">
-					<div class="sidebar-content sl-flex">
-						<slot name="sidebar" />
-					</div>
-				</div>
-			</nav>
-		)
-	}
-	<div class="main-frame"><slot /></div>
-</div>
+<DefaultPageFrame {...Astro.props} />
 
 <Chat client:only="react" />
 
