@@ -239,11 +239,10 @@ export function Chat() {
           }}
         >
           <div
-            className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all hover:shadow-lg"
+            className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full transition-all"
             style={{
               backgroundColor: "var(--sl-color-bg)",
-              border: "1px solid var(--sl-color-gray-4)",
-              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)"
+              border: "1px solid var(--sl-color-gray-4)"
             }}
           >
             <svg
