@@ -407,7 +407,7 @@ export function Chat() {
                           color: "var(--sl-color-white)"
                         }
                       : {
-                          color: "var(--sl-color-white)"
+                          color: "var(--sl-color-gray-2)"
                         }
                   }
                 >
@@ -416,7 +416,10 @@ export function Chat() {
                       <ReactMarkdown
                         components={{
                           p: ({ children }) => (
-                            <p className="mb-4 last:mb-0 leading-7 text-[0.9rem]">
+                            <p
+                              className="mb-4 last:mb-0 leading-7 text-[0.9rem]"
+                              style={{ color: "var(--sl-color-gray-2)" }}
+                            >
                               {children}
                             </p>
                           ),
@@ -427,7 +430,7 @@ export function Chat() {
                                 className="px-2 py-0.5 rounded-md text-xs font-mono"
                                 style={{
                                   backgroundColor: "var(--sl-color-gray-6)",
-                                  color: "var(--sl-color-accent)",
+                                  color: "var(--sl-color-gray-2)",
                                   border: "1px solid var(--sl-color-gray-5)"
                                 }}
                               >
@@ -444,7 +447,7 @@ export function Chat() {
                                 <code
                                   className="text-xs font-mono block"
                                   style={{
-                                    color: "var(--sl-color-white)",
+                                    color: "var(--sl-color-gray-2)",
                                     lineHeight: "1.7"
                                   }}
                                 >
@@ -470,7 +473,10 @@ export function Chat() {
                             </ol>
                           ),
                           li: ({ children }) => (
-                            <li className="leading-7 text-[0.9rem] pl-1">
+                            <li
+                              className="leading-7 text-[0.9rem] pl-1"
+                              style={{ color: "var(--sl-color-gray-2)" }}
+                            >
                               {children}
                             </li>
                           ),
