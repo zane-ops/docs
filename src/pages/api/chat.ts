@@ -3,6 +3,8 @@ import type { APIRoute } from "astro";
 import fs from "fs/promises";
 import path from "path";
 
+export const prerender = false;
+
 const anthropic = new Anthropic({
   apiKey: import.meta.env.ANTHROPIC_API_KEY
 });
