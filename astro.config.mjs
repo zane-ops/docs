@@ -10,7 +10,7 @@ const defaultDomain = process.env.ZANE_DOMAINS?.split(",")[0] || "zaneops.dev";
 const scheme = process.env.NODE_ENV === "production" ? "https" : "http";
 export default defineConfig({
   site: `${scheme}://${defaultDomain}`,
-  output: "server",
+  output: "static",
   adapter: node({
     mode: "standalone"
   }),
