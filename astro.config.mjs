@@ -10,6 +10,10 @@ const defaultDomain = process.env.ZANE_DOMAINS?.split(",")[0] || "zaneops.dev";
 const scheme = process.env.NODE_ENV === "production" ? "https" : "http";
 export default defineConfig({
   site: `${scheme}://${defaultDomain}`,
+  output: "static",
+  adapter: node({
+    mode: "standalone"
+  }),
 
   env: {
     schema: {
@@ -56,6 +60,10 @@ export default defineConfig({
       VERIFICATION_EMAIL_FROM: envField.string({
         context: "server",
         access: "secret"
+      }),
+      ANTHROPIC_API_KEY: envField.string({
+        context: "server",
+        access: "secret"
       })
     }
   },
@@ -93,7 +101,8 @@ export default defineConfig({
       ],
       components: {
         Footer: "./src/components/Footer.astro",
-        Head: "./src/components/Head.astro"
+        Head: "./src/components/Head.astro",
+        PageFrame: "./src/components/PageFrame.astro"
       },
       sidebar: [
         {
@@ -178,10 +187,7 @@ export default defineConfig({
 
     react()
   ],
-  output: "static",
-  adapter: node({
-    mode: "standalone"
-  }),
+
   vite: {
     // @ts-ignore
     plugins: [tailwindcss()]
