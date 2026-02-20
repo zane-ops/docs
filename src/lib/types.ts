@@ -43,7 +43,7 @@ export type TemplateSearchAPIResponse = {
   search_time_ms: number;
 };
 
-export type TemplateApiResponse = {
+export type TemplateDetailsApiResponse = {
   id: string;
   name: string;
   description: string;
@@ -54,5 +54,4 @@ export type TemplateApiResponse = {
   websiteUrl: string;
   url: string;
   compose: string;
-  content: string;
 };

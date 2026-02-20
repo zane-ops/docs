@@ -12,7 +12,7 @@ import {
 import { marked } from "marked";
 import { TemplateCard } from "~/components/templates/template-search";
 import type {
-    TemplateApiResponse,
+    TemplateDetailsApiResponse,
     TemplateSearchAPIResponse,
 } from "~/lib/types";
 
@@ -25,7 +25,7 @@ const response = await fetch(
 if (!response.ok) {
     return new Response(null, { status: 404 });
 }
-const template: TemplateApiResponse = await response.json();
+const template: TemplateDetailsApiResponse = await response.json();
 
 const templateSearchUrl = new URL("/api/search", TEMPLATE_API_HOST);
 templateSearchUrl.searchParams.set("per_page", "4");
@@ -79,11 +79,10 @@ const html = await marked(template.content ?? "");
                     <div
                         class="flex flex-col gap-8 items-start border-t py-8 border-border"
                     >
-                        {
-                            template.content && (
-                                <article set:html={html} class="space-y-4" />
-                            )
-                        }
+                        <h3>What is {template.name} ?</h3>
+                        <p>
+                            {template.description}
+                        </p>
 
                         <h3>Template content</h3>
 
