@@ -10,7 +10,11 @@ import {
     PencilLine,
 } from "@lucide/astro";
 import { marked } from "marked";
-import type { TemplateApiResponse } from "~/lib/types";
+import { TemplateCard } from "~/components/templates/template-search";
+import type {
+    TemplateApiResponse,
+    TemplateSearchAPIResponse,
+} from "~/lib/types";
 
 export const prerender = false;
 
@@ -21,8 +25,21 @@ const response = await fetch(
 if (!response.ok) {
     return new Response(null, { status: 404 });
 }
-
 const template: TemplateApiResponse = await response.json();
+
+const templateSearchUrl = new URL("/api/search", TEMPLATE_API_HOST);
+templateSearchUrl.searchParams.set("per_page", "4");
+templateSearchUrl.searchParams.set("pick_random", "true");
+templateSearchUrl.searchParams.set("exclude_ids", template.id);
+
+for (const tag of template.tags) {
+    templateSearchUrl.searchParams.append("tags", tag);
+}
+
+const { hits: templateList } = await fetch(templateSearchUrl).then(
+    (r) => r.json() as Promise<TemplateSearchAPIResponse>,
+);
+
 const logoUrl = new URL(template.logoUrl, TEMPLATE_API_HOST);
 const html = await marked(template.content ?? "");
 ---
@@ -59,7 +76,9 @@ const html = await marked(template.content ?? "");
                         <h1>{template.name}</h1>
                     </div>
 
-                    <div class="flex flex-col gap-8 items-start">
+                    <div
+                        class="flex flex-col gap-8 items-start border-t py-8 border-border"
+                    >
                         {
                             template.content && (
                                 <article set:html={html} class="space-y-4" />
@@ -122,8 +141,38 @@ const html = await marked(template.content ?? "");
                             </a>
                         </li>
                     </ul>
+
+                    <h4 class="border-t border-border py-4">Tags</h4>
+                    <div class="flex items-center flex-wrap gap-2 my-4">
+                        {
+                            template.tags.map((tag) => (
+                                <a
+                                    href={`/templates?tags=${tag}`}
+                                    class="text-sm no-underline hover:text-(--sl-color-accent) text-(--sl-color-text)  rounded-full px-2 py-0.5 bg-(--sl-color-bg-nav)"
+                                >
+                                    {tag}
+                                </a>
+                            ))
+                        }
+                    </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <section class="flex flex-col gap-8 border-t border-border py-8">
+        <h2>Related templates</h2>
+        <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {
+                templateList.map(({ document }) => (
+                    <TemplateCard
+                        id={document.id}
+                        name={document.name}
+                        description={document.description}
+                        logoUrl={document.logoUrl}
+                    />
+                ))
+            }
         </div>
     </section>
 </StarlightPage>

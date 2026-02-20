@@ -142,7 +142,12 @@ export function TemplateSearch() {
           <ul className="w-full grid md:grid-cols-2 lg:grid-cols-3 gap-4 list-none pl-0">
             {hits.map(({ document }) => (
               <li key={document.id} className="w-full">
-                <TemplateCard document={document} />
+                <TemplateCard
+                  id={document.id}
+                  name={document.name}
+                  description={document.description}
+                  logoUrl={document.logoUrl}
+                />
               </li>
             ))}
           </ul>
@@ -283,8 +288,18 @@ function TagsListForm({ selectedTags, onTagSelectChange }: TagsListFormProps) {
   );
 }
 
-function TemplateCard({ document: doc }: { document: TemplateDocument }) {
-  const logoUrl = new URL(doc.logoUrl, TEMPLATE_API_HOST);
+export function TemplateCard({
+  id,
+  name,
+  description,
+  logoUrl: logo
+}: {
+  id: string;
+  name: string;
+  description: string;
+  logoUrl: string;
+}) {
+  const logoUrl = new URL(logo, TEMPLATE_API_HOST);
   return (
     <div
       className={cn(
@@ -300,14 +315,14 @@ function TemplateCard({ document: doc }: { document: TemplateDocument }) {
           <div className="flex items-center gap-2  border-gray-400/30  w-full px-4">
             <img
               src={logoUrl.toString()}
-              alt={doc.name}
+              alt={name}
               className="size-8 object-contain flex-none rounded-sm"
             />
             <a
-              href={`./templates/${doc.id}`}
+              href={`/templates/${id}`}
               className="font-semibold truncate after:inset-0 after:absolute no-underline text-(--sl-color-white)"
             >
-              {doc.name}
+              {name}
             </a>
           </div>
 
@@ -315,7 +330,7 @@ function TemplateCard({ document: doc }: { document: TemplateDocument }) {
         </div>
 
         <div className="px-4">
-          <p className="text-base line-clamp-3">{doc.description}</p>
+          <p className="text-base line-clamp-3">{description}</p>
         </div>
       </div>
     </div>
