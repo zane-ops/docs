@@ -137,7 +137,7 @@ export function TemplateSearch() {
       <div className="grid sm:grid-cols-4 lg:grid-cols-5 gap-4 place-items-start ">
         <TagsListForm selectedTags={tags} onTagSelectChange={setTags} />
 
-        <div className="flex flex-col gap-8 sm:col-span-3 md:col-span-4 items-center w-full">
+        <div className="flex flex-col gap-8 sm:col-span-3 lg:col-span-4 items-center w-full">
           <ul className="w-full grid md:grid-cols-2 lg:grid-cols-3 gap-4 list-none pl-0">
             {hits.map(({ document }) => (
               <li key={document.id} className="w-full">
