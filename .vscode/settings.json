@@ -25,6 +25,6 @@
   ],
   "biome.lsp.bin": "node_modules/.bin/biome",
   "[astro]": {
-    "editor.defaultFormatter": "biomejs.biome"
+    "editor.defaultFormatter": "astro-build.astro-vscode"
   }
 }

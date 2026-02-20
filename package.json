@@ -30,6 +30,7 @@
     "astro": "^5.16.9",
     "drizzle-orm": "^0.45.1",
     "lucide-react": "^0.575.0",
+    "marked": "^17.0.3",
     "nodemailer": "^7.0.12",
     "nuqs": "^2.8.8",
     "pg": "^8.16.3",

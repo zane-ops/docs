@@ -53,6 +53,9 @@ importers:
       lucide-react:
         specifier: ^0.575.0
         version: 0.575.0(react@18.3.1)
+      marked:
+        specifier: ^17.0.3
+        version: 17.0.3
       nodemailer:
         specifier: ^7.0.12
         version: 7.0.12
@@ -3042,6 +3045,11 @@ packages:
   marked@15.0.12:
     resolution: {integrity: sha512-8dD6FusOQSrpv9Z1rdNMdlSgQOIP880DHqnohobOmYLElGEqAL/JvxvuxZO16r4HtjTlfPRDC1hbvxC9dPN2nA==}
     engines: {node: '>= 18'}
+    hasBin: true
+
+  marked@17.0.3:
+    resolution: {integrity: sha512-jt1v2ObpyOKR8p4XaUJVk3YWRJ5n+i4+rjQopxvV32rSndTJXvIzuUdWWIy/1pFQMkQmvTXawzDNqOH/CUmx6A==}
+    engines: {node: '>= 20'}
     hasBin: true
 
   mdast-util-definitions@6.0.0:
@@ -7665,6 +7673,8 @@ snapshots:
   markdown-table@3.0.4: {}
 
   marked@15.0.12: {}
+
+  marked@17.0.3: {}
 
   mdast-util-definitions@6.0.0:
     dependencies:

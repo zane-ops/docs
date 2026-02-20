@@ -42,3 +42,17 @@ export type TemplateSearchAPIResponse = {
   search_cutoff: boolean;
   search_time_ms: number;
 };
+
+export type TemplateApiResponse = {
+  id: string;
+  name: string;
+  description: string;
+  tags: string[];
+  logoUrl: string;
+  githubUrl: string;
+  docsUrl: string;
+  websiteUrl: string;
+  url: string;
+  compose: string;
+  content: string;
+};

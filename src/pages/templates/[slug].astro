@@ -1,0 +1,164 @@
+---
+import { TEMPLATE_API_HOST } from "astro:env/client";
+import { Code } from "@astrojs/starlight/components";
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import {
+    Book,
+    ChevronLeftIcon,
+    Github,
+    Globe,
+    PencilLine,
+} from "@lucide/astro";
+import { marked } from "marked";
+import type { TemplateApiResponse } from "~/lib/types";
+
+export const prerender = false;
+
+const response = await fetch(
+    new URL(`/api/templates/${Astro.params.slug}.json`, TEMPLATE_API_HOST),
+);
+
+if (!response.ok) {
+    return new Response(null, { status: 404 });
+}
+
+const template: TemplateApiResponse = await response.json();
+const logoUrl = new URL(template.logoUrl, TEMPLATE_API_HOST);
+const html = await marked(template.content ?? "");
+---
+
+<StarlightPage
+    frontmatter={{
+        title: template.name,
+        description: template.description,
+        template: "splash",
+        hero: {
+            title: "",
+        },
+    }}
+>
+    <section class="py-12 md:pt-24">
+        <div class="flex flex-col gap-4">
+            <a href="/templates" class="flex items-center gap-1">
+                <ChevronLeftIcon class="size-4 flex-none" />
+                back to all templates
+            </a>
+
+            <div class="grid lg:grid-cols-5 gap-8 items-start">
+                <div class="lg:col-span-4 flex flex-col gap-8">
+                    <div class="flex gap-4 items-center col-span-4">
+                        <div
+                            class="rounded-md p-2 border border-border bg-(--sl-color-bg-nav) dark:bg-bg"
+                        >
+                            <img
+                                src={logoUrl.toString()}
+                                alt={template.name}
+                                class="size-8 object-contain flex-none rounded-sm"
+                            />
+                        </div>
+                        <h1>{template.name}</h1>
+                    </div>
+
+                    <div class="flex flex-col gap-8 items-start">
+                        {
+                            template.content && (
+                                <article set:html={html} class="space-y-4" />
+                            )
+                        }
+
+                        <h3>Template content</h3>
+
+                        <div
+                            class="w-full overflow-auto max-w-full [&_pre]:max-w-[calc(100vw-calc(var(--spacing)*8))] [&_pre]:overflow-auto"
+                        >
+                            <Code
+                                code={template.compose}
+                                lang="yaml"
+                                title="compose.yml"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="flex flex-col gap-4 border-t lg:border-none py-4 border-border sticky top-20"
+                >
+                    <h4>Links</h4>
+                    <ul class="pl-0 list-none">
+                        <li>
+                            <a
+                                class="flex items-center gap-1"
+                                href={template.docsUrl}
+                            >
+                                <Book class="size-4 flex-none m-0" />
+                                Documentation
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                class="flex items-center gap-1"
+                                href={template.githubUrl}
+                            >
+                                <Github class="size-4 flex-none m-0" />
+                                Github Repository
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                class="flex items-center gap-1"
+                                href={template.websiteUrl}
+                            >
+                                <Globe class="size-4 flex-none m-0" />
+                                Website
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                class="flex items-center gap-1"
+                                href={`https://github.com/zane-ops/templates/tree/main/src/content/templates/${template.id}`}
+                            >
+                                <PencilLine class="size-4 flex-none m-0" />
+                                Edit this template
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+</StarlightPage>
+
+<style is:global>
+    .sl-banner {
+        padding: 0.35rem;
+    }
+    .sl-container {
+        margin-inline: auto;
+    }
+    .hero {
+        display: none;
+    }
+    .sl-markdown-content {
+        margin-top: 0;
+    }
+    .sl-markdown-content
+        section
+        :not(a, strong, em, del, span, input, code, br)
+        + :not(
+            a,
+            strong,
+            em,
+            del,
+            span,
+            input,
+            code,
+            br,
+            :where(.not-content *)
+        ) {
+        margin-top: 0;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+</style>

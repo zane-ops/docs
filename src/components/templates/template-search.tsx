@@ -9,7 +9,6 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
   ArrowRightIcon,
   CheckIcon,
-  ChevronDownIcon,
   ChevronRightIcon,
   ChevronUpIcon,
   SearchIcon
@@ -22,7 +21,7 @@ import {
 } from "nuqs";
 import { NuqsAdapter } from "nuqs/adapters/react";
 import * as React from "react";
-import { Button, buttonClassNames } from "~/components/templates/button";
+import { Button } from "~/components/templates/button";
 import { Input } from "~/components/templates/input";
 import { Pagination } from "~/components/templates/pagination";
 import type { TemplateDocument, TemplateSearchAPIResponse } from "~/lib/types";
