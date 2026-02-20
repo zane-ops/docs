@@ -114,7 +114,10 @@ export function TemplateSearch() {
           <div className="relative w-full">
             <Input
               value={searchTerm || ""}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
               type="search"
               autoComplete="off"
               placeholder="Search templates... (e.g. postgres, redis, n8n)"
