@@ -9,7 +9,7 @@ import {
     Globe,
     PencilLine,
 } from "@lucide/astro";
-import { marked } from "marked";
+
 import { TemplateCard } from "~/components/templates/template-search";
 import type {
     TemplateDetailsApiResponse,
@@ -41,7 +41,6 @@ const { hits: templateList } = await fetch(templateSearchUrl).then(
 );
 
 const logoUrl = new URL(template.logoUrl, TEMPLATE_API_HOST);
-const html = await marked(template.content ?? "");
 ---
 
 <StarlightPage
