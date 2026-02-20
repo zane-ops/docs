@@ -12,8 +12,6 @@ export type PaginationProps = {
   currentPage: number;
   className?: string;
   onChangePage: (page: number) => void;
-  //   perPage: number;
-  //   onChangePerPage: (perPage: number) => void;
 };
 
 export function Pagination({
@@ -21,8 +19,6 @@ export function Pagination({
   currentPage,
   className,
   onChangePage
-  //   perPage,
-  //   onChangePerPage
 }: PaginationProps) {
   return (
     <div className={cn("flex items-center justify-end px-2", className)}>

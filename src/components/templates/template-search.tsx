@@ -6,10 +6,23 @@ import {
   useQuery
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { ArrowRightIcon, SearchIcon } from "lucide-react";
-import { parseAsInteger, useQueryState } from "nuqs";
+import {
+  ArrowRightIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  ChevronUpIcon,
+  SearchIcon
+} from "lucide-react";
+import {
+  parseAsInteger,
+  parseAsNativeArrayOf,
+  parseAsString,
+  useQueryState
+} from "nuqs";
 import { NuqsAdapter } from "nuqs/adapters/react";
 import * as React from "react";
+import { Button, buttonClassNames } from "~/components/templates/button";
+import { Input } from "~/components/templates/input";
 import { Pagination } from "~/components/templates/pagination";
 import type { TemplateDocument, TemplateSearchAPIResponse } from "~/lib/types";
 import { cn, durationToMs } from "~/lib/utils";
@@ -51,9 +64,13 @@ export function TemplateSearch() {
     "page",
     parseAsInteger.withDefault(1)
   );
+  const [tags, setTags] = useQueryState(
+    "tags",
+    parseAsNativeArrayOf(parseAsString)
+  );
 
-  const { data } = useQuery({
-    queryKey: ["TEMPLATES", { searchTerm, currentPage }],
+  const templatesQuery = useQuery({
+    queryKey: ["TEMPLATES", { searchTerm, currentPage, tags }],
     queryFn: async ({ signal }) => {
       const url = new URL("/api/search", TEMPLATE_API_HOST);
 
@@ -63,6 +80,9 @@ export function TemplateSearch() {
 
       url.searchParams.set("per_page", PER_PAGE.toString());
       url.searchParams.set("page", currentPage.toString());
+      for (const tag of tags) {
+        url.searchParams.append("tags", tag);
+      }
 
       const response = await fetch(url, { signal });
 
@@ -74,12 +94,12 @@ export function TemplateSearch() {
     }
   });
 
-  const hits = data?.hits ?? [];
+  const hits = templatesQuery.data?.hits ?? [];
 
   let totalPages = 0;
 
-  if (data && data.found > hits.length) {
-    totalPages = Math.ceil(data.found / PER_PAGE);
+  if (templatesQuery.data && templatesQuery.data.found > hits.length) {
+    totalPages = Math.ceil(templatesQuery.data.found / PER_PAGE);
   }
 
   return (
@@ -90,42 +110,141 @@ export function TemplateSearch() {
       <h1 className="text-center">Deploy your app in one click</h1>
 
       <div className="flex flex-col w-full gap-2">
-        <form className="relative w-full flex">
-          <input
-            value={searchTerm || ""}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            type="text"
-            autoComplete="off"
-            className="w-full px-4 py-2 pr-10 rounded-md border border-border bg-bg text-(--sl-color-text) focus:outline-none focus:ring-2 focus:ring-(--sl-color-accent)"
-            placeholder="Search templates... (e.g. postgres, redis, n8n)"
-            name="query"
-            autoFocus
-          />
-          <SearchIcon className="absolute top-1/2 -translate-y-1/2 right-4 size-4 flex-none text-(--sl-color-text)" />
+        <form className="w-full flex items-center gap-4">
+          <div className="relative w-full">
+            <Input
+              value={searchTerm || ""}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              type="search"
+              autoComplete="off"
+              placeholder="Search templates... (e.g. postgres, redis, n8n)"
+              name="query"
+              autoFocus
+            />
+            <SearchIcon className="absolute top-1/2 -translate-y-1/2 right-4 size-4 flex-none text-(--sl-color-text)" />
+          </div>
         </form>
-        {data && (
+        {templatesQuery.data && (
           <small className="text-start w-full">
-            Found {data.found} results in {data.search_time_ms}ms
+            Found {templatesQuery.data.found} results in{" "}
+            {templatesQuery.data.search_time_ms}ms
           </small>
         )}
       </div>
 
-      <ul className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 list-none pl-0 ">
-        {hits.map(({ document }) => (
-          <li key={document.id}>
-            <TemplateCard document={document} />
+      <div className="grid grid-cols-5 gap-4 place-items-start ">
+        <TagsListForm selectedTags={tags} onTagSelectChange={setTags} />
+
+        <div className="flex flex-col gap-8 col-span-4 items-center w-full">
+          <ul className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 list-none pl-0">
+            {hits.map(({ document }) => (
+              <li key={document.id} className="w-full">
+                <TemplateCard document={document} />
+              </li>
+            ))}
+          </ul>
+          {totalPages > 1 && (
+            <Pagination
+              totalPages={totalPages}
+              currentPage={currentPage}
+              onChangePage={setCurrentPage}
+            />
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+type TagsListFormProps = {
+  selectedTags: string[];
+  onTagSelectChange: (newValues: string[]) => void;
+};
+
+function TagsListForm({ selectedTags, onTagSelectChange }: TagsListFormProps) {
+  const { data: tags = [] } = useQuery({
+    queryKey: ["TAGS"],
+    queryFn: async ({ signal }) => {
+      const url = new URL("/api/tags", TEMPLATE_API_HOST);
+      const response = await fetch(url, { signal });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch tags");
+      }
+
+      return response.json() as Promise<string[]>;
+    }
+  });
+
+  const [showAll, setShowAll] = React.useState(false);
+
+  const [tagSearch, setTagSearch] = React.useState("");
+
+  const tagList =
+    showAll || tagSearch.trim()
+      ? tags.filter((tag) => tag.includes(tagSearch))
+      : tags.slice(0, 10);
+
+  return (
+    <form
+      className="flex flex-col gap-2"
+      onChange={(e) => {
+        const data = new FormData(e.currentTarget);
+        onTagSelectChange(data.getAll("tags").map((t) => t.toString()));
+      }}
+    >
+      <h3 className="text-lg">Tags</h3>
+
+      <Input
+        placeholder="search tags"
+        className="py-1"
+        type="search"
+        value={tagSearch}
+        onChange={(ev) => {
+          setTagSearch(ev.currentTarget.value);
+        }}
+      />
+
+      <ul className="flex flex-col pl-0 list-none gap-1">
+        {tagList.map((tag) => (
+          <li key={tag} className="flex items-center gap-1">
+            <input
+              type="checkbox"
+              id={`tags-${tag}`}
+              name="tags"
+              value={tag}
+              checked={selectedTags.includes(tag)}
+            />
+            <label htmlFor={`tags-${tag}`} className="m-0 w-full">
+              {tag}
+            </label>
           </li>
         ))}
       </ul>
-
-      {totalPages > 1 && (
-        <Pagination
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onChangePage={setCurrentPage}
-        />
+      {!tagSearch.trim() && (
+        <Button
+          className="px-2 py-1 gap-1 rounded-full bg-(--sl-color-accent)! text-(--sl-color-black)"
+          type="button"
+          onClick={() => {
+            setShowAll((prev) => !prev);
+            if (showAll) {
+              const main = document.querySelector("main");
+              main?.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+              });
+            }
+          }}
+        >
+          Show {!showAll ? "all" : "less"}
+          {!showAll ? (
+            <ChevronRightIcon className="size-4" />
+          ) : (
+            <ChevronUpIcon className="size-4" />
+          )}
+        </Button>
       )}
-    </section>
+    </form>
   );
 }
 
@@ -134,11 +253,11 @@ function TemplateCard({ document: doc }: { document: TemplateDocument }) {
   return (
     <div
       className={cn(
-        "h-full relative border flex flex-col gap-3 py-4",
+        "h-full w-full relative border flex flex-col gap-3 py-4 m-0",
         "border-border  bg-(--sl-color-bg-nav) dark:bg-bg hover:dark:bg-(--sl-color-grey-6)",
         "hover:border-(--sl-color-white) transition-colors focus-within:dark:bg-(--sl-color-grey-6) focus-within:border-(--sl-color-white)",
         "hover:bg-(--sl-color-gray-6)",
-        "rounded-lg shadow-sm"
+        "rounded-lg shadow-sm min-h-40"
       )}
     >
       <div className="flex flex-col items-start gap-6">
