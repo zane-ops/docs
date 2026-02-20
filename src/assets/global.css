@@ -38,6 +38,7 @@
 	--sl-color-gray-4: #57585c;
 	--sl-color-gray-5: #37383c;
 	--sl-color-gray-6: hsl(226 19% 13%);
+	--sl-color-grey-6: oklch(0.2905 0.0191 271.65);
 	--sl-color-gray-7: hsl(164 43% 2%);
 	--sl-color-black: hsl(164 43% 2%);
 	--color-border: var(--color-border-dark);
