@@ -8,6 +8,7 @@ import {
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
   ArrowRightIcon,
+  CheckIcon,
   ChevronDownIcon,
   ChevronRightIcon,
   ChevronUpIcon,
@@ -120,6 +121,7 @@ export function TemplateSearch() {
               placeholder="Search templates... (e.g. postgres, redis, n8n)"
               name="query"
               autoFocus
+              className="pr-10 "
             />
             <SearchIcon className="absolute top-1/2 -translate-y-1/2 right-4 size-4 flex-none text-(--sl-color-text)" />
           </div>
@@ -180,10 +182,29 @@ function TagsListForm({ selectedTags, onTagSelectChange }: TagsListFormProps) {
 
   const [tagSearch, setTagSearch] = React.useState("");
 
-  const tagList =
-    showAll || tagSearch.trim()
-      ? tags.filter((tag) => tag.includes(tagSearch))
-      : tags.slice(0, 10);
+  const tagList = React.useMemo(() => {
+    let filteredTags = tags.toSorted((tagA, tagB) => {
+      // put selected tags first & sort alphabetically
+      if (selectedTags.includes(tagA) && selectedTags.includes(tagB)) {
+        return tagA > tagB ? 1 : -1;
+      }
+      if (selectedTags.includes(tagA)) {
+        return -1;
+      }
+      if (selectedTags.includes(tagB)) {
+        return 1;
+      }
+      return 0;
+    });
+
+    if (showAll || tagSearch.trim()) {
+      filteredTags = filteredTags.filter((tag) => tag.includes(tagSearch));
+    } else {
+      filteredTags = filteredTags.slice(0, 10);
+    }
+
+    return filteredTags;
+  }, [showAll, tagSearch, selectedTags, tags]);
 
   return (
     <form
@@ -207,16 +228,28 @@ function TagsListForm({ selectedTags, onTagSelectChange }: TagsListFormProps) {
 
       <ul className="flex flex-col pl-0 list-none gap-1">
         {tagList.map((tag) => (
-          <li key={tag} className="flex items-center gap-1">
-            <input
-              type="checkbox"
-              id={`tags-${tag}`}
-              name="tags"
-              value={tag}
-              checked={selectedTags.includes(tag)}
-            />
-            <label htmlFor={`tags-${tag}`} className="m-0 w-full">
-              {tag}
+          <li key={tag}>
+            <label
+              className={cn(
+                "m-0 w-full cursor-pointer py-1 px-2",
+                "flex items-center gap-1 rounded-sm group",
+                "transition-transform duration-100 active:scale-95"
+              )}
+            >
+              <input
+                type="checkbox"
+                id={`tags-${tag}`}
+                name="tags"
+                value={tag}
+                checked={selectedTags.includes(tag)}
+                className="sr-only peer"
+              />
+              <span className="p-0.5 bg-gray-500/10 dark:bg-gray-500/30 rounded-md text-transparent peer-checked:text-(--sl-color-accent)">
+                <CheckIcon className="size-4 " />
+              </span>
+              <span className="text-(--sl-color-text)/60 dark:text-(--sl-color-text)/75 peer-checked:text-(--sl-color-white) group-hover:text-(--sl-color-white)">
+                {tag}
+              </span>
             </label>
           </li>
         ))}
