@@ -134,11 +134,11 @@ export function TemplateSearch() {
         )}
       </div>
 
-      <div className="grid grid-cols-5 gap-4 place-items-start ">
+      <div className="grid sm:grid-cols-4 lg:grid-cols-5 gap-4 place-items-start ">
         <TagsListForm selectedTags={tags} onTagSelectChange={setTags} />
 
-        <div className="flex flex-col gap-8 col-span-4 items-center w-full">
-          <ul className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 list-none pl-0">
+        <div className="flex flex-col gap-8 sm:col-span-3 md:col-span-4 items-center w-full">
+          <ul className="w-full grid md:grid-cols-2 lg:grid-cols-3 gap-4 list-none pl-0">
             {hits.map(({ document }) => (
               <li key={document.id} className="w-full">
                 <TemplateCard document={document} />
@@ -208,7 +208,7 @@ function TagsListForm({ selectedTags, onTagSelectChange }: TagsListFormProps) {
 
   return (
     <form
-      className="flex flex-col gap-2"
+      className="flex flex-col gap-2 w-full"
       onChange={(e) => {
         const data = new FormData(e.currentTarget);
         onTagSelectChange(data.getAll("tags").map((t) => t.toString()));
@@ -226,13 +226,13 @@ function TagsListForm({ selectedTags, onTagSelectChange }: TagsListFormProps) {
         }}
       />
 
-      <ul className="flex flex-col pl-0 list-none gap-1">
+      <ul className="grid grid-cols-2 sm:grid-cols-1 pl-0 list-none gap-1">
         {tagList.map((tag) => (
           <li key={tag}>
             <label
               className={cn(
                 "m-0 w-full cursor-pointer py-1 px-2",
-                "flex items-center gap-1 rounded-sm group",
+                "flex items-start gap-1 rounded-sm group",
                 "transition-transform duration-100 active:scale-95"
               )}
             >
@@ -244,7 +244,7 @@ function TagsListForm({ selectedTags, onTagSelectChange }: TagsListFormProps) {
                 checked={selectedTags.includes(tag)}
                 className="sr-only peer"
               />
-              <span className="p-0.5 bg-gray-500/10 dark:bg-gray-500/30 rounded-md text-transparent peer-checked:text-(--sl-color-accent)">
+              <span className="p-0.5 bg-gray-500/10 dark:bg-gray-500/30 rounded-md text-transparent peer-checked:text-(--sl-color-accent) relative top-1">
                 <CheckIcon className="size-4 " />
               </span>
               <span className="text-(--sl-color-text)/60 dark:text-(--sl-color-text)/75 peer-checked:text-(--sl-color-white) group-hover:text-(--sl-color-white)">
