@@ -65,17 +65,19 @@ export function TemplateSearch() {
     >
       <h1 className="text-center">Deploy your app in one click</h1>
 
-      <div className="relative w-full flex">
+      <form className="relative w-full flex">
         <input
           value={searchTerm || ""}
           onChange={(e) => setSearchTerm(e.target.value)}
           type="text"
+          autoComplete="off"
           className="w-full px-4 py-2 pr-10 rounded-md border border-border bg-bg text-(--sl-color-text) focus:outline-none focus:ring-2 focus:ring-(--sl-color-accent)"
           placeholder="Search templates... (e.g. postgres, redis, n8n)"
-          name="template"
+          name="query"
+          autoFocus
         />
         <SearchIcon className="absolute top-1/2 -translate-y-1/2 right-4 size-4 flex-none text-(--sl-color-text)" />
-      </div>
+      </form>
 
       <ul className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 list-none pl-0 ">
         {hits.map(({ document }) => (
