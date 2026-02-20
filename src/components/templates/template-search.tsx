@@ -176,7 +176,7 @@ function TagsListForm({ selectedTags, onTagSelectChange }: TagsListFormProps) {
   const { data: tags = [] } = useQuery({
     queryKey: ["TAGS"],
     queryFn: async ({ signal }) => {
-      const url = new URL("/api/tags", TEMPLATE_API_HOST);
+      const url = new URL("/api/tags.json", TEMPLATE_API_HOST);
       const response = await fetch(url, { signal });
 
       if (!response.ok) {
