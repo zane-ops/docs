@@ -17,6 +17,12 @@ export default defineConfig({
 
   env: {
     schema: {
+      TEMPLATE_API_HOST: envField.string({
+        context: "client",
+        access: "public",
+        url: true,
+        default: "https://templates.zaneops.dev"
+      }),
       ASSETS_SERVER_DOMAIN: envField.string({
         context: "client",
         access: "public",
