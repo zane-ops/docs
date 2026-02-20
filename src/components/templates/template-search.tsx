@@ -207,13 +207,7 @@ function TagsListForm({ selectedTags, onTagSelectChange }: TagsListFormProps) {
   }, [showAll, tagSearch, selectedTags, tags]);
 
   return (
-    <form
-      className="flex flex-col gap-2 w-full"
-      onChange={(e) => {
-        const data = new FormData(e.currentTarget);
-        onTagSelectChange(data.getAll("tags").map((t) => t.toString()));
-      }}
-    >
+    <form className="flex flex-col gap-2 w-full">
       <h3 className="text-lg">Tags</h3>
 
       <Input
@@ -243,6 +237,13 @@ function TagsListForm({ selectedTags, onTagSelectChange }: TagsListFormProps) {
                 value={tag}
                 checked={selectedTags.includes(tag)}
                 className="sr-only peer"
+                onChange={(e) => {
+                  if (e.currentTarget.checked) {
+                    onTagSelectChange([...selectedTags, tag]);
+                  } else {
+                    onTagSelectChange(selectedTags.filter((t) => t !== tag));
+                  }
+                }}
               />
               <span className="p-0.5 bg-gray-500/10 dark:bg-gray-500/30 rounded-md text-transparent peer-checked:text-(--sl-color-accent) relative top-1">
                 <CheckIcon className="size-4 " />
