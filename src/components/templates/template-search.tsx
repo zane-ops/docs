@@ -125,11 +125,13 @@ export function TemplateSearch() {
             <SearchIcon className="absolute top-1/2 -translate-y-1/2 right-4 size-4 flex-none text-(--sl-color-text)" />
           </div>
         </form>
-        {templatesQuery.data && (
+        {templatesQuery.data ? (
           <small className="text-start w-full">
             Found {templatesQuery.data.found} results in{" "}
             {templatesQuery.data.search_time_ms}ms
           </small>
+        ) : (
+          <small className="h-6"></small>
         )}
       </div>
 

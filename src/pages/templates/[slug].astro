@@ -87,7 +87,7 @@ const html = await marked(template.content ?? "");
                     <ul class="pl-0 list-none">
                         <li>
                             <a
-                                class="flex items-center gap-1"
+                                class="flex items-center gap-1 no-underline hover:underline"
                                 href={template.docsUrl}
                             >
                                 <Book class="size-4 flex-none m-0" />
@@ -96,7 +96,7 @@ const html = await marked(template.content ?? "");
                         </li>
                         <li>
                             <a
-                                class="flex items-center gap-1"
+                                class="flex items-center gap-1 no-underline hover:underline"
                                 href={template.githubUrl}
                             >
                                 <Github class="size-4 flex-none m-0" />
@@ -105,7 +105,7 @@ const html = await marked(template.content ?? "");
                         </li>
                         <li>
                             <a
-                                class="flex items-center gap-1"
+                                class="flex items-center gap-1 no-underline hover:underline"
                                 href={template.websiteUrl}
                             >
                                 <Globe class="size-4 flex-none m-0" />
@@ -114,7 +114,7 @@ const html = await marked(template.content ?? "");
                         </li>
                         <li>
                             <a
-                                class="flex items-center gap-1"
+                                class="flex items-center gap-1 no-underline hover:underline"
                                 href={`https://github.com/zane-ops/templates/tree/main/src/content/templates/${template.id}`}
                             >
                                 <PencilLine class="size-4 flex-none m-0" />
