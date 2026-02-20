@@ -158,21 +158,23 @@ const logoUrl = new URL(template.logoUrl, TEMPLATE_API_HOST);
         </div>
     </section>
 
-    <section class="flex flex-col gap-8 border-t border-border py-8">
-        <h2>Related templates</h2>
-        <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {
-                templateList.map(({ document }) => (
-                    <TemplateCard
-                        id={document.id}
-                        name={document.name}
-                        description={document.description}
-                        logoUrl={document.logoUrl}
-                    />
-                ))
-            }
-        </div>
-    </section>
+    {
+        templateList.length > 0 && (
+            <section class="flex flex-col gap-8 border-t border-border py-8">
+                <h2>Related templates</h2>
+                <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {templateList.map(({ document }) => (
+                        <TemplateCard
+                            id={document.id}
+                            name={document.name}
+                            description={document.description}
+                            logoUrl={document.logoUrl}
+                        />
+                    ))}
+                </div>
+            </section>
+        )
+    }
 </StarlightPage>
 
 <style is:global>
