@@ -24,7 +24,7 @@ import * as React from "react";
 import { Button } from "~/components/templates/button";
 import { Input } from "~/components/templates/input";
 import { Pagination } from "~/components/templates/pagination";
-import type { TemplateDocument, TemplateSearchAPIResponse } from "~/lib/types";
+import type { TemplateSearchAPIResponse } from "~/lib/types";
 import { cn, durationToMs } from "~/lib/utils";
 
 export default function TemplateSearchPage() {
@@ -49,7 +49,7 @@ export default function TemplateSearchPage() {
     <NuqsAdapter fullPageNavigationOnShallowFalseUpdates>
       <QueryClientProvider client={queryClient}>
         <TemplateSearch />
-        <ReactQueryDevtools />
+        {import.meta.env.DEV && <ReactQueryDevtools />}
       </QueryClientProvider>
     </NuqsAdapter>
   );
@@ -139,7 +139,13 @@ export function TemplateSearch() {
       </div>
 
       <div className="grid sm:grid-cols-4 lg:grid-cols-5 gap-4 place-items-start ">
-        <TagsListForm selectedTags={tags} onTagSelectChange={setTags} />
+        <TagsListForm
+          selectedTags={tags}
+          onTagSelectChange={(newTags) => {
+            setTags(newTags);
+            setCurrentPage(1);
+          }}
+        />
 
         <div className="flex flex-col gap-8 sm:col-span-3 lg:col-span-4 items-center w-full">
           <ul className="w-full grid md:grid-cols-2 lg:grid-cols-3 gap-4 list-none pl-0">
