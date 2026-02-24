@@ -107,7 +107,7 @@ export function TemplateSearch() {
       id="header"
       className="py-12 md:pt-24 gap-8 flex flex-col items-center"
     >
-      <h1 className="text-center">Deploy your app in one click</h1>
+      <h1 className="text-center">All our docker-compose templates</h1>
 
       <div className="flex flex-col w-full gap-2">
         <form className="w-full flex items-center gap-4">

@@ -161,11 +161,13 @@ export default defineConfig({
         },
         {
           label: "Knowledge base",
-          autogenerate: { directory: "knowledge-base" }
+          autogenerate: { directory: "knowledge-base" },
+          collapsed: true
         },
         {
           label: "Changelog",
-          autogenerate: { directory: "changelog" }
+          autogenerate: { directory: "changelog" },
+          collapsed: true
         },
         {
           label: "Tutorials",
@@ -173,6 +175,7 @@ export default defineConfig({
         },
         {
           label: "API Reference",
+          collapsed: true,
           items: [
             {
               label: "Introduction",
