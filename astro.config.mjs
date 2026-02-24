@@ -14,7 +14,7 @@ export default defineConfig({
   adapter: node({
     mode: "standalone"
   }),
-
+  prefetch: true,
   env: {
     schema: {
       TEMPLATE_API_HOST: envField.string({

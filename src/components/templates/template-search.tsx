@@ -328,6 +328,7 @@ export function TemplateCard({
               className="size-8 object-contain flex-none rounded-sm"
             />
             <a
+              data-astro-prefetch
               href={`/templates/${id}`}
               className="font-semibold truncate after:inset-0 after:absolute no-underline text-(--sl-color-white)"
             >
