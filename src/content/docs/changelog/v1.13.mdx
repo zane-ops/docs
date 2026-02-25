@@ -11,7 +11,7 @@ import { ASSETS_SERVER_DOMAIN } from "astro:env/client"
 <span className='text-gray-600 dark:text-gray-400'>25 February 2026</span> by [**Fred KISSIE**](https://github.com/Fredkiss3)
 
 
-Today we release zaneOps v1.13 introducing support for [docker compose](/knowledge-base/docker-compose), [templates](/knowledge-base/docker-compose/01-templates) and more.
+Today we release ZaneOps v1.13 introducing support for [docker compose](/knowledge-base/docker-compose), [templates](/knowledge-base/docker-compose/01-templates) and more.
 
 
 **To install :**
@@ -53,11 +53,11 @@ The open source version will stay free and under the MIT licence.
 The major feature for this new version is support for [docker compose stacks](/knowledge-base/docker-compose), they allow you 
 to deploy your app from a `docker-compose.yml` file.
 
-Docker compose iles on ZaneOps are deployed as [docker stack](https://docs.docker.com/reference/cli/docker/stack/)
-with support for : 
-- blue/green deployments by default 
+Docker compose files on ZaneOps are deployed as [docker stack](https://docs.docker.com/reference/cli/docker/stack/)
+with support for:
+- blue/green deployments by default
 - assigning domains to your services via labels
-- Generating variable & secrets values via template expressions (ex: `{{ generate_password | 8 }}` to generate secure 8 chars password) 
+- generating variable and secret values via template expressions (e.g. `{{ generate_password | 8 }}` to generate a secure 8-character password)
 
 <video src={`${ASSETS_SERVER_DOMAIN}/videos/deploy-simple-nginx.mp4`} alt="Deploy simple nginx docker compose" muted controls />
 
@@ -70,7 +70,7 @@ ZaneOps support two template providers:
 - Our custom templates:
     <video src={`${ASSETS_SERVER_DOMAIN}/videos/deploy-umami-template.mp4`} alt="Deploy ZaneOps umami template" muted controls />
     
-- Dokploy templates (experimental);
+- Dokploy templates (experimental):
     <video src={`${ASSETS_SERVER_DOMAIN}/videos/deploy-dokploy-template.mp4`} alt="Deploy dokploy uptime-kuma template" muted controls />
 
 
@@ -80,15 +80,15 @@ You can create volumes that are shared between multiple services, with one servi
 
 You use them to access data between services, by referencing the same volume. This is useful if you want to share assets, medias or uploads between a backend & frontend (for ex).
  
- When you reference a shared volumes, the volume will be attached as read-only and still allow for blue/green deployments.
+ When you reference a shared volume, it will be attached as read-only and still support blue/green deployments.
 
-<video src={`${ASSETS_SERVER_DOMAIN}/videos/shared_volumes.mp4`} alt="Shared volumes accross reader & writer" muted controls />
+<video src={`${ASSETS_SERVER_DOMAIN}/videos/shared_volumes.mp4`} alt="Shared volumes across reader & writer" muted controls />
 
 
 ### Docker registry credentials
 
-To deploy private images, previously you had to manually enter the credentials, now you can 
-create shared credentials accross your apps.
+To deploy private images, previously you had to manually enter the credentials on each service, now you can 
+create shared credentials across your apps.
 
 <video src={`${ASSETS_SERVER_DOMAIN}/videos/shared-credentials.mp4`} alt="Shared registry credentials" muted controls />
 
@@ -96,8 +96,7 @@ create shared credentials accross your apps.
 
 ### Build registries
 
-To prepare for multi servers, you can now setup a build registry to store the docker images of the applications that are built on ZaneOps. you can choose to either store the images in the filesystem of your 
-ZaneOps server or use a S3 provider (AWS S3, minio, R2, etc.)  
+To prepare for multi servers, you can now set up a build registry to store the docker images of the applications built on ZaneOps. You can choose to either store the images on the filesystem of your ZaneOps server or use an S3 provider (AWS S3, MinIO, R2, etc.)
 
 <video src={`${ASSETS_SERVER_DOMAIN}/videos/build-registries.mp4`} alt="Build registries" muted controls />
 
