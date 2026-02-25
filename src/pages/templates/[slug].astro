@@ -104,7 +104,32 @@ const logoUrl = new URL(template.logoUrl, TEMPLATE_API_HOST);
                                 code={template.compose}
                                 lang="yaml"
                                 title="compose.yml"
-                            />
+                            >
+                                <figure
+                                    slot="fallback"
+                                    class="border-x border-b border-(--sl-color-gray-5)"
+                                >
+                                    <figcaption
+                                        id="header"
+                                        class="flex items-stretch"
+                                    >
+                                        <div
+                                            class="inline-block border-t-2 bg-(--sl-color-bg-nav) border-(--sl-color-accent) px-4 py-2 text-sm"
+                                        >
+                                            compose.yml
+                                        </div>
+                                        <div
+                                            class="grow border-y border-y-(--sl-color-gray-5) dark:bg-black bg-zinc-200 w-full"
+                                        >
+                                        </div>
+                                    </figcaption>
+                                    <div
+                                        class="h-100 flex items-center justify-center gap-center font-mono bg-(--sl-color-bg-nav)"
+                                    >
+                                        loading..
+                                    </div>
+                                </figure>
+                            </Code>
                         </div>
                     </div>
                 </div>
