@@ -76,7 +76,7 @@ You use them to access data between services, by referencing the same volume. Th
  
  When you reference a shared volumes, the volume will be attached as read-only and still allow for blue/green deployments.
 
-<video src={`${ASSETS_SERVER_DOMAIN}/videos/shared_volumes.mp4`} alt="Deploy simple nginx docker compose" muted controls />
+<video src={`${ASSETS_SERVER_DOMAIN}/videos/shared_volumes.mp4`} alt="Shared volumes accross reader & writer" muted controls />
 
 
 ### Docker registry credentials
@@ -84,17 +84,17 @@ You use them to access data between services, by referencing the same volume. Th
 To deploy private images, previously you had to manually enter the credentials, now you can 
 create shared credentials accross your apps.
 
-<video src={`${ASSETS_SERVER_DOMAIN}/videos/shared-credentials.mp4`} alt="Deploy simple nginx docker compose" muted controls />
+<video src={`${ASSETS_SERVER_DOMAIN}/videos/shared-credentials.mp4`} alt="Shared registry credentials" muted controls />
 
 
 
 ### Build registries
 
-To prepare for multi servers, you can now setup a build registry to build and publish your built 
-apps to a registry. you can choose to either store the images in the filesystem of your 
+To prepare for multi servers, you can now setup a build registry to store the docker images of the applications that are built on ZaneOps. you can choose to either store the images in the filesystem of your 
 ZaneOps server or use a S3 provider (AWS S3, minio, R2, etc.)  
 
-> TODO: video
+<video src={`${ASSETS_SERVER_DOMAIN}/videos/build-registries.mp4`} alt="Build registries" muted controls />
+
 
 
 ### Other changes
