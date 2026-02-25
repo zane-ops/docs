@@ -5,4 +5,6 @@ description: Learn how to use docker compose in ZaneOps
 
 > Introduced in [**v1.13.0**](/changelog/v113)
 
-You can deploy docker compose stacks on ZaneOps...
+{/* You can deploy docker compose stacks on ZaneOps...
+
+Under the hood, compose files are deployed as [Docker stacks](https://docs.docker.com/reference/cli/docker/stack/) via Docker Swarm, not plain `docker compose up`. This is an important distinction: Swarm is what enables ZaneOps to orchestrate rolling blue/green deployments, whereas standard Docker Compose has no concept of that. */}

@@ -11,10 +11,10 @@ import { ASSETS_SERVER_DOMAIN } from "astro:env/client"
 <span className='text-gray-600 dark:text-gray-400'>25 February 2026</span> by [**Fred KISSIE**](https://github.com/Fredkiss3)
 
 
-Today we release ZaneOps v1.13 introducing support for [docker compose](/knowledge-base/docker-compose), [templates](/knowledge-base/docker-compose/01-templates) and more.
+ZaneOps v1.13 is here with some big additions: [Docker Compose support](/knowledge-base/docker-compose), [templates](/knowledge-base/docker-compose/01-templates), shared volumes, build registries, and more.
 
 
-**To install :**
+**To install:**
 
 ```shell
 # assuming you are at /var/www/zaneops
@@ -24,97 +24,83 @@ make deploy
 ```
 
 <Aside type="caution" title='Before updating'>
-This version makes changes to the docker stack, please make sure to download the makefile and 
-rerun the `setup` script.
+This version includes changes to the Docker stack. Make sure to re-download the `Makefile` and rerun the `setup` script before deploying.
 </Aside>
 
-### ☁️ ZaneOps Cloud waitlist 
+### ☁️ ZaneOps Cloud waitlist
 
-We have officially opened the waitlist for [ZaneOps Cloud](/cloud). ZaneOps Cloud is meant to be the next evolution of 
-ZaneOps for enterprise and PRO users. It will come packed with features:
+The waitlist for [ZaneOps Cloud](/cloud) is now open. ZaneOps Cloud is the next evolution of the platform, designed for teams and enterprise users. It will ship with:
 
-- **Multi tenancy**: with support for multiple teams and with exhaustive permissions configuration 
-- **OIDC Authentication**: Enterprise-grade authentication with OpenID Connect support, with SSO support and more
-- **Audit logs**: to track all activity: logins, deployments, service changes, and more
-- **Custom authentication pages for services**: to protect your services with login pages 
-- **Custom branding**: to customize your authentication pages 
+- **Multi-tenancy**: support for multiple teams with fine-grained permissions
+- **OIDC Authentication**: enterprise-grade SSO via OpenID Connect
+- **Audit logs**: full activity trail of logins, deployments, service changes, and more
+- **Custom authentication pages**: protect any service behind a login page
+- **Custom branding**: white-label your authentication pages
 - ...and more
 
-Join the [waitlist](/cloud) now to be updated on when the cloud version is available, and if you sponsor the project you 
-can be a member of the **early access** of the cloud version. 
+[Join the waitlist](/cloud) to be notified when the cloud version launches. [Sponsor the project](https://github.com/sponsors/zane-ops) to get **early access** when it does.
 
 <Aside type="tip" title='Open Source'>
-The open source version will stay free and under the MIT licence.
+The self-hosted version will remain free and MIT-licensed.
 </Aside>
 
 
-### Docker compose stacks
+### Docker Compose stacks
 
-The major feature for this new version is support for [docker compose stacks](/knowledge-base/docker-compose), they allow you 
-to deploy your app from a `docker-compose.yml` file.
+The headline feature of v1.13 is native [Docker Compose stack support](/knowledge-base/docker-compose). You can now deploy any `docker-compose.yml` file directly on ZaneOps.
 
-Docker compose files on ZaneOps are deployed as [docker stack](https://docs.docker.com/reference/cli/docker/stack/)
-with support for:
-- blue/green deployments by default
-- assigning domains to your services via labels
-- generating variable and secret values via template expressions (e.g. `{{ generate_password | 8 }}` to generate a secure 8-character password)
+Under the hood, compose files are deployed as [Docker stacks](https://docs.docker.com/reference/cli/docker/stack/), with:
+
+- blue/green deployments out of the box
+- domain assignment via service labels
+- dynamic value generation via template expressions (e.g. `{{ generate_password | 8 }}` generates a secure 8-character password)
 
 <video src={`${ASSETS_SERVER_DOMAIN}/videos/deploy-simple-nginx.mp4`} alt="Deploy simple nginx docker compose" muted controls />
 
 
 ### Templates
 
-You can create applications from docker-compose files, but also deploy from [templates](/knowledge-base/docker-compose/01-templates). 
-ZaneOps support two template providers:
+Beyond raw compose files, you can also deploy from pre-built [templates](/knowledge-base/docker-compose/01-templates). ZaneOps supports two template providers:
 
-- Our custom templates:
+- Our own curated templates:
     <video src={`${ASSETS_SERVER_DOMAIN}/videos/deploy-umami-template.mp4`} alt="Deploy ZaneOps umami template" muted controls />
-    
+
 - Dokploy templates (experimental):
     <video src={`${ASSETS_SERVER_DOMAIN}/videos/deploy-dokploy-template.mp4`} alt="Deploy dokploy uptime-kuma template" muted controls />
 
 
 ### Shared volumes
 
-You can create volumes that are shared between multiple services, with one service as the owner and many readers:
+You can now create volumes shared across multiple services. One service owns the volume, and others mount it as read-only. This is useful for sharing assets, media, or uploads between a backend and frontend, for example.
 
-You use them to access data between services, by referencing the same volume. This is useful if you want to share assets, medias or uploads between a backend & frontend (for ex).
- 
- When you reference a shared volume, it will be attached as read-only and still support blue/green deployments.
+Shared volumes are fully compatible with blue/green deployments.
 
 <video src={`${ASSETS_SERVER_DOMAIN}/videos/shared_volumes.mp4`} alt="Shared volumes across reader & writer" muted controls />
 
 
 ### Docker registry credentials
 
-To deploy private images, previously you had to manually enter the credentials on each service, now you can 
-create shared credentials across your apps.
+Deploying private images no longer requires entering credentials on every service. You can now create registry credentials once and reuse them across all your apps.
 
 <video src={`${ASSETS_SERVER_DOMAIN}/videos/shared-credentials.mp4`} alt="Shared registry credentials" muted controls />
 
 
-
 ### Build registries
 
-To prepare for multi servers, you can now set up a build registry to store the docker images of the applications built on ZaneOps. 
+In preparation for multi-server support, you can now configure a build registry to store Docker images built by ZaneOps. Choose between storing images on your server's filesystem or pushing them to an S3-compatible provider (AWS S3, MinIO, R2, etc.).
 
 <video src={`${ASSETS_SERVER_DOMAIN}/videos/build-registries.mp4`} alt="Build registries" muted controls />
-
-You can choose to either store the images on the filesystem of your ZaneOps server or use an S3 provider (AWS S3, MinIO, R2, etc.)
 
 ![S3 settings build registries](/images/build-registries-s3.webp)
 
 
 ### Other changes
 
-- Environment variables are now obfuscated in the build logs, as well as in the change fields where they are hidden by default
+- Environment variables are now obfuscated in build logs and hidden by default in change fields
    ![obfuscated secrets in logs](/images/obfuscate-env-in-logs.png)
-- Git services now receive `GIT_COMMIT_SHA` as a build arg and environment variables when building the app
+- Git services now receive `GIT_COMMIT_SHA` as both a build arg and an environment variable
     ![Git commit sha](/images/git-commit-sha.webp)
-- After creating a SSH key in the server settings, you get the commands to add the key to your server
+- After creating an SSH key in server settings, ZaneOps now shows the exact commands to add it to your server
     ![command after creating SSH key](/images/ssh-command-after-creation.webp)
-- ZaneOps will remember the last SSH key you used to connect to the server terminal and automatically reconnect you when you 
-  navigate back to the server console:
+- ZaneOps remembers the last SSH key used in the server terminal and automatically reconnects you on your next visit
     <video src={`${ASSETS_SERVER_DOMAIN}/videos/remember-last-ssh-on-console.mp4`} alt="Remember last ssh key" muted controls />
-
-
