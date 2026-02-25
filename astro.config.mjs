@@ -167,8 +167,7 @@ export default defineConfig({
         },
         {
           label: "Knowledge base",
-          autogenerate: { directory: "knowledge-base" },
-          collapsed: true
+          autogenerate: { directory: "knowledge-base", collapsed: true }
         },
         {
           label: "Changelog",
