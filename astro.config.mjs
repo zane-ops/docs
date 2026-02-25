@@ -17,6 +17,12 @@ export default defineConfig({
   prefetch: true,
   env: {
     schema: {
+      PRIVATE_TEMPLATE_API_HOST: envField.string({
+        context: "server",
+        access: "secret",
+        url: true,
+        default: "https://templates.zaneops.dev"
+      }),
       TEMPLATE_API_HOST: envField.string({
         context: "client",
         access: "public",

@@ -1,5 +1,6 @@
 ---
 import { TEMPLATE_API_HOST } from "astro:env/client";
+import { PRIVATE_TEMPLATE_API_HOST } from "astro:env/server";
 import { Code } from "@astrojs/starlight/components";
 import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
 import {
@@ -20,7 +21,10 @@ export const prerender = false;
 
 let t0 = performance.now();
 const response = await fetch(
-    new URL(`/api/templates/${Astro.params.slug}.json`, TEMPLATE_API_HOST),
+    new URL(
+        `/api/templates/${Astro.params.slug}.json`,
+        PRIVATE_TEMPLATE_API_HOST,
+    ),
 );
 console.log(
     `[${Astro.params.slug}] fetch template details: ${(performance.now() - t0).toFixed(2)}ms`,
@@ -31,13 +35,13 @@ if (!response.ok) {
 }
 const template: TemplateDetailsApiResponse = await response.json();
 
-const templateSearchUrl = new URL("/api/search", TEMPLATE_API_HOST);
+const templateSearchUrl = new URL("/api/search", PRIVATE_TEMPLATE_API_HOST);
 templateSearchUrl.searchParams.set("per_page", "4");
 templateSearchUrl.searchParams.set("pick_random", "true");
 templateSearchUrl.searchParams.set("exclude_ids", template.id);
 
 for (const tag of template.tags) {
-    templateSearchUrl.searchParams.append("tags", tag);
+    templateSearchUrl.searchParams.append("tagrs", tag);
 }
 
 t0 = performance.now();
