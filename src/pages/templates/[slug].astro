@@ -8,6 +8,7 @@ import {
     ChevronLeftIcon,
     Github,
     Globe,
+    LoaderIcon,
     PencilLine,
 } from "@lucide/astro";
 
@@ -124,9 +125,12 @@ const logoUrl = new URL(template.logoUrl, TEMPLATE_API_HOST);
                                         </div>
                                     </figcaption>
                                     <div
-                                        class="h-100 flex items-center justify-center gap-center font-mono bg-(--sl-color-bg-nav)"
+                                        class="h-100 flex items-center justify-center gap-2 font-mono bg-(--sl-color-bg-nav)"
                                     >
-                                        loading..
+                                        <span>loading...</span>
+                                        <LoaderIcon
+                                            class="animate-spin size-4 flex-none"
+                                        />
                                     </div>
                                 </figure>
                             </Code>
