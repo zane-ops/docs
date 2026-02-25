@@ -53,6 +53,12 @@ The open source version will stay free and under the MIT licence.
 The major feature for this new version is support for [docker compose stacks](/knowledge-base/docker-compose), they allow you 
 to deploy your app from a `docker-compose.yml` file.
 
+Docker compose iles on ZaneOps are deployed as [docker stack](https://docs.docker.com/reference/cli/docker/stack/)
+with support for : 
+- blue/green deployments by default 
+- assigning domains to your services via labels
+- Generating variable & secrets values via template expressions (ex: `{{ generate_password | 8 }}` to generate secure 8 chars password) 
+
 <video src={`${ASSETS_SERVER_DOMAIN}/videos/deploy-simple-nginx.mp4`} alt="Deploy simple nginx docker compose" muted controls />
 
 
