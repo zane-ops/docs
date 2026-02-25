@@ -18,6 +18,8 @@ FROM build-deps AS build
 COPY . .
 ARG ZANE_DOMAINS
 ARG DATABASE_URL
+ARG TEMPLATE_API_HOST=https://templates.zaneops.dev
+ENV TEMPLATE_API_HOST=${TEMPLATE_API_HOST}
 ENV DATABASE_URL=${DATABASE_URL}
 ENV ZANE_DOMAINS=${ZANE_DOMAINS}
 RUN --mount=type=cache,target=/app/.astro FORCE_COLOR=true pnpm run build
