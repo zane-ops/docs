@@ -72,14 +72,21 @@ ZaneOps support two template providers:
 
 You can create volumes that are shared between multiple services, with one service as the owner and many readers:
 
-> TODO: video
+You use them to access data between services, by referencing the same volume. This is useful if you want to share assets, medias or uploads between a backend & frontend (for ex).
+ 
+ When you reference a shared volumes, the volume will be attached as read-only and still allow for blue/green deployments.
+
+<video src={`${ASSETS_SERVER_DOMAIN}/videos/shared_volumes.mp4`} alt="Deploy simple nginx docker compose" muted controls />
+
 
 ### Docker registry credentials
 
 To deploy private images, previously you had to manually enter the credentials, now you can 
 create shared credentials accross your apps.
 
-> TODO: video
+<video src={`${ASSETS_SERVER_DOMAIN}/videos/shared-credentials.mp4`} alt="Deploy simple nginx docker compose" muted controls />
+
+
 
 ### Build registries
 
