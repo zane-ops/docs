@@ -96,22 +96,25 @@ create shared credentials across your apps.
 
 ### Build registries
 
-To prepare for multi servers, you can now set up a build registry to store the docker images of the applications built on ZaneOps. You can choose to either store the images on the filesystem of your ZaneOps server or use an S3 provider (AWS S3, MinIO, R2, etc.)
+To prepare for multi servers, you can now set up a build registry to store the docker images of the applications built on ZaneOps. 
 
 <video src={`${ASSETS_SERVER_DOMAIN}/videos/build-registries.mp4`} alt="Build registries" muted controls />
 
+You can choose to either store the images on the filesystem of your ZaneOps server or use an S3 provider (AWS S3, MinIO, R2, etc.)
+
+![S3 settings build registries](/images/build-registries-s3.webp)
 
 
 ### Other changes
 
-- Git services now receive `GIT_COMMIT_SHA` as a build arg and environment variables when building the app
-    > TODO: image src
-- After creating a SSH key in the server settings, you get the commands to add the key to your server
-    > TODO: image src
-- ZaneOps will remember the last SSH key you used to connect to the server terminal and automatically reconnect you when you 
-  navigate to the console
-    > TODO: image src
 - Environment variables are now obfuscated in the build logs, as well as in the change fields where they are hidden by default
-    > TODO: image src
+   ![obfuscated secrets in logs](/images/obfuscate-env-in-logs.png)
+- Git services now receive `GIT_COMMIT_SHA` as a build arg and environment variables when building the app
+    ![Git commit sha](/images/git-commit-sha.webp)
+- After creating a SSH key in the server settings, you get the commands to add the key to your server
+    ![command after creating SSH key](/images/ssh-command-after-creation.webp)
+- ZaneOps will remember the last SSH key you used to connect to the server terminal and automatically reconnect you when you 
+  navigate back to the server console:
+    <video src={`${ASSETS_SERVER_DOMAIN}/videos/remember-last-ssh-on-console.mp4`} alt="Remember last ssh key" muted controls />
 
 
