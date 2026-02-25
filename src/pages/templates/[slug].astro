@@ -18,8 +18,12 @@ import type {
 
 export const prerender = false;
 
+let t0 = performance.now();
 const response = await fetch(
     new URL(`/api/templates/${Astro.params.slug}.json`, TEMPLATE_API_HOST),
+);
+console.log(
+    `[${Astro.params.slug}] fetch template details: ${(performance.now() - t0).toFixed(2)}ms`,
 );
 
 if (!response.ok) {
@@ -36,8 +40,12 @@ for (const tag of template.tags) {
     templateSearchUrl.searchParams.append("tags", tag);
 }
 
+t0 = performance.now();
 const { hits: templateList } = await fetch(templateSearchUrl).then(
     (r) => r.json() as Promise<TemplateSearchAPIResponse>,
+);
+console.log(
+    `[${Astro.params.slug}] fetch related templates: ${(performance.now() - t0).toFixed(2)}ms`,
 );
 
 const logoUrl = new URL(template.logoUrl, TEMPLATE_API_HOST);
