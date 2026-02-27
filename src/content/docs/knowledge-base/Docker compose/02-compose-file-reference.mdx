@@ -188,7 +188,7 @@ x-zane-env:
 
 #### `network_alias | 'service_name'`
 
-Generates a stable, environment-scoped hostname for inter-service communication. This is the recommended way to reference other services in your stack.
+Generates a stable, environment-scoped hostname. Use this when you need to reference a service in this stack from another service or stack in the same environment.
 
 **Format**: `{network_alias_prefix}-{service_name}`
 
@@ -215,7 +215,8 @@ x-zane-env:
 # Output example: abc123_postgres
 ```
 
-Use this only for cross-project or cross-environment communication. Prefer `network_alias` in all other cases.
+Use this only for cross-project or cross-environment communication. Use `network_alias` to connect in the same environment 
+and use the service name directly to reference it in the stack.
 
 ---
 
@@ -308,6 +309,7 @@ The following standard Docker Compose properties are **silently stripped** befor
 | `expose` | Not meaningful in Swarm mode |
 | `restart` | Use `deploy.restart_policy` instead |
 | `build` | ZaneOps requires pre-built images |
+| `container_name` | Not meaningful in Swarm mode |
 
 ### `ports`
 
@@ -420,6 +422,9 @@ configs:
 
 Docker configs are immutable, so ZaneOps appends a version suffix to every config name and manages the lifecycle automatically.
 
+
+![Docker config versioned](/images/config-versioning-in-compose.png)
+
 | Deployment | `content` changed? | Config name used | Old config |
 | --- | --- | --- | --- |
 | 1st deploy | — | `nginx_config_v1` | — |
@@ -440,11 +445,15 @@ The version is **only incremented when the content actually changes**. Redeployi
 
 You don't need to declare networks for basic service communication. ZaneOps automatically attaches every service to three networks:
 
+
 | Network | Scope | Purpose |
 | --- | --- | --- |
 | `zane` (global overlay) | All ZaneOps services | Proxy and ZaneOps-internal communication |
 | Environment network (`zn-env-*`) | Same environment | Services in the same env can talk to each other |
 | Stack default network | Same stack | Services within the stack use their original names as hostnames |
+
+![ZaneOps added networks to compose](/images/networks-in-compose.png)
+
 
 ### Service name hashing
 
