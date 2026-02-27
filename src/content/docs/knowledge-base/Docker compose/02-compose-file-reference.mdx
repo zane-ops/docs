@@ -4,3 +4,667 @@ description: Learn how to create a compose stack file on ZaneOps
 ---
 
 > Introduced in [**v1.13.0**](/changelog/v113)
+
+ZaneOps accepts standard Docker Compose files with a few extensions and restrictions described below.
+
+## File structure
+
+Any valid compose file with at least one `services` entry works. The ZaneOps-specific additions are all optional except when you need routing or generated secrets.
+
+```yaml title="docker-compose.yml"
+# ZaneOps-specific: template expressions for generating values at deploy time
+x-zane-env:
+  VAR_NAME: "{{ template_expression }}"
+
+# Standard services
+services:
+  service_name:
+    image: image:tag
+    environment:
+      KEY: ${VALUE}        # references an x-zane-env variable
+    deploy:
+      labels:
+        # ZaneOps-specific: label-based routing instead of ports
+        zane.http.routes.0.domain: "example.com"
+        zane.http.routes.0.port: "8080"
+
+# Standard named volumes
+volumes:
+  data:
+
+# ZaneOps-specific: inline config files defined by content
+configs:
+  my_config:
+    content: |
+      server { listen 80; }
+```
+
+## How ZaneOps processes your file
+
+Before deploying, ZaneOps transforms the compose file through these steps:
+
+1. **Template processing**: `x-zane-env` expressions evaluated, `${VAR}` references expanded
+2. **Service name hashing**: all service names prefixed with the stack's hash (e.g. `app` → `abc123_app`) to prevent DNS collisions across stacks
+3. **Network injection**: three networks attached to every service automatically (see [Networks](#networks))
+4. **Config versioning**: inline configs created as versioned Docker configs (`my_config_v1`, `my_config_v2`, …)
+5. **Stack deployment**: `docker stack deploy --with-registry-auth` executed
+
+---
+
+## `x-zane-env`
+
+`x-zane-env` is a ZaneOps-specific top-level key that replaces the role of a `.env` file. It lets you define stack-wide variables (either plain values or template expressions) that are then referenced throughout the rest of the compose file.
+
+```yaml
+x-zane-env:
+  # Plain value (behaves like a .env file entry)
+  APP_PORT: "3000"
+
+  # Template expression (generates a value at deploy time)
+  DB_PASSWORD: "{{ generate_password | 32 }}"
+```
+
+All variables are referenced with **`${VAR_NAME}`** syntax (curly braces required). Variables referenced without curly braces (`$VAR_NAME`) are left as-is and not expanded.
+
+```yaml
+x-zane-env:
+  DB_PASSWORD: "{{ generate_password | 32 }}"
+
+services:
+  app:
+    environment:
+      PASSWORD: ${DB_PASSWORD}   # ✅ expanded
+      RAW: $DB_PASSWORD          # ❌ not expanded, kept literally as "$DB_PASSWORD"
+```
+
+Values from template expressions are evaluated **once on the first deployment** and then persisted. A generated password won't change on subsequent deploys.
+
+:::caution
+Template expressions **only** work inside `x-zane-env`. Writing `{{ generate_password | 32 }}` directly in a service `environment` will not be evaluated.
+:::
+
+### Available template functions
+
+#### `generate_username`
+
+Generates a random username in the format `{adjective}{animal}{number}`.
+
+```yaml
+x-zane-env:
+  DB_USER: "{{ generate_username }}"
+# Output example: reddog65, bluecat42
+```
+
+---
+
+#### `generate_password | <length>`
+
+Generates a cryptographically secure random password as a hexadecimal string. Length must be an even number ≥ 8.
+
+```yaml
+x-zane-env:
+  DB_PASSWORD: "{{ generate_password | 32 }}"
+  API_SECRET: "{{ generate_password | 64 }}"
+```
+
+```yaml
+# ❌ Wrong: odd length
+PASSWORD: "{{ generate_password | 31 }}"
+
+# ✅ Correct
+PASSWORD: "{{ generate_password | 32 }}"
+```
+
+---
+
+#### `generate_base64 | <bytes>`
+
+Generates a base64-encoded random string of N bytes. Minimum value is 8.
+
+```yaml
+x-zane-env:
+  ENCRYPTION_KEY: "{{ generate_base64 | 32 }}"
+  SESSION_SECRET: "{{ generate_base64 | 64 }}"
+```
+
+---
+
+#### `generate_slug`
+
+Generates a URL-friendly slug in the format `{adjective}-{noun}-{number}`.
+
+```yaml
+x-zane-env:
+  DB_NAME: "{{ generate_slug }}"
+# Output example: happy-tree-91
+```
+
+---
+
+#### `generate_domain`
+
+Generates a unique domain scoped to your stack: `{project_slug}-{stack_slug}-{random}.{ROOT_DOMAIN}`.
+
+```yaml
+x-zane-env:
+  APP_URL: "{{ generate_domain }}"
+  CALLBACK_URL: "https://{{ generate_domain }}/auth/callback"
+# Output example: my-app-backend-a1b2c3.zaneops.dev
+```
+
+---
+
+#### `generate_uuid`
+
+Generates a UUID v4.
+
+```yaml
+x-zane-env:
+  INSTALLATION_ID: "{{ generate_uuid }}"
+```
+
+---
+
+#### `generate_email`
+
+Generates a fake but valid-looking email address.
+
+```yaml
+x-zane-env:
+  ADMIN_EMAIL: "{{ generate_email }}"
+```
+
+---
+
+#### `network_alias | 'service_name'`
+
+Generates a stable, environment-scoped hostname for inter-service communication. This is the recommended way to reference other services in your stack.
+
+**Format**: `{network_alias_prefix}-{service_name}`
+
+```yaml
+x-zane-env:
+  DB_HOST: "{{ network_alias | 'postgres' }}"
+  REDIS_URL: "redis://{{ network_alias | 'redis' }}:6379"
+# Output example: my-stack-postgres
+```
+
+The alias is stable across redeployments and scoped to the environment, so services in the same environment share the same alias space.
+
+---
+
+#### `global_alias | 'service_name'`
+
+Generates a globally unique hostname, accessible across all projects and environments.
+
+**Format**: `{hash_prefix}_{service_name}`
+
+```yaml
+x-zane-env:
+  GLOBAL_DB: "{{ global_alias | 'postgres' }}"
+# Output example: abc123_postgres
+```
+
+Use this only for cross-project or cross-environment communication. Prefer `network_alias` in all other cases.
+
+---
+
+### Variable composition
+
+Variables in `x-zane-env` can reference each other using `${VAR}` syntax to build composite values:
+
+```yaml
+x-zane-env:
+  DB_USER: "{{ generate_username }}"
+  DB_PASSWORD: "{{ generate_password | 32 }}"
+  DB_NAME: "{{ generate_slug }}"
+  DB_HOST: "{{ network_alias | 'postgres' }}"
+
+  DATABASE_URL: "postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:5432/${DB_NAME}"
+
+services:
+  app:
+    image: myapp:latest
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+```
+
+---
+
+## Routing
+
+ZaneOps uses label-based routing instead of port mappings. There is no concept of published ports; traffic is routed through ZaneOps' reverse proxy based on `deploy.labels`.
+
+### Route labels
+
+```yaml
+services:
+  web:
+    image: nginx:alpine
+    deploy:
+      labels:
+        zane.http.routes.0.domain: "example.com"
+        zane.http.routes.0.port: "80"
+        zane.http.routes.0.base_path: "/"
+        zane.http.routes.0.strip_prefix: "false"
+```
+
+| Label | Required | Description |
+| --- | --- | --- |
+| `zane.http.routes.{N}.domain` | ✅ | Domain name to match |
+| `zane.http.routes.{N}.port` | ✅ | Container port to forward traffic to |
+| `zane.http.routes.{N}.base_path` | No | Path prefix (default: `/`) |
+| `zane.http.routes.{N}.strip_prefix` | No | Strip `base_path` before forwarding (default: `true`) |
+
+`{N}` is a zero-based sequential index. Add more routes by incrementing the index:
+
+```yaml
+deploy:
+  labels:
+    zane.http.routes.0.domain: "example.com"
+    zane.http.routes.0.port: "8080"
+
+    zane.http.routes.1.domain: "www.example.com"
+    zane.http.routes.1.port: "8080"
+
+    zane.http.routes.2.domain: "api.example.com"
+    zane.http.routes.2.port: "3000"
+    zane.http.routes.2.base_path: "/api"
+    zane.http.routes.2.strip_prefix: "true"
+```
+
+Route domains can reference `x-zane-env` variables:
+
+```yaml
+x-zane-env:
+  APP_DOMAIN: "{{ generate_domain }}"
+
+services:
+  web:
+    deploy:
+      labels:
+        zane.http.routes.0.domain: "${APP_DOMAIN}"
+        zane.http.routes.0.port: "8080"
+```
+
+---
+
+## Ignored properties
+
+The following standard Docker Compose properties are **silently stripped** before deployment:
+
+| Property | Reason |
+| --- | --- |
+| `ports` | Replaced by routing labels |
+| `expose` | Not meaningful in Swarm mode |
+| `restart` | Use `deploy.restart_policy` instead |
+| `build` | ZaneOps requires pre-built images |
+
+Setting `deploy.replicas: 0` is supported and will pause the service (its status becomes `SLEEPING`).
+
+---
+
+## Volumes
+
+Relative path bind mounts are **not supported** and will fail validation:
+
+```yaml
+# ❌ Will fail
+volumes:
+  - ./config:/etc/app/config
+  - ../data:/app/data
+```
+
+Use inline configs for configuration files, or absolute paths for host directories:
+
+```yaml
+# ✅ Inline config
+services:
+  web:
+    configs:
+      - source: app_config
+        target: /etc/app/config.json
+
+configs:
+  app_config:
+    content: |
+      { "key": "value" }
+
+# ✅ Absolute path
+services:
+  portainer:
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+```
+
+---
+
+## Docker configs
+
+ZaneOps extends the Docker Compose `configs` spec with a `content` key that lets you define config file content inline, with no external file needed.
+
+```yaml
+services:
+  web:
+    image: nginx:alpine
+    configs:
+      - source: nginx_config
+        target: /etc/nginx/nginx.conf
+
+configs:
+  nginx_config:
+    content: |
+      server {
+        listen 80;
+      }
+```
+
+Config content supports `${VAR}` interpolation from `x-zane-env`:
+
+```yaml
+x-zane-env:
+  DB_HOST: "{{ network_alias | 'postgres' }}"
+
+configs:
+  app_config:
+    content: |
+      { "db_host": "${DB_HOST}" }
+```
+
+### Automatic versioning
+
+Docker configs are immutable. ZaneOps handles this transparently: each config is deployed with a version suffix (`nginx_config_v1`, `nginx_config_v2`, …). The version increments automatically when the `content` changes. Old versions are cleaned up after deployment.
+
+---
+
+## Networks
+
+### Automatic network injection
+
+You don't need to declare networks for basic service communication. ZaneOps automatically attaches every service to three networks:
+
+| Network | Scope | Purpose |
+| --- | --- | --- |
+| `zane` (global overlay) | All ZaneOps services | Proxy and ZaneOps-internal communication |
+| Environment network (`zn-env-*`) | Same environment | Services in the same env can talk to each other |
+| Stack default network | Same stack | Services within the stack use their original names as hostnames |
+
+### Service name hashing
+
+ZaneOps prefixes all service names with a stack-specific hash to prevent DNS collisions across stacks:
+
+```
+# In your compose file:    app, postgres
+# Deployed as:             abc123_app, abc123_postgres
+```
+
+Because of this, **do not hardcode hashed names as hostnames**. Use one of these instead:
+
+- **Original service name**: works within the stack's default network:
+  ```yaml
+  environment:
+    DB_HOST: postgres  # resolves in the stack default network
+  ```
+
+- **`network_alias`**: works across services in the same environment:
+  ```yaml
+  x-zane-env:
+    DB_HOST: "{{ network_alias | 'postgres' }}"  # e.g. my-stack-postgres
+  ```
+
+- **`global_alias`**: for cross-stack or cross-environment references:
+  ```yaml
+  x-zane-env:
+    DB_HOST: "{{ global_alias | 'postgres' }}"  # e.g. abc123_postgres
+  ```
+
+---
+
+## `depends_on`
+
+ZaneOps converts the dict form of `depends_on` to a list for Docker Swarm compatibility:
+
+```yaml
+# ❌ Dict form: converted automatically
+depends_on:
+  postgres:
+    condition: service_healthy
+
+# ✅ Equivalent after conversion
+depends_on:
+  - postgres
+```
+
+The `condition` field is dropped. `depends_on` controls startup ordering only; it does not wait for a service to become healthy or ready.
+
+---
+
+## Complete examples
+
+### Full stack app (frontend + backend + database)
+
+```yaml
+x-zane-env:
+  DB_USER: "{{ generate_username }}"
+  DB_PASSWORD: "{{ generate_password | 32 }}"
+  DB_NAME: "{{ generate_slug }}"
+  DB_HOST: "{{ network_alias | 'postgres' }}"
+  DATABASE_URL: "postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:5432/${DB_NAME}"
+  API_SECRET: "{{ generate_password | 64 }}"
+  API_DOMAIN: "{{ generate_domain }}"
+
+services:
+  frontend:
+    image: myapp/frontend:latest
+    environment:
+      API_URL: "https://${API_DOMAIN}"
+    deploy:
+      replicas: 2
+      labels:
+        zane.http.routes.0.domain: "myapp.com"
+        zane.http.routes.0.port: "3000"
+
+  backend:
+    image: myapp/backend:latest
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      SECRET_KEY: ${API_SECRET}
+    depends_on:
+      - postgres
+    deploy:
+      replicas: 3
+      labels:
+        zane.http.routes.0.domain: "${API_DOMAIN}"
+        zane.http.routes.0.port: "8080"
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
+```
+
+### WordPress with MySQL
+
+```yaml
+x-zane-env:
+  MYSQL_ROOT_PASSWORD: "{{ generate_password | 32 }}"
+  MYSQL_USER: "{{ generate_username }}"
+  MYSQL_PASSWORD: "{{ generate_password | 32 }}"
+  MYSQL_DATABASE: "{{ generate_slug }}"
+  MYSQL_HOST: "{{ network_alias | 'mysql' }}"
+  WP_DOMAIN: "{{ generate_domain }}"
+
+services:
+  wordpress:
+    image: wordpress:6-apache
+    environment:
+      WORDPRESS_DB_HOST: ${MYSQL_HOST}
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+    volumes:
+      - wp_content:/var/www/html/wp-content
+    depends_on:
+      - mysql
+    deploy:
+      labels:
+        zane.http.routes.0.domain: "${WP_DOMAIN}"
+        zane.http.routes.0.port: "80"
+        zane.http.routes.0.strip_prefix: "false"
+
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  wp_content:
+  mysql_data:
+```
+
+---
+
+## Dokploy template migration
+
+ZaneOps includes an adapter to import templates from Dokploy. Dokploy templates are base64-encoded JSON containing a compose YAML and a TOML config.
+
+### Placeholder mapping
+
+| Dokploy placeholder | ZaneOps expression |
+| --- | --- |
+| `${domain}` | `{{ generate_domain }}` |
+| `${email}` | `{{ generate_email }}` |
+| `${username}` | `{{ generate_username }}` |
+| `${uuid}` | `{{ generate_uuid }}` |
+| `${password}` | `{{ generate_password \| 32 }}` |
+| `${password:16}` | `{{ generate_password \| 16 }}` |
+| `${base64}` / `${hash}` / `${jwt}` | `{{ generate_password \| 32 }}` |
+
+### Example migration
+
+**Dokploy compose**:
+```yaml
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ../files/nginx.conf:/etc/nginx/nginx.conf
+```
+
+**Dokploy config.toml**:
+```toml
+[variables]
+main_domain = "${domain}"
+db_password = "${password:32}"
+
+[[config.domains]]
+serviceName = "web"
+host = "${main_domain}"
+port = 8080
+
+[[config.mounts]]
+filePath = "nginx.conf"
+content = """
+server {
+  listen 80;
+}
+"""
+```
+
+**Resulting ZaneOps compose**:
+```yaml
+x-zane-env:
+  main_domain: "{{ generate_domain }}"
+  db_password: "{{ generate_password | 32 }}"
+  DB_PASSWORD: ${db_password}
+
+services:
+  web:
+    image: nginx:alpine
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+    configs:
+      - source: nginx.conf
+        target: /etc/nginx/nginx.conf
+    deploy:
+      labels:
+        zane.http.routes.0.domain: "${main_domain}"
+        zane.http.routes.0.port: "8080"
+        zane.http.routes.0.base_path: "/"
+        zane.http.routes.0.strip_prefix: "false"
+
+configs:
+  nginx.conf:
+    content: |
+      server {
+        listen 80;
+      }
+```
+
+The `../files/` volume paths used in Dokploy are converted to Docker configs. If no matching mount exists, the path is converted to a named volume instead.
+
+---
+
+## Troubleshooting
+
+### Template expression not evaluated
+
+Template expressions only work inside `x-zane-env`:
+
+```yaml
+# ❌ Not evaluated
+services:
+  app:
+    environment:
+      PASSWORD: "{{ generate_password | 32 }}"
+
+# ✅ Correct
+x-zane-env:
+  PASSWORD: "{{ generate_password | 32 }}"
+
+services:
+  app:
+    environment:
+      PASSWORD: ${PASSWORD}
+```
+
+### `${VAR}` not expanded
+
+The variable must be declared in `x-zane-env` first. A `${VAR}` reference to an undefined variable is left as-is.
+
+### Service can't connect to another service
+
+Don't use the hashed service name (`abc123_postgres`) as a hostname; it's an implementation detail. Use the original service name (works in the stack default network) or `network_alias` (works across the environment):
+
+```yaml
+x-zane-env:
+  DB_HOST: "{{ network_alias | 'postgres' }}"
+```
+
+### Route validation failed
+
+Both `domain` and `port` are required per route. `strip_prefix` must be `"true"` or `"false"` (not `"yes"`/`"no"`).
+
+### Config not updated after redeployment
+
+ZaneOps only creates a new config version when the `content` changes. If the content is identical to the previous deployment, the existing version is reused. This is expected behavior.
+
+### `generate_password` invalid length error
+
+Length must be an even number ≥ 8 (e.g. 8, 10, 12, 16, 32, 64).

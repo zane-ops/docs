@@ -171,8 +171,7 @@ export default defineConfig({
         },
         {
           label: "Changelog",
-          autogenerate: { directory: "changelog" },
-          collapsed: true
+          autogenerate: { directory: "changelog" }
         },
         {
           label: "Tutorials",

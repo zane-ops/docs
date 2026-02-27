@@ -3,8 +3,67 @@ title: Overview
 description: Learn how to use docker compose in ZaneOps
 ---
 
+import {Steps, Aside} from '@astrojs/starlight/components';
+
 > Introduced in [**v1.13.0**](/changelog/v113)
 
-{/* You can deploy docker compose stacks on ZaneOps...
+ZaneOps supports deploying applications from `docker-compose.yml` files.
+In ZaneOps they are called **Compose Stacks**.
 
-Under the hood, compose files are deployed as [Docker stacks](https://docs.docker.com/reference/cli/docker/stack/) via Docker Swarm, not plain `docker compose up`. This is an important distinction: Swarm is what enables ZaneOps to orchestrate rolling blue/green deployments, whereas standard Docker Compose has no concept of that. */}
+
+## How does it work ?
+
+Under the hood, compose files are deployed as [Docker stacks](https://docs.docker.com/reference/cli/docker/stack/) via Docker Swarm, not plain `docker compose up`.
+
+This is an important distinction: Swarm is what enables ZaneOps to orchestrate rolling blue/green deployments, whereas standard Docker Compose has no concept of that.
+
+
+![Compose stack deployment logs](/images/deploy-compose-stack-logs.png)
+
+
+## How to create and deploy a Compose Stack
+
+<Steps>
+1. In the ZaneOps dashboard go to your project and select **New > Compose Stack**
+    > TODO: image
+2. Select **from docker-compose.yml**
+    > TODO: image
+3. Paste your compose file
+    > TODO: image
+5. Click **Create**
+    > TODO: image
+6. Click **Deploy** if you want to deploy now
+    > TODO: image
+</Steps>
+
+### Compose file syntax
+
+ZaneOps adds some flavor on top of the normal compose file.
+
+- **Template expressions** for generating secrets, domains, and service aliases
+  ```yaml title="docker-compose.yml"
+  x-zane-env:
+    DB_PASSWORD: "{{ generate_password | 32 }}"
+    DB_NAME: "{{ generate_slug }}"
+
+  services:
+    db:
+      image: postgres:16
+      environment:
+        POSTGRES_PASSWORD: ${DB_PASSWORD}
+        POSTGRES_DB: ${DB_NAME}
+  ```
+- **Label-based routing** instead of port mappings for exposing services to the web
+  ```yaml title="docker-compose.yml"
+  services:
+    web:
+      image: nginx:alpine
+      deploy:
+        labels:
+          zane.http.routes.0.domain: "myapp.com"
+          zane.http.routes.0.port: "80"
+  ```
+- **Variable interpolation** using `${VAR}` syntax in env vars and configs
+- **Config versioning** for inline configuration files
+
+See the [Compose file syntax reference](./02-compose-file-reference) for the full details.
