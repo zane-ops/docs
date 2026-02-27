@@ -11,7 +11,7 @@ ZaneOps supports deploying applications from `docker-compose.yml` files.
 In ZaneOps they are called **Compose Stacks**.
 
 
-## How does it work ?
+### How does it work ?
 
 Under the hood, compose files are deployed as [Docker stacks](https://docs.docker.com/reference/cli/docker/stack/) via Docker Swarm, not plain `docker compose up`.
 
@@ -20,8 +20,26 @@ This is an important distinction: Swarm is what enables ZaneOps to orchestrate r
 
 ![Compose stack deployment logs](/images/deploy-compose-stack-logs.png)
 
+---
 
-## How to create and deploy a Compose Stack
+### Ways to create a compose stack
+
+There are three ways to create a compose stack in ZaneOps:
+
+- **From a `docker-compose.yml` file**: paste your own compose file directly. [See below](#how-to-create-and-deploy-a-compose-stack).
+- **From a curated template**: pick from ZaneOps' library of ready-to-deploy stacks (Postgres, Redis, WordPress, and more) to get a pre-filled compose file. [Browse templates](./01-templates).
+   ![template list](/images/create-from-template-list.png)
+   ![Deploy n8n](/images/deploy-n8n-on-zaneops.png)
+- **From a Dokploy template** *(experimental)*: paste a base64-encoded Dokploy template and ZaneOps converts it to a native compose file automatically. [Learn more](./01-templates#dokploy-template-migration).
+   ![Create dokploy template](/images/create-from-dokploy.png)
+
+<Aside>
+All compose stacks are backed by a `docker-compose.yml` file. The three creation methods differ only in how that file is initially populated. You can edit the compose file at any time after creation, regardless of how the stack was created.
+</Aside>
+
+---
+
+### How to create and deploy a Compose Stack
 
 <Steps>
 1. In the ZaneOps dashboard go to your project and select **New > Compose Stack**
@@ -33,6 +51,8 @@ This is an important distinction: Swarm is what enables ZaneOps to orchestrate r
 5. Click **Create** and  **Deploy**
     ![Deploy compose stack](/images/deploy-compose-stack.png)
 </Steps>
+
+---
 
 ### Compose file syntax
 
