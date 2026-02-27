@@ -3,15 +3,46 @@ title: Templates
 description: Learn how to deploy templates on ZaneOps
 ---
 
+import {Steps, Aside} from '@astrojs/starlight/components';
+
+
 > Introduced in [**v1.13.0**](/changelog/v113)
 
+ZaneOps allows you to deploy [Docker Compose Stacks](../) from preexisting templates. 
+
+There are two kinds: 
+- curated ZaneOps templates (Postgres, Redis, WordPress, and more) 
+- and Dokploy templates (experimental)
+
+<Aside>
+All compose stacks are backed by a `docker-compose.yml` file. The three creation methods differ only in how that file is initially populated. You can edit the compose file at any time after creation, regardless of how the stack was created.
+</Aside>
 
 
-## Dokploy template migration
+## ZaneOps templates
+
+We have a curated list of docker-compose templates on ZaneOps, you can [Browse them](/templates).
+
+> TODO: doc 
+
+## Dokploy templates 
 
 ZaneOps includes an adapter to import templates from Dokploy. Dokploy templates are base64-encoded JSON containing a compose YAML and a TOML config.
 
-### Placeholder mapping
+### How to create a dokploy template
+
+> TODO: doc 
+
+
+### How Dokploy templates are processed
+
+<Steps>
+1. todo...
+2. todo...
+3. todo...
+</Steps>
+
+#### Placeholder mapping
 
 | Dokploy placeholder | ZaneOps expression |
 | --- | --- |
@@ -23,7 +54,7 @@ ZaneOps includes an adapter to import templates from Dokploy. Dokploy templates 
 | `${password:16}` | `{{ generate_password \| 16 }}` |
 | `${base64}` / `${hash}` / `${jwt}` | `{{ generate_password \| 32 }}` |
 
-### Example migration
+#### Example migration
 
 **Dokploy compose**:
 ```yaml
@@ -90,4 +121,3 @@ configs:
 
 The `../files/` volume paths used in Dokploy are converted to Docker configs. If no matching mount exists, the path is converted to a named volume instead.
 
----
