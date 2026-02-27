@@ -4,3 +4,90 @@ description: Learn how to deploy templates on ZaneOps
 ---
 
 > Introduced in [**v1.13.0**](/changelog/v113)
+
+
+
+## Dokploy template migration
+
+ZaneOps includes an adapter to import templates from Dokploy. Dokploy templates are base64-encoded JSON containing a compose YAML and a TOML config.
+
+### Placeholder mapping
+
+| Dokploy placeholder | ZaneOps expression |
+| --- | --- |
+| `${domain}` | `{{ generate_domain }}` |
+| `${email}` | `{{ generate_email }}` |
+| `${username}` | `{{ generate_username }}` |
+| `${uuid}` | `{{ generate_uuid }}` |
+| `${password}` | `{{ generate_password \| 32 }}` |
+| `${password:16}` | `{{ generate_password \| 16 }}` |
+| `${base64}` / `${hash}` / `${jwt}` | `{{ generate_password \| 32 }}` |
+
+### Example migration
+
+**Dokploy compose**:
+```yaml
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ../files/nginx.conf:/etc/nginx/nginx.conf
+```
+
+**Dokploy config.toml**:
+```toml
+[variables]
+main_domain = "${domain}"
+db_password = "${password:32}"
+
+[[config.domains]]
+serviceName = "web"
+host = "${main_domain}"
+port = 8080
+
+[[config.mounts]]
+filePath = "nginx.conf"
+content = """
+server {
+  listen 80;
+}
+"""
+```
+
+**Resulting ZaneOps compose**:
+```yaml
+x-zane-env:
+  main_domain: "{{ generate_domain }}"
+  db_password: "{{ generate_password | 32 }}"
+  DB_PASSWORD: ${db_password}
+
+services:
+  web:
+    image: nginx:alpine
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+    configs:
+      - source: nginx.conf
+        target: /etc/nginx/nginx.conf
+    deploy:
+      labels:
+        zane.http.routes.0.domain: "${main_domain}"
+        zane.http.routes.0.port: "8080"
+        zane.http.routes.0.base_path: "/"
+        zane.http.routes.0.strip_prefix: "false"
+
+configs:
+  nginx.conf:
+    content: |
+      server {
+        listen 80;
+      }
+```
+
+The `../files/` volume paths used in Dokploy are converted to Docker configs. If no matching mount exists, the path is converted to a named volume instead.
+
+---

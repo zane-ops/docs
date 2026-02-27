@@ -3,6 +3,8 @@ title: Compose file syntax reference
 description: Learn how to create a compose stack file on ZaneOps
 ---
 
+import {Aside, Steps} from '@astrojs/starlight/components'
+
 > Introduced in [**v1.13.0**](/changelog/v113)
 
 ZaneOps accepts standard Docker Compose files with a few extensions and restrictions described below.
@@ -32,7 +34,7 @@ services:
 volumes:
   data:
 
-# ZaneOps-specific: inline config files defined by content
+# Inline config files (standard content key, ZaneOps adds ${VAR} interpolation and auto-versioning)
 configs:
   my_config:
     content: |
@@ -43,11 +45,16 @@ configs:
 
 Before deploying, ZaneOps transforms the compose file through these steps:
 
+<Steps>
 1. **Template processing**: `x-zane-env` expressions evaluated, `${VAR}` references expanded
 2. **Service name hashing**: all service names prefixed with the stack's hash (e.g. `app` → `abc123_app`) to prevent DNS collisions across stacks
 3. **Network injection**: three networks attached to every service automatically (see [Networks](#networks))
-4. **Config versioning**: inline configs created as versioned Docker configs (`my_config_v1`, `my_config_v2`, …)
-5. **Stack deployment**: `docker stack deploy --with-registry-auth` executed
+4. **Config versioning**: inline configs created as versioned Docker configs (`my_config_v1`, `my_config_v2`, ...)
+5. **Computed file**: the fully processed compose file (with all variables resolved, service names hashed, and networks injected) is saved and visible in the ZaneOps UI so you can inspect exactly what gets deployed
+   > TODO: screenshot input
+   > TODO: screenshot output
+6. **Stack deployment**: `docker stack deploy --with-registry-auth` is executed using the computed compose file
+</Steps>
 
 ---
 
@@ -64,7 +71,7 @@ x-zane-env:
   DB_PASSWORD: "{{ generate_password | 32 }}"
 ```
 
-All variables are referenced with **`${VAR_NAME}`** syntax (curly braces required). Variables referenced without curly braces (`$VAR_NAME`) are left as-is and not expanded.
+All variables are referenced with **`${VAR_NAME}`** syntax (curly braces required). Variables referenced without curly braces (`$VAR_NAME`) are left as-is and not expanded. Referencing an undefined variable with `${VAR_NAME}` expands to an empty string.
 
 ```yaml
 x-zane-env:
@@ -73,15 +80,16 @@ x-zane-env:
 services:
   app:
     environment:
-      PASSWORD: ${DB_PASSWORD}   # ✅ expanded
+      PASSWORD: ${DB_PASSWORD}   # ✅ expanded to the generated value
       RAW: $DB_PASSWORD          # ❌ not expanded, kept literally as "$DB_PASSWORD"
+      MISSING: ${UNDEFINED_VAR}  # ⚠️ expanded to an empty string
 ```
 
 Values from template expressions are evaluated **once on the first deployment** and then persisted. A generated password won't change on subsequent deploys.
 
-:::caution
+<Aside type='caution' title='template expressions outside of `x-zane-env`'>
 Template expressions **only** work inside `x-zane-env`. Writing `{{ generate_password | 32 }}` directly in a service `environment` will not be evaluated.
-:::
+</Aside>
 
 ### Available template functions
 
@@ -289,18 +297,53 @@ services:
 
 ---
 
-## Ignored properties
+## Unsupported properties
 
 The following standard Docker Compose properties are **silently stripped** before deployment:
 
 | Property | Reason |
 | --- | --- |
-| `ports` | Replaced by routing labels |
 | `expose` | Not meaningful in Swarm mode |
 | `restart` | Use `deploy.restart_policy` instead |
 | `build` | ZaneOps requires pre-built images |
 
-Setting `deploy.replicas: 0` is supported and will pause the service (its status becomes `SLEEPING`).
+### `ports`
+
+`ports` is not stripped and will work, but **it is strongly recommended to use routing labels instead**. Routing labels integrate with ZaneOps' reverse proxy to handle TLS termination, domain routing, and path-based routing automatically. Publishing raw ports bypasses all of that.
+
+```yaml
+# ✅ Recommended: routing labels
+services:
+  web:
+    image: myapp:latest
+    deploy:
+      labels:
+        zane.http.routes.0.domain: "myapp.com"
+        zane.http.routes.0.port: "8080"
+
+# ⚠️ Works, but gives up ZaneOps routing features
+services:
+  web:
+    image: myapp:latest
+    ports:
+      - "8080:8080"
+```
+
+---
+
+## Pausing a service
+
+Setting `deploy.replicas` to `0` pauses a service without removing it from the stack. Its status in ZaneOps becomes `SLEEPING`. Set it back to any positive number to resume.
+
+```yaml
+services:
+  worker:
+    image: myapp/worker:latest
+    deploy:
+      replicas: 0  # paused; change to 1 or more to resume
+```
+
+This is useful for temporarily disabling background workers or non-critical services without tearing down the entire stack.
 
 ---
 
@@ -341,7 +384,7 @@ services:
 
 ## Docker configs
 
-ZaneOps extends the Docker Compose `configs` spec with a `content` key that lets you define config file content inline, with no external file needed.
+ZaneOps supports inline configs using the standard `content` key. What ZaneOps adds on top is `${VAR}` interpolation inside config content and automatic versioning on redeploy.
 
 ```yaml
 services:
@@ -373,7 +416,19 @@ configs:
 
 ### Automatic versioning
 
-Docker configs are immutable. ZaneOps handles this transparently: each config is deployed with a version suffix (`nginx_config_v1`, `nginx_config_v2`, …). The version increments automatically when the `content` changes. Old versions are cleaned up after deployment.
+Docker configs are immutable, so ZaneOps appends a version suffix to every config name and manages the lifecycle automatically.
+
+| Deployment | `content` changed? | Config name used | Old config |
+| --- | --- | --- | --- |
+| 1st deploy | — | `nginx_config_v1` | — |
+| 2nd deploy | No | `nginx_config_v1` (reused) | unchanged |
+| 3rd deploy | **Yes** | `nginx_config_v2` (new) | not used anymore |
+
+<Aside type='note' title='Version increment'>
+The version is **only incremented when the content actually changes**. Redeploying with identical config content reuses the existing version — no new config is created.
+</Aside>
+
+
 
 ---
 
@@ -536,91 +591,6 @@ volumes:
 
 ---
 
-## Dokploy template migration
-
-ZaneOps includes an adapter to import templates from Dokploy. Dokploy templates are base64-encoded JSON containing a compose YAML and a TOML config.
-
-### Placeholder mapping
-
-| Dokploy placeholder | ZaneOps expression |
-| --- | --- |
-| `${domain}` | `{{ generate_domain }}` |
-| `${email}` | `{{ generate_email }}` |
-| `${username}` | `{{ generate_username }}` |
-| `${uuid}` | `{{ generate_uuid }}` |
-| `${password}` | `{{ generate_password \| 32 }}` |
-| `${password:16}` | `{{ generate_password \| 16 }}` |
-| `${base64}` / `${hash}` / `${jwt}` | `{{ generate_password \| 32 }}` |
-
-### Example migration
-
-**Dokploy compose**:
-```yaml
-services:
-  web:
-    image: nginx:alpine
-    ports:
-      - "8080:80"
-    environment:
-      DB_PASSWORD: ${DB_PASSWORD}
-    volumes:
-      - ../files/nginx.conf:/etc/nginx/nginx.conf
-```
-
-**Dokploy config.toml**:
-```toml
-[variables]
-main_domain = "${domain}"
-db_password = "${password:32}"
-
-[[config.domains]]
-serviceName = "web"
-host = "${main_domain}"
-port = 8080
-
-[[config.mounts]]
-filePath = "nginx.conf"
-content = """
-server {
-  listen 80;
-}
-"""
-```
-
-**Resulting ZaneOps compose**:
-```yaml
-x-zane-env:
-  main_domain: "{{ generate_domain }}"
-  db_password: "{{ generate_password | 32 }}"
-  DB_PASSWORD: ${db_password}
-
-services:
-  web:
-    image: nginx:alpine
-    environment:
-      DB_PASSWORD: ${DB_PASSWORD}
-    configs:
-      - source: nginx.conf
-        target: /etc/nginx/nginx.conf
-    deploy:
-      labels:
-        zane.http.routes.0.domain: "${main_domain}"
-        zane.http.routes.0.port: "8080"
-        zane.http.routes.0.base_path: "/"
-        zane.http.routes.0.strip_prefix: "false"
-
-configs:
-  nginx.conf:
-    content: |
-      server {
-        listen 80;
-      }
-```
-
-The `../files/` volume paths used in Dokploy are converted to Docker configs. If no matching mount exists, the path is converted to a named volume instead.
-
----
-
 ## Troubleshooting
 
 ### Template expression not evaluated
@@ -644,9 +614,9 @@ services:
       PASSWORD: ${PASSWORD}
 ```
 
-### `${VAR}` not expanded
+### Unexpected empty value
 
-The variable must be declared in `x-zane-env` first. A `${VAR}` reference to an undefined variable is left as-is.
+`${VAR}` references are always expanded. If the variable is not declared in `x-zane-env`, it expands to an empty string rather than keeping the literal `${VAR}` text. Make sure every variable you reference is defined.
 
 ### Service can't connect to another service
 
