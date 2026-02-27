@@ -51,9 +51,11 @@ Before deploying, ZaneOps transforms the compose file through these steps:
 3. **Network injection**: three networks attached to every service automatically (see [Networks](#networks))
 4. **Config versioning**: inline configs created as versioned Docker configs (`my_config_v1`, `my_config_v2`, ...)
 5. **Computed file**: the fully processed compose file (with all variables resolved, service names hashed, and networks injected) is saved and visible in the ZaneOps UI so you can inspect exactly what gets deployed
-   > TODO: screenshot input
-   > TODO: screenshot output
+   ![Docker compose yaml input](/images/docker-compose-yml-input.png)
+   ![Computed docker compose yaml](/images/computed-docker-compose-yml.png)
 6. **Stack deployment**: `docker stack deploy --with-registry-auth` is executed using the computed compose file
+   ![Compose stack deployment logs](/images/deploy-compose-stack-logs.png)
+
 </Steps>
 
 ---
