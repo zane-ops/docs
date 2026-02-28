@@ -13,7 +13,7 @@ ZaneOps accepts standard Docker Compose files with a few extensions and restrict
 
 Any valid compose file with at least one `services` entry works. The ZaneOps-specific additions are all optional except when you need routing or generated secrets.
 
-```yaml title="docker-compose.yml"
+```yaml title="docker-compose.yml" title="docker-compose.yml"
 # ZaneOps-specific: template expressions for generating values at deploy time
 x-zane-env:
   VAR_NAME: "{{ template_expression }}"
@@ -64,7 +64,7 @@ Before deploying, ZaneOps transforms the compose file through these steps:
 
 `x-zane-env` is a ZaneOps-specific top-level key that replaces the role of a `.env` file. It lets you define stack-wide variables (either plain values or template expressions) that are then referenced throughout the rest of the compose file.
 
-```yaml
+```yaml title="docker-compose.yml"
 x-zane-env:
   # Plain value (behaves like a .env file entry)
   APP_PORT: "3000"
@@ -75,7 +75,7 @@ x-zane-env:
 
 All variables are referenced with **`${VAR_NAME}`** syntax (curly braces required). Variables referenced without curly braces (`$VAR_NAME`) are left as-is and not expanded. Referencing an undefined variable with `${VAR_NAME}` expands to an empty string.
 
-```yaml
+```yaml title="docker-compose.yml"
 x-zane-env:
   DB_PASSWORD: "{{ generate_password | 32 }}"
 
@@ -104,7 +104,7 @@ Template expressions **only** work inside `x-zane-env`. Writing `{{ generate_pas
 
 Generates a random username in the format `{adjective}{animal}{number}`.
 
-```yaml
+```yaml title="docker-compose.yml"
 x-zane-env:
   DB_USER: "{{ generate_username }}"
 # Output example: reddog65, bluecat42
@@ -116,13 +116,13 @@ x-zane-env:
 
 Generates a cryptographically secure random password as a hexadecimal string. Length must be an even number ≥ 8.
 
-```yaml
+```yaml title="docker-compose.yml"
 x-zane-env:
   DB_PASSWORD: "{{ generate_password | 32 }}"
   API_SECRET: "{{ generate_password | 64 }}"
 ```
 
-```yaml
+```yaml title="docker-compose.yml"
 # ❌ Wrong: odd length
 PASSWORD: "{{ generate_password | 31 }}"
 
@@ -136,7 +136,7 @@ PASSWORD: "{{ generate_password | 32 }}"
 
 Generates a base64-encoded random string of N bytes. Minimum value is 8.
 
-```yaml
+```yaml title="docker-compose.yml"
 x-zane-env:
   ENCRYPTION_KEY: "{{ generate_base64 | 32 }}"
   SESSION_SECRET: "{{ generate_base64 | 64 }}"
@@ -148,7 +148,7 @@ x-zane-env:
 
 Generates a URL-friendly slug in the format `{adjective}-{noun}-{number}`.
 
-```yaml
+```yaml title="docker-compose.yml"
 x-zane-env:
   DB_NAME: "{{ generate_slug }}"
 # Output example: happy-tree-91
@@ -160,7 +160,7 @@ x-zane-env:
 
 Generates a unique domain scoped to your stack: `{project_slug}-{stack_slug}-{random}.{ROOT_DOMAIN}`.
 
-```yaml
+```yaml title="docker-compose.yml"
 x-zane-env:
   APP_URL: "{{ generate_domain }}"
   CALLBACK_URL: "https://{{ generate_domain }}/auth/callback"
@@ -173,7 +173,7 @@ x-zane-env:
 
 Generates a UUID v4.
 
-```yaml
+```yaml title="docker-compose.yml"
 x-zane-env:
   INSTALLATION_ID: "{{ generate_uuid }}"
 ```
@@ -184,7 +184,7 @@ x-zane-env:
 
 Generates a fake but valid-looking email address.
 
-```yaml
+```yaml title="docker-compose.yml"
 x-zane-env:
   ADMIN_EMAIL: "{{ generate_email }}"
 ```
@@ -197,7 +197,7 @@ Generates a stable, environment-scoped hostname. Use this when you need to refer
 
 **Format**: `{network_alias_prefix}-{service_name}`
 
-```yaml
+```yaml title="docker-compose.yml"
 x-zane-env:
   DB_HOST: "{{ network_alias | 'postgres' }}"
   REDIS_URL: "redis://{{ network_alias | 'redis' }}:6379"
@@ -214,7 +214,7 @@ Generates a globally unique hostname, accessible across all projects and environ
 
 **Format**: `{hash_prefix}_{service_name}`
 
-```yaml
+```yaml title="docker-compose.yml"
 x-zane-env:
   GLOBAL_DB: "{{ global_alias | 'postgres' }}"
 # Output example: abc123_postgres
@@ -229,7 +229,7 @@ and use the service name directly to reference it in the stack.
 
 Variables in `x-zane-env` can reference each other using `${VAR}` syntax to build composite values:
 
-```yaml
+```yaml title="docker-compose.yml"
 x-zane-env:
   DB_USER: "{{ generate_username }}"
   DB_PASSWORD: "{{ generate_password | 32 }}"
@@ -251,7 +251,7 @@ Variables whose name starts with `__` are surfaced as **environment overrides** 
 
 A typical use case is generating a connection URL for a database stack and exposing it so an external service (a git app, another stack) can reference it without having to reconstruct it manually.
 
-```yaml
+```yaml title="docker-compose.yml"
 x-zane-env:
   DB_USER: "{{ generate_username }}"
   DB_PASSWORD: "{{ generate_password | 32 }}"
@@ -276,7 +276,7 @@ ZaneOps uses label-based routing instead of port mappings. There is no concept o
 
 ### Route labels
 
-```yaml
+```yaml title="docker-compose.yml"
 services:
   web:
     image: nginx:alpine
@@ -297,7 +297,7 @@ services:
 
 `{N}` is a zero-based sequential index. Add more routes by incrementing the index:
 
-```yaml
+```yaml title="docker-compose.yml"
 deploy:
   labels:
     zane.http.routes.0.domain: "example.com"
@@ -314,7 +314,7 @@ deploy:
 
 Route domains can reference `x-zane-env` variables:
 
-```yaml
+```yaml title="docker-compose.yml"
 x-zane-env:
   APP_DOMAIN: "{{ generate_domain }}"
 
@@ -343,7 +343,7 @@ The following standard Docker Compose properties are **silently stripped** befor
 
 `ports` is not stripped and will work, but **it is strongly recommended to use routing labels instead**. Routing labels integrate with ZaneOps' reverse proxy to handle TLS termination, domain routing, and path-based routing automatically. Publishing raw ports bypasses all of that.
 
-```yaml
+```yaml title="docker-compose.yml"
 # ✅ Recommended: routing labels
 services:
   web:
@@ -367,7 +367,7 @@ services:
 
 Setting `deploy.replicas` to `0` pauses a service without removing it from the stack. Its status in ZaneOps becomes `SLEEPING`. Set it back to any positive number to resume.
 
-```yaml
+```yaml title="docker-compose.yml"
 services:
   worker:
     image: myapp/worker:latest
@@ -383,7 +383,7 @@ This is useful for temporarily disabling background workers or non-critical serv
 
 Relative path bind mounts are **not supported** and will fail validation:
 
-```yaml
+```yaml title="docker-compose.yml"
 # ❌ Will fail
 volumes:
   - ./config:/etc/app/config
@@ -392,7 +392,7 @@ volumes:
 
 Use inline configs for configuration files, or absolute paths for host directories:
 
-```yaml
+```yaml title="docker-compose.yml"
 # ✅ Inline config
 services:
   web:
@@ -418,7 +418,7 @@ services:
 
 ZaneOps supports inline configs using the standard `content` key. What ZaneOps adds on top is `${VAR}` interpolation inside config content and automatic versioning on redeploy.
 
-```yaml
+```yaml title="docker-compose.yml"
 services:
   web:
     image: nginx:alpine
@@ -436,7 +436,7 @@ configs:
 
 Config content supports `${VAR}` interpolation from `x-zane-env`:
 
-```yaml
+```yaml title="docker-compose.yml"
 x-zane-env:
   DB_HOST: "{{ network_alias | 'postgres' }}"
 
@@ -444,6 +444,27 @@ configs:
   app_config:
     content: |
       { "db_host": "${DB_HOST}" }
+```
+
+A common use case is shipping database initialization scripts:
+
+```yaml title="docker-compose.yml"
+# docker-compose.yml
+services:
+  postgres:
+    image: postgres:16
+    configs:
+      - source: init_sql
+        target: /docker-entrypoint-initdb.d/init.sql
+
+configs:
+  init_sql:
+    content: |
+      CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+      CREATE TABLE users (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        email TEXT UNIQUE NOT NULL
+      );
 ```
 
 ### Automatic versioning
@@ -495,19 +516,19 @@ ZaneOps prefixes all service names with a stack-specific hash to prevent DNS col
 Because of this, **do not hardcode hashed names as hostnames**. Use one of these instead:
 
 - **Original service name**: works within the stack's default network:
-  ```yaml
+  ```yaml title="docker-compose.yml"
   environment:
     DB_HOST: postgres  # resolves in the stack default network
   ```
 
 - **`network_alias`**: works across services in the same environment:
-  ```yaml
+  ```yaml title="docker-compose.yml"
   x-zane-env:
     DB_HOST: "{{ network_alias | 'postgres' }}"  # e.g. my-stack-postgres
   ```
 
 - **`global_alias`**: for cross-stack or cross-environment references:
-  ```yaml
+  ```yaml title="docker-compose.yml"
   x-zane-env:
     DB_HOST: "{{ global_alias | 'postgres' }}"  # e.g. abc123_postgres
   ```
@@ -518,7 +539,7 @@ Because of this, **do not hardcode hashed names as hostnames**. Use one of these
 
 ZaneOps converts the dict form of `depends_on` to a list for Docker Swarm compatibility:
 
-```yaml
+```yaml title="docker-compose.yml"
 # ❌ Dict form: converted automatically
 depends_on:
   postgres:
@@ -533,74 +554,13 @@ The `condition` field is dropped. `depends_on` controls startup ordering only; i
 
 ---
 
-
-## Full Examples 
-
-### Grafana
-
-```yml title="docker-compose.yml"
-x-zane-env:
-  GRAFANA_DOMAIN: "{{ generate_domain }}"
-
-version: "3.8"
-services:
-  grafana:
-    image: grafana/grafana-enterprise:9.5.20
-    restart: unless-stopped
-    volumes:
-      - grafana-storage:/var/lib/grafana
-    deploy:
-      labels:
-        zane.http.routes.0.port: 3000
-        zane.http.routes.0.domain: ${GRAFANA_DOMAIN}
-volumes:
-  grafana-storage: 
-```
-
-
-### PostgresSQL
-
-```yml title="docker-compose.yml"
-version: "3.8"
-x-zane-env:
-  POSTGRES_PASSWORD: "{{ generate_password | 32 }}"
-  POSTGRES_USER: "{{ generate_slug }}"
-  POSTGRES_DB: "{{ generate_slug }}"
-  POSTGRES_VERSION: "18-alpine"
-  DB_HOST_ENV_NAME: "{{ network_alias | 'postgres' }}"
-  # DB url to use to access this DB on the outside
-  __DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DB_HOST_ENV_NAME}:5432/${POSTGRES_DB}?schema=public"
-
-services:
-  postgres:
-    image: docker.io/library/postgres:${POSTGRES_VERSION:-18-alpine}
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d $$POSTGRES_DB -U $$POSTGRES_USER"]
-      start_period: 20s
-      interval: 30s
-      retries: 5
-      timeout: 5s
-    volumes:
-      - database:/var/lib/postgresql
-    environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_DB: ${POSTGRES_DB}
-volumes:
-  database:
-    driver: local
-```
-
-
-
 ## Troubleshooting
 
 ### Template expression not evaluated
 
 Template expressions only work inside `x-zane-env`:
 
-```yaml
+```yaml title="docker-compose.yml"
 # ❌ Not evaluated
 services:
   app:
@@ -625,7 +585,7 @@ services:
 
 Don't use the hashed service name (`abc123_postgres`) as a hostname; it's an implementation detail. Use the original service name (works in the stack default network) or `network_alias` (works across the environment):
 
-```yaml
+```yaml title="docker-compose.yml"
 x-zane-env:
   DB_HOST: "{{ network_alias | 'postgres' }}"
 ```
@@ -641,3 +601,50 @@ ZaneOps only creates a new config version when the `content` changes. If the con
 ### `generate_password` invalid length error
 
 Length must be an even number ≥ 8 (e.g. 8, 10, 12, 16, 32, 64).
+
+
+---
+
+## Complete example
+
+PostgreSQL stack using generated credentials, a network alias, and an exposed connection URL:
+
+```yml title="docker-compose.yml"
+version: "3.8"
+x-zane-env:
+  # Generated once on first deploy and persisted
+  POSTGRES_PASSWORD: "{{ generate_password | 32 }}"
+  POSTGRES_USER: "{{ generate_slug }}"
+  POSTGRES_DB: "{{ generate_slug }}"
+
+  POSTGRES_VERSION: "18-alpine"
+
+  # Stable hostname for other services in the same environment to connect to
+  DB_HOST_ENV_NAME: "{{ network_alias | 'postgres' }}"
+
+  # Exposed in the UI so external services can copy the full connection string
+  __DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DB_HOST_ENV_NAME}:5432/${POSTGRES_DB}?schema=public"
+
+services:
+  postgres:
+    image: docker.io/library/postgres:${POSTGRES_VERSION:-18-alpine}
+    restart: unless-stopped
+    healthcheck:
+      # $$ escapes the $ so it's passed literally to the shell instead of being expanded by ZaneOps
+      test: ["CMD-SHELL", "pg_isready -d $$POSTGRES_DB -U $$POSTGRES_USER"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 5s
+    volumes:
+      - database:/var/lib/postgresql
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+volumes:
+  database:
+    driver: local
+```
+
+
