@@ -73,35 +73,95 @@ If you encounter an issue, please verify the template works on [Dokploy](https:/
 </Steps>
 
 
+### Dokploy Template Migration
 
-### How Dokploy templates are processed
+ZaneOps includes an adapter to import templates from Dokploy. If you have existing Dokploy templates, here's how to migrate them.
 
-<Steps>
-1. **Decode**: the base64 JSON is decoded into a compose YAML and a TOML config (or used as-is if provided separately)
-2. **Placeholder substitution**: Dokploy placeholders (e.g. `${domain}`, `${password:32}`) are replaced with their equivalent ZaneOps template expressions (see [Placeholder mapping](#placeholder-mapping) below)
-3. **Domain conversion**: each `[[config.domains]]` entry in the TOML config is converted to ZaneOps routing labels on the matching service
-4. **Mount conversion**: each `[[config.mounts]]` entry is converted to an inline Docker config. If no matching mount is found for a `../files/` volume path, the path is converted to a named volume instead
-5. **Standard processing**: the resulting compose file goes through the same pipeline as any other ZaneOps compose file: template expressions are evaluated, service names are hashed, networks are injected, and the stack is deployed
-</Steps>
+#### Dokploy Template Format
 
-#### Placeholder mapping
+Dokploy templates are base64-encoded JSON containing:
+- **compose**: Docker Compose YAML with placeholders
+- **config**: TOML with variables, domains, env, and file mounts
 
-| Dokploy placeholder | ZaneOps expression |
+Example Dokploy template structure (base64):
+
+```
+eyJjb21wb3NlIjogInNlcnZpY2VzOlxuICB3ZWI6XG4gICAgaW1hZ2U6IG5naW54XG4gICAgZW52aXJvbm1lbnQ6XG4gICAgICBQQVNTV09SRDogJHtQQVNTV09SRH1cbiIsICJjb25maWciOiAiW3ZhcmlhYmxlc11cbnBhc3N3b3JkID0gXCIke3Bhc3N3b3JkOjMyfVwiXG5cbltjb25maWcuZW52XVxuUEFTU1dPUkQ9JHtwYXNzd29yZH1cblxuW1tjb25maWcuZG9tYWluc11dXG5zZXJ2aWNlTmFtZSA9IFwid2ViXCJcbmhvc3QgPSBcImV4YW1wbGUuY29tXCJcbnBvcnQgPSA4MFxuIn0=
+```
+
+Which is the base64 encoding of this JSON:
+
+```json
+{
+  "compose": "services:\n  web:\n    image: nginx\n    environment:\n      PASSWORD: ${PASSWORD}\n",
+  "config": "[variables]\npassword = \"${password:32}\"\n\n[config.env]\nPASSWORD=${password}\n\n[[config.domains]]\nserviceName = \"web\"\nhost = \"example.com\"\nport = 80\n"
+}
+```
+
+Which decodes to:
+
+```yaml title="compose.yaml"
+services:
+  web:
+    image: nginx
+    environment:
+      PASSWORD: ${PASSWORD}
+```
+
+```toml title="template.toml"
+[variables]
+password = "${password:32}"
+
+[config.env]
+PASSWORD=${password}
+
+[[config.domains]]
+serviceName = "web"
+host = "example.com"
+port = 80
+```
+
+---
+
+#### Placeholder Mapping
+
+Dokploy placeholders are automatically converted to ZaneOps template expressions:
+
+| Dokploy Placeholder | ZaneOps Expression |
 | --- | --- |
 | `${domain}` | `{{ generate_domain }}` |
 | `${email}` | `{{ generate_email }}` |
 | `${username}` | `{{ generate_username }}` |
 | `${uuid}` | `{{ generate_uuid }}` |
-| `${password}` | `{{ generate_password \| 32 }}` |
-| `${password:16}` | `{{ generate_password \| 16 }}` |
+| `${password}`, `${hash}`, `${jwt}` | `{{ generate_password \| 32 }}` |
+| `${password:N}`, `${hash:N}`, `${jwt:N}` | `{{ generate_password \| N }}` |
 | `${base64}` | `{{ generate_base64 \| 32 }}` |
-| `${base64:16}` | `{{ generate_base64 \| 16 }}` |
-| `${hash}` / `${jwt}` | `{{ generate_password \| 32 }}` |
+| `${base64:N}` | `{{ generate_base64 \| N }}` |
 
-#### Example migration
+---
 
-**Dokploy compose**:
+#### Conversion Process
+
+
+
+<Steps>
+1. **Decode**: the base64 JSON is decoded into a compose YAML and a TOML config (or used as-is if provided separately)
+2. **Placeholder substitution**: Dokploy placeholders (e.g. `${domain}`, `${password:32}`) are replaced with their equivalent ZaneOps template expressions (see [Placeholder mapping](#placeholder-mapping) below)
+3. **Process variables**: Extract `[variables]` and `[[config.env]]` section into `x-zane-env`
+3. **Domain conversion**: each `[[config.domains]]` entry in the TOML config is converted to ZaneOps routing labels on the matching service
+4. **Mount conversion**: each `[[config.mounts]]` entry is converted to an inline Docker config. If no matching mount is found for a `../files/` volume path, the path is converted to a named volume instead
+6. **Clean up**: Remove `ports`, `expose`, `restart`
+5. **Standard processing**: the resulting compose file goes through the same pipeline as any other ZaneOps compose file: template expressions are evaluated, service names are hashed, networks are injected, and the stack is deployed
+</Steps>
+
+
+---
+
+#### Example Migration
+
+**Dokploy template content**:
 ```yaml
+# compose.yaml
 services:
   web:
     image: nginx:alpine
@@ -109,20 +169,26 @@ services:
       - "8080:80"
     environment:
       DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
     volumes:
       - ../files/nginx.conf:/etc/nginx/nginx.conf
 ```
 
-**Dokploy config.toml**:
-```toml
+```toml 
+# template.toml
 [variables]
 main_domain = "${domain}"
 db_password = "${password:32}"
+admin_email = "${email}"
 
 [[config.domains]]
 serviceName = "web"
 host = "${main_domain}"
 port = 8080
+
+[[config.env]]
+DB_PASSWORD = "${db_password}"
+ADMIN_EMAIL = "${admin_email}"
 
 [[config.mounts]]
 filePath = "nginx.conf"
@@ -133,18 +199,22 @@ server {
 """
 ```
 
-**Resulting ZaneOps compose**:
-```yaml
+**Resulting ZaneOps compose.yaml**:
+```yaml 
+# docker-compose.yml
 x-zane-env:
   main_domain: "{{ generate_domain }}"
   db_password: "{{ generate_password | 32 }}"
+  admin_email: "{{ generate_email }}"
   DB_PASSWORD: ${db_password}
+  ADMIN_EMAIL: ${admin_email}
 
 services:
   web:
     image: nginx:alpine
     environment:
       DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
     configs:
       - source: nginx.conf
         target: /etc/nginx/nginx.conf
@@ -163,5 +233,167 @@ configs:
       }
 ```
 
-The `../files/` volume paths used in Dokploy are converted to Docker configs. If no matching mount exists, the path is converted to a named volume instead.
+---
 
+#### Mount Processing
+
+Dokploy uses `../files/` prefix for file mounts. The adapter converts these to Docker configs.
+
+**Case 1: Directory mount**
+
+**Dokploy:**
+```yaml
+# compose.yml
+# ... rest of the file
+volumes:
+  - ../files/clickhouse_config:/etc/clickhouse-server/config.d
+
+```
+
+```toml 
+# template.toml
+[[config.mounts]]
+filePath = "clickhouse_config/logging_rules.xml"
+content = "..."
+
+[[config.mounts]]
+filePath = "clickhouse_config/network.xml"
+content = "..."
+```
+
+**ZaneOps result:**
+```yaml
+# ... rest of the file
+# docker-compose.yml
+configs:
+  - source: logging_rules.xml
+    target: /etc/clickhouse-server/config.d/logging_rules.xml
+  - source: network.xml
+    target: /etc/clickhouse-server/config.d/network.xml
+
+configs:
+  logging_rules.xml:
+    content: "..."
+  network.xml:
+    content: "..."
+```
+
+---
+
+**Case 2: File mount**
+
+**Dokploy:**
+```yaml
+# ... rest of the file
+# compose.yml
+volumes:
+  - ../files/nginx.conf:/etc/nginx/nginx.conf:ro
+```
+
+```toml
+# template.toml
+[[config.mounts]]
+filePath = "nginx.conf"
+content = "..."
+```
+
+**ZaneOps result:**
+```yaml
+# ... rest of the file
+# docker-compose.yml
+configs:
+  - source: nginx.conf
+    target: /etc/nginx/nginx.conf
+
+configs:
+  nginx.conf:
+    content: "..."
+```
+
+---
+
+**Case 3: Non-existent path (becomes volume)**
+
+**Dokploy:**
+```yaml
+# ... rest of the file
+# compose.yml
+volumes:
+  - ../files/data:/app/data
+```
+
+If no matching mount exists → converted to named volume:
+```yaml
+# ... rest of the file
+# docker-compose.yml
+volumes:
+  - data:/app/data
+
+volumes:
+  data:
+```
+
+#### Ports processing
+
+`ports` entries are removed and replaced with ZaneOps routing labels derived from the `[[config.domains]]` entries in the TOML config.
+
+**Dokploy:**
+```yaml
+# compose.yml
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+```
+
+```toml
+# template.toml
+[variables]
+main_domain = ${domain}
+
+[[config.domains]]
+serviceName = "web"
+host = "${main_domain}"
+port = 8080
+```
+
+**ZaneOps result:**
+```yaml
+# docker-compose.yml
+x-zane-env:
+  main_domain: '{{ generate_domain }}'
+
+services:
+  web:
+    image: nginx:alpine
+    deploy:
+      labels:
+        zane.http.routes.0.domain: "${main_domain}"
+        zane.http.routes.0.port: "8080"
+```
+
+#### `depends_on`
+
+The dict form of `depends_on` (used in Dokploy templates) is converted to a plain list, since Docker Swarm only supports the list form.
+
+**Dokploy:**
+```yaml 
+# compose.yml
+depends_on:
+  postgres:
+    condition: service_healthy
+
+# ZaneOps result
+depends_on:
+  - postgres
+```
+
+**ZaneOps result:**
+```yaml 
+# docker-compose.yml
+depends_on:
+  - postgres
+```
+
+The `condition` field is dropped. See [`depends_on`](./02-compose-file-reference#depends_on) in the compose file reference for details.
