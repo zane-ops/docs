@@ -14,18 +14,20 @@ import { ASSETS_SERVER_DOMAIN } from "astro:env/client"
 ZaneOps v1.13 is here with some big additions: [Docker Compose support](/knowledge-base/docker-compose), [templates](/knowledge-base/docker-compose/01-templates), shared volumes, build registries, and more.
 
 
+
+<Aside type="caution" title='Before updating'>
+This version includes changes to the Docker stack. Make sure to re-download the `Makefile` and rerun the `setup` script before deploying.
+</Aside>
+
 **To install:**
 
 ```shell
 # assuming you are at /var/www/zaneops
 curl https://cdn.zaneops.dev/makefile > Makefile
 make setup
+make stop # stop the services
 make deploy
 ```
-
-<Aside type="caution" title='Before updating'>
-This version includes changes to the Docker stack. Make sure to re-download the `Makefile` and rerun the `setup` script before deploying.
-</Aside>
 
 ### ZaneOps Cloud ☁️ waitlist
 
