@@ -262,7 +262,7 @@ x-zane-env:
   __DATABASE_URL: "postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:5432/${DB_NAME}"
 ```
 
-The `__DATABASE_URL` variable won't be injected into any service automatically — it's purely for surfacing the resolved value in the UI so you can copy it into another service's environment variables.
+The `__DATABASE_URL` variable won't be injected into any service automatically. It exists purely to surface the resolved value in the UI so you can copy it into another service's environment variables.
 
 <Aside type='note'>
 The `__` prefix is part of the variable name. If you do reference it inside the stack, use `${__DATABASE_URL}` (double underscore included).
@@ -460,7 +460,7 @@ Docker configs are immutable, so ZaneOps appends a version suffix to every confi
 | 3rd deploy | **Yes** | `nginx_config_v2` (new) | not used anymore |
 
 <Aside type='note' title='Version increment'>
-The version is **only incremented when the content actually changes**. Redeploying with identical config content reuses the existing version — no new config is created.
+The version is **only incremented when the content actually changes**. Redeploying with identical config content reuses the existing version and no new config is created.
 </Aside>
 
 

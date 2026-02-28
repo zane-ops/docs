@@ -77,9 +77,11 @@ If you encounter an issue, please verify the template works on [Dokploy](https:/
 ### How Dokploy templates are processed
 
 <Steps>
-1. todo...
-2. todo...
-3. todo...
+1. **Decode**: the base64 JSON is decoded into a compose YAML and a TOML config (or used as-is if provided separately)
+2. **Placeholder substitution**: Dokploy placeholders (e.g. `${domain}`, `${password:32}`) are replaced with their equivalent ZaneOps template expressions (see [Placeholder mapping](#placeholder-mapping) below)
+3. **Domain conversion**: each `[[config.domains]]` entry in the TOML config is converted to ZaneOps routing labels on the matching service
+4. **Mount conversion**: each `[[config.mounts]]` entry is converted to an inline Docker config. If no matching mount is found for a `../files/` volume path, the path is converted to a named volume instead
+5. **Standard processing**: the resulting compose file goes through the same pipeline as any other ZaneOps compose file: template expressions are evaluated, service names are hashed, networks are injected, and the stack is deployed
 </Steps>
 
 #### Placeholder mapping
@@ -92,7 +94,9 @@ If you encounter an issue, please verify the template works on [Dokploy](https:/
 | `${uuid}` | `{{ generate_uuid }}` |
 | `${password}` | `{{ generate_password \| 32 }}` |
 | `${password:16}` | `{{ generate_password \| 16 }}` |
-| `${base64}` / `${hash}` / `${jwt}` | `{{ generate_password \| 32 }}` |
+| `${base64}` | `{{ generate_base64 \| 32 }}` |
+| `${base64:16}` | `{{ generate_base64 \| 16 }}` |
+| `${hash}` / `${jwt}` | `{{ generate_password \| 32 }}` |
 
 #### Example migration
 
