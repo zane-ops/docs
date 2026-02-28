@@ -8,6 +8,7 @@ import {
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
   ArrowRightIcon,
+  ArrowUpRightIcon,
   CheckIcon,
   ChevronRightIcon,
   ChevronUpIcon,
@@ -107,7 +108,7 @@ export function TemplateSearch() {
       id="header"
       className="py-12 md:pt-24 gap-8 flex flex-col items-center"
     >
-      <h1 className="text-center">All our docker-compose templates</h1>
+      <h1 className="text-center">Ready-to-deploy templates</h1>
 
       <div className="flex flex-col w-full gap-2">
         <form className="w-full flex items-center gap-4">
@@ -159,6 +160,25 @@ export function TemplateSearch() {
                 />
               </li>
             ))}
+            {hits.length === 0 && (
+              <div className="col-span-full my-10 flex flex-col items-center justify-center">
+                <h2 className="text-2xl font-medium">
+                  No templates match the search criteria
+                </h2>
+                <h2 className="text-lg text-gray-400 font-normal">
+                  Can't find what you're looking for? Suggest a template!
+                </h2>
+
+                <a
+                  href="https://github.com/zane-ops/templates/issues/new?template=new-template.md"
+                  target="_blank"
+                  className="inline-flex items-center gap-1.5 my-3 text-link underline"
+                >
+                  Submit a suggestion{" "}
+                  <ArrowUpRightIcon className="size-4 flex-none" />
+                </a>
+              </div>
+            )}
           </ul>
           {totalPages > 1 && (
             <Pagination
@@ -270,7 +290,7 @@ function TagsListForm({ selectedTags, onTagSelectChange }: TagsListFormProps) {
           </li>
         ))}
       </ul>
-      {!tagSearch.trim() && (
+      {tags.length > 10 && !tagSearch.trim() && (
         <Button
           className="px-2 py-1 gap-1 rounded-full bg-(--sl-color-accent)! text-(--sl-color-black)"
           type="button"
