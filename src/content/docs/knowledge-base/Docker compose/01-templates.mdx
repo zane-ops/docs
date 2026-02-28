@@ -375,25 +375,197 @@ services:
 
 #### `depends_on`
 
-The dict form of `depends_on` (used in Dokploy templates) is converted to a plain list, since Docker Swarm only supports the list form.
+The dict form of `depends_on` is converted to a plain list, since Docker Swarm only supports the list form. All `condition` values are dropped.
 
 **Dokploy:**
-```yaml 
+```yaml
 # compose.yml
 depends_on:
-  postgres:
+  rybbit_clickhouse:
     condition: service_healthy
-
-# ZaneOps result
-depends_on:
-  - postgres
+  rybbit_postgres:
+    condition: service_started
 ```
 
 **ZaneOps result:**
-```yaml 
+```yaml
 # docker-compose.yml
 depends_on:
-  - postgres
+  - rybbit_clickhouse
+  - rybbit_postgres
 ```
 
-The `condition` field is dropped. See [`depends_on`](./02-compose-file-reference#depends_on) in the compose file reference for details.
+---
+
+#### Self-referencing variables in `config.env`
+
+If a `config.env` entry references itself (e.g. `KEY = "${KEY}"`), the adapter ignores it and keeps the original template expression from `[variables]` instead. Cross-references and new values are kept as-is.
+
+**Dokploy:**
+```toml
+# template.toml
+[variables]
+KENER_SECRET_KEY = "${password:64}"
+DB_PASSWORD = "${password:32}"
+MYSQL_PASSWORD = "${password:32}"
+
+[config.env]
+KENER_SECRET_KEY = "${KENER_SECRET_KEY}"  # self-reference — ignored
+MYSQL_PASSWORD = "${MYSQL_PASSWORD}"       # self-reference — ignored
+POSTGRES_PASSWORD = "${DB_PASSWORD}"       # cross-reference — kept
+TZ = "Etc/UTC"                             # new value — added
+```
+
+**ZaneOps result:**
+```yaml
+# docker-compose.yml
+x-zane-env:
+  KENER_SECRET_KEY: "{{ generate_password | 64 }}"
+  DB_PASSWORD: "{{ generate_password | 32 }}"
+  MYSQL_PASSWORD: "{{ generate_password | 32 }}"
+  POSTGRES_PASSWORD: "${DB_PASSWORD}"
+  TZ: "Etc/UTC"
+```
+
+---
+
+#### Static variables in `config.variables`
+
+Variables without Dokploy placeholders in `[variables]` are kept as literal values.
+
+**Dokploy:**
+```toml
+# template.toml
+[variables]
+pg_user = "authentik"
+pg_db = "authentik"
+
+[config.env]
+PG_USER = "${pg_user}"
+PG_DB = "${pg_db}"
+PG_PASS = "${password:32}"
+```
+
+**ZaneOps result:**
+```yaml
+# docker-compose.yml
+x-zane-env:
+  pg_user: "authentik"
+  pg_db: "authentik"
+  PG_USER: "${pg_user}"
+  PG_DB: "${pg_db}"
+  PG_PASS: "{{ generate_password | 32 }}"
+```
+
+---
+
+#### Empty environment variable entries
+
+Environment entries without a value (list-style passthrough) are replaced with `${KEY}` if that key exists in `x-zane-env`. Entries with no matching key are dropped.
+
+**Dokploy:**
+```yaml
+# compose.yml
+services:
+  docmost:
+    environment:
+      - APP_URL        # resolved from config.env
+      - APP_SECRET     # resolved from config.env
+      - APP_WHATEVER   # not in config.env — dropped
+      - DATABASE_URL=postgresql://...  # has value — kept as-is
+```
+
+```toml
+# template.toml
+[config.env]
+APP_URL = "http://${main_domain}:3000"
+APP_SECRET = "${app_secret}"
+```
+
+**ZaneOps result:**
+```yaml
+# docker-compose.yml
+x-zane-env:
+  APP_URL: "http://${main_domain}:3000"
+  APP_SECRET: "${app_secret}"
+
+services:
+  docmost:
+    environment:
+      APP_URL: "${APP_URL}"
+      APP_SECRET: "${APP_SECRET}"
+      DATABASE_URL: "postgresql://..."
+```
+
+---
+
+#### Variable references without curly braces
+
+`$VAR` (no braces) is normalized to `${VAR}`. `$$VAR` (shell escape) is preserved unchanged.
+
+**Dokploy:**
+```yaml
+# compose.yml
+services:
+  wordpress:
+    environment:
+      WORDPRESS_DB_NAME: $DB_NAME
+      WORDPRESS_DEBUG: ${WORDPRESS_DEBUG:-0}
+  wp_db:
+    healthcheck:
+      test: ["CMD-SHELL", "exit | mysql -u root -p$$MYSQL_ROOT_PASSWORD"]
+```
+
+**ZaneOps result:**
+```yaml
+# docker-compose.yml
+services:
+  wordpress:
+    environment:
+      WORDPRESS_DB_NAME: "${DB_NAME}"
+      WORDPRESS_DEBUG: "${WORDPRESS_DEBUG:-0}"
+  wp_db:
+    healthcheck:
+      test: ["CMD-SHELL", "exit | mysql -u root -p$$MYSQL_ROOT_PASSWORD"]
+```
+
+---
+
+#### `env_file` replacement
+
+`env_file` references are removed and replaced with inline `environment` entries from `config.env`.
+
+**Dokploy:**
+```yaml
+# compose.yml
+services:
+  plausible:
+    image: ghcr.io/plausible/community-edition:v2.1.5
+    env_file:
+      - .env
+```
+
+```toml
+# template.toml
+[config.env]
+BASE_URL = "http://${main_domain}"
+SECRET_KEY_BASE = "${secret_base}"
+TOTP_VAULT_KEY = "${totp_key}"
+```
+
+**ZaneOps result:**
+```yaml
+# docker-compose.yml
+x-zane-env:
+  main_domain: "{{ generate_domain }}"
+  secret_base: "{{ generate_password | 64 }}"
+  totp_key: "{{ generate_password | 32 }}"
+
+services:
+  plausible:
+    image: ghcr.io/plausible/community-edition:v2.1.5
+    environment:
+      BASE_URL: "http://${main_domain}"
+      SECRET_KEY_BASE: "${secret_base}"
+      TOTP_VAULT_KEY: "${totp_key}"
+```
