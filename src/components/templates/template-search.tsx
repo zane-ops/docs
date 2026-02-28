@@ -12,6 +12,7 @@ import {
   CheckIcon,
   ChevronRightIcon,
   ChevronUpIcon,
+  LoaderIcon,
   SearchIcon
 } from "lucide-react";
 import {
@@ -160,9 +161,9 @@ export function TemplateSearch() {
                 />
               </li>
             ))}
-            {hits.length === 0 && (
+            {hits.length === 0 && !templatesQuery.isLoading && (
               <div className="col-span-full my-10 flex flex-col items-center justify-center">
-                <h2 className="text-2xl font-medium">
+                <h2 className="text-2xl font-semibold">
                   No templates match the search criteria
                 </h2>
                 <h2 className="text-lg text-gray-400 font-normal">
@@ -177,6 +178,14 @@ export function TemplateSearch() {
                   Submit a suggestion{" "}
                   <ArrowUpRightIcon className="size-4 flex-none" />
                 </a>
+              </div>
+            )}
+            {templatesQuery.isLoading && (
+              <div className="col-span-full my-20 flex items-center justify-center">
+                <h2 className="text-2xl font-semibold flex items-center gap-2">
+                  Loading{" "}
+                  <LoaderIcon className="size-5 text-gray-400 animate-spin" />
+                </h2>
               </div>
             )}
           </ul>
