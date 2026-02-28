@@ -1,152 +1,149 @@
 ---
 import { Icon, LinkButton } from "@astrojs/starlight/components";
 import {
-  CloudUpload,
-  FileText,
-  Github,
-  Heart,
-  KeyRound,
-  Network,
-  Palette,
-  Plus,
-  Server,
-  ShieldCheck,
-  Users,
-  Webhook
+	CloudUpload,
+	FileText,
+	Github,
+	Heart,
+	KeyRound,
+	Network,
+	Palette,
+	Plus,
+	Server,
+	ShieldCheck,
+	Users,
+	Webhook,
 } from "@lucide/astro";
 import Logo from "../assets/Logo.svg";
 import WaitlistForm from "./WaitlistForm.astro";
 
 type Feature = {
-  icon: any;
-  title: string;
-  description: string;
+	icon: any;
+	title: string;
+	description: string;
 };
 
 const features: Feature[] = [
-  {
-    icon: Users,
-    title: "Multi-tenancy",
-    description:
-      "Organize projects with custom permissions for teams, groups, and workspaces"
-  },
-  {
-    icon: KeyRound,
-    title: "OIDC Authentication",
-    description: "Enterprise-grade authentication with OpenID Connect support"
-  },
-  {
-    icon: Github,
-    title: "Social Authentication",
-    description:
-      "Login with Google, Github, and other providers for both dashboard and service access"
-  },
-  {
-    icon: ShieldCheck,
-    title: "Advanced Service Auth",
-    description:
-      "Protect services using social providers like GitHub and GitLab"
-  },
-  {
-    icon: Palette,
-    title: "Custom Branding",
-    description: "Customize authentication pages with your brand identity"
-  },
-  {
-    icon: FileText,
-    title: "Audit Logs",
-    description:
-      "Track all activity: logins, deployments, service changes, and more"
-  },
-  {
-    icon: Server,
-    title: "Multi-Server Cluster",
-    description:
-      "Deploy across multiple servers for high availability and failover"
-  },
-  {
-    icon: Webhook,
-    title: "Pre/Post Webhooks",
-    description:
-      "Execute custom logic before and after deployments with webhooks"
-  },
-  {
-    icon: Plus,
-    title: "And much more...",
-    description: "More features incoming for the cloud version"
-  }
+	{
+		icon: Users,
+		title: "Multi-tenancy",
+		description:
+			"Organize projects with custom permissions for teams, groups, and workspaces",
+	},
+	{
+		icon: KeyRound,
+		title: "OIDC Authentication",
+		description:
+			"Enterprise-grade authentication with OpenID Connect support",
+	},
+	{
+		icon: Github,
+		title: "Social Authentication",
+		description:
+			"Login with Google, Github, and other providers for both dashboard and service access",
+	},
+	{
+		icon: ShieldCheck,
+		title: "Advanced Service Auth",
+		description:
+			"Protect services using social providers like GitHub and GitLab",
+	},
+	{
+		icon: Palette,
+		title: "Custom Branding",
+		description: "Customize authentication pages with your brand identity",
+	},
+	{
+		icon: FileText,
+		title: "Audit Logs",
+		description:
+			"Track all activity: logins, deployments, service changes, and more",
+	},
+	{
+		icon: Server,
+		title: "Multi-Server Cluster",
+		description:
+			"Deploy across multiple servers for high availability and failover",
+	},
+	{
+		icon: Webhook,
+		title: "Pre/Post Webhooks",
+		description:
+			"Execute custom logic before and after deployments with webhooks",
+	},
+	{
+		icon: Plus,
+		title: "And much more...",
+		description: "More features incoming for the cloud version",
+	},
 ];
 
 type SponsorTier = {
-  price: string;
-  features: string[];
-  highlight?: boolean;
+	price: string;
+	features: string[];
+	highlight?: boolean;
 };
 
 const sponsorTiers: SponsorTier[] = [
-  {
-    price: "$5/month",
-    features: ["Sponsor badge", "Early alpha access"]
-  },
-  {
-    price: "$25/month",
-    features: [
-      "Everything in $5",
-      "Priority bug fixes",
-      "Early access to features"
-    ],
-    highlight: true
-  },
-  {
-    price: "$100/month",
-    features: [
-      "Everything in $25",
-      "Company logo on README",
-      "Private support channel"
-    ]
-  }
+	{
+		price: "$5/month",
+		features: ["Sponsor badge", "Early alpha access"],
+	},
+	{
+		price: "$25/month",
+		features: [
+			"Everything in $5",
+			"Priority bug fixes",
+			"Early access to features",
+		],
+		highlight: true,
+	},
+	{
+		price: "$100/month",
+		features: [
+			"Everything in $25",
+			"Company logo on README",
+			"Private support channel",
+		],
+	},
 ];
 
 type FAQ = {
-  question: string;
-  answer: string;
+	question: string;
+	answer: string;
 };
 
 const faqs: FAQ[] = [
-  {
-    question: "How is ZaneOps Cloud different from other PaaS?",
-    answer:
-      "Your servers, your data. We host the control panel with enterprise features, you host your applications on your own infrastructure. This gives you the benefits of a managed platform without the lock-in or loss of control."
-  },
-  {
-    question: "When will cloud access be available?",
-    answer:
-      "We're working toward an alpha release. Join the waitlist to be notified when access becomes available. Sponsors get priority access."
-  },
-  {
-    question: "What about self-hosted ZaneOps?",
-    answer:
-      "Self-hosted ZaneOps remains 100% free and open source. Cloud offers additional enterprise features like multi-tenancy, OIDC auth, audit logs, and more on a managed control panel."
-  },
-  {
-    question: "How does sponsorship work?",
-    answer:
-      "Sponsors get priority access to the cloud platform, priority bug fixes, and early access to new features. See our GitHub Sponsors page for details and to become a sponsor."
-  }
+	{
+		question: "How is ZaneOps Cloud different from other PaaS?",
+		answer: "Your servers, your data. We host the control panel with enterprise features, you host your applications on your own infrastructure. This gives you the benefits of a managed platform without the lock-in or loss of control.",
+	},
+	{
+		question: "When will cloud access be available?",
+		answer: "We're working toward an alpha release. Join the waitlist to be notified when access becomes available. Sponsors get priority access.",
+	},
+	{
+		question: "What about self-hosted ZaneOps?",
+		answer: "Self-hosted ZaneOps remains 100% free and open source. Cloud offers additional enterprise features like multi-tenancy, OIDC auth, audit logs, and more on a managed control panel.",
+	},
+	{
+		question: "How does sponsorship work?",
+		answer: "Sponsors get priority access to the cloud platform, priority bug fixes, and early access to new features. See our GitHub Sponsors page for details and to become a sponsor.",
+	},
 ];
 ---
 
 <section
 	id="hero"
-	class="py-12 md:pt-24 grid grid-cols-1  md:grid-cols-3 gap-8 items-center"
+	class="py-12 md:pt-24 grid grid-cols-1 md:grid-cols-3 gap-8 items-center"
 >
 	<div
 		class="md:col-span-2 flex flex-col gap-4 items-center text-center md:text-start md:items-start"
 	>
 		<h1 class="text-4xl md:text-5xl lg:text-6xl text-pretty">
-			ZaneOps Cloud 
+			ZaneOps Cloud
 		</h1>
-		<p >
+		<p>
 			Deploy with confidence using enterprise-grade features while keeping
 			control of your data and servers.
 		</p>
@@ -155,7 +152,11 @@ const faqs: FAQ[] = [
 				Join the Waitlist
 				<Icon name="right-arrow" />
 			</LinkButton>
-			<LinkButton variant="minimal" href="#sponsor" class:list={['hover:underline']}>
+			<LinkButton
+				variant="minimal"
+				href="#sponsor"
+				class:list={["hover:underline"]}
+			>
 				Become a Sponsor
 				<Heart class="size-4 fill-rose-500 text-rose-500" />
 			</LinkButton>
@@ -219,11 +220,7 @@ const faqs: FAQ[] = [
 			</p>
 		</div>
 
-		<div
-			class:list={[
-				"grid sm:grid-cols-2 md:grid-cols-3 gap-6",
-			]}
-		>
+		<div class:list={["grid sm:grid-cols-2 md:grid-cols-3 gap-6"]}>
 			{
 				features.map((feature) => (
 					<div class="flex flex-col gap-3 p-6 border  border-border rounded-lg bg-(--sl-color-bg-nav) dark:bg-[var(--sl-color-gray-6)] ">
@@ -247,9 +244,7 @@ const faqs: FAQ[] = [
 		</div>
 
 		<div class="max-w-2xl mx-auto w-full">
-			<div
-				class="p-6 md:p-8 "
-			>
+			<div class="p-6 md:p-8">
 				<WaitlistForm />
 			</div>
 		</div>
@@ -266,7 +261,9 @@ const faqs: FAQ[] = [
 		<div class="flex flex-col gap-8">
 			<div class="max-w-3xl">
 				<h3 class="text-xl font-medium mb-4">Sponsor benefits</h3>
-				<ul class="inline-grid md:grid-cols-2 gap-x-1 gap-y-3 text-left pl-0">
+				<ul
+					class="inline-grid md:grid-cols-2 gap-x-1 gap-y-3 text-left pl-0"
+				>
 					<li class="flex items-start gap-2">
 						<Icon
 							name="approve-check"
@@ -304,8 +301,8 @@ const faqs: FAQ[] = [
 						<div
 							class:list={[
 								"border-l-2 rounded-r-md border-[var(--sl-color-accent)] bg-(--sl-color-bg-nav) dark:bg-(--sl-color-bg-nav)/60 px-4 p-6 flex flex-col gap-4 ",
-								tier.highlight
-									&& "!bg-[var(--sl-color-accent)]/5"
+								tier.highlight &&
+									"!bg-[var(--sl-color-accent)]/5",
 							]}
 						>
 							<div>
@@ -335,7 +332,7 @@ const faqs: FAQ[] = [
 			<div class="text-center">
 				<LinkButton
 					variant="primary"
-					href="https://github.com/sponsors/fredkiss3"
+					href="https://github.com/sponsors/zane-ops"
 				>
 					Become a Sponsor
 					<Heart class="size-4 text-rose-500 fill-rose-500" />
@@ -372,47 +369,47 @@ const faqs: FAQ[] = [
 			</p>
 		</div>
 
-		<div class=" flex flex-col md:flex-row gap-8">
+		<div class="flex flex-col md:flex-row gap-8">
 			<div class="flex-1 flex flex-col gap-4 items-center text-center">
-			<h3 class="text-2xl font-medium">Join the waitlist</h3>
-			<p class="text-sm text-pretty max-w-80">
-				Get notified when ZaneOps Cloud launches and be among the first
-				to try it
-			</p>
-			<LinkButton variant="primary" href="#waitlist">
-				Sign Up Now
-				<Icon name="right-arrow" />
-			</LinkButton>
-		</div>
+				<h3 class="text-2xl font-medium">Join the waitlist</h3>
+				<p class="text-sm text-pretty max-w-80">
+					Get notified when ZaneOps Cloud launches and be among the
+					first to try it
+				</p>
+				<LinkButton variant="primary" href="#waitlist">
+					Sign Up Now
+					<Icon name="right-arrow" />
+				</LinkButton>
+			</div>
 
-		<div
-			class="hidden md:block w-px bg-border flex-none"
-			aria-hidden="true"
-		>
-		</div>
-		<div class="block md:hidden h-px bg-border" aria-hidden="true"></div>
-
-		<div class="flex-1 flex flex-col gap-4 items-center text-center">
-			<h3 class="text-2xl font-medium">Become a sponsor</h3>
-			<p class="text-sm text-pretty max-w-80">
-				Get early access, priority support, and help shape the future of
-				ZaneOps
-			</p>
-			<LinkButton
-				variant="secondary"
-				href="https://github.com/sponsors/fredkiss3"
-				class:list={["border-neutral-400/60"]}
+			<div
+				class="hidden md:block w-px bg-border flex-none"
+				aria-hidden="true"
 			>
-				Sponsor Now
-				<Heart class="size-4 text-rose-500 fill-rose-500" />
-			</LinkButton>
-		</div>
+			</div>
+			<div class="block md:hidden h-px bg-border" aria-hidden="true">
+			</div>
+
+			<div class="flex-1 flex flex-col gap-4 items-center text-center">
+				<h3 class="text-2xl font-medium">Become a sponsor</h3>
+				<p class="text-sm text-pretty max-w-80">
+					Get early access, priority support, and help shape the
+					future of ZaneOps
+				</p>
+				<LinkButton
+					variant="secondary"
+					href="https://github.com/sponsors/zane-ops"
+					class:list={["border-neutral-400/60"]}
+				>
+					Sponsor Now
+					<Heart class="size-4 text-rose-500 fill-rose-500" />
+				</LinkButton>
+			</div>
 		</div>
 	</section>
 </div>
 
 <style is:global>
-
 	.sl-banner {
 		padding: 0.35rem;
 	}

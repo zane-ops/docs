@@ -1,0 +1,33 @@
+---
+import TemplateSearchPage from "~/components/templates/template-search";
+---
+
+<TemplateSearchPage client:idle />
+
+<style is:global>
+    .sl-container {
+        margin-inline: auto;
+    }
+    .hero {
+        display: none;
+    }
+    .sl-markdown-content {
+        margin-top: 0;
+    }
+    .sl-markdown-content
+        section
+        :not(a, strong, em, del, span, input, code, br)
+        + :not(
+            a,
+            strong,
+            em,
+            del,
+            span,
+            input,
+            code,
+            br,
+            :where(.not-content *)
+        ) {
+        margin-top: 0;
+    }
+</style>

@@ -1,0 +1,571 @@
+---
+title: Templates
+description: Learn how to deploy templates on ZaneOps
+---
+
+import {Steps, Aside} from '@astrojs/starlight/components';
+
+
+> Introduced in [**v1.13.0**](/changelog/v113)
+
+ZaneOps allows you to deploy [Docker Compose Stacks](../) from preexisting templates. 
+
+There are two kinds: 
+- Curated ZaneOps templates (Postgres, Redis, WordPress, and more) 
+- Dokploy templates (experimental)
+
+<Aside>
+All compose stacks are backed by a `docker-compose.yml` file. The templates only fill in the initial content of the `docker-compose.yml`.
+You can edit the compose file at any time after creation, regardless of how the stack was created.
+</Aside>
+
+
+## ZaneOps templates
+
+ZaneOps maintains a curated library of ready-to-deploy templates including Postgres, Redis, WordPress, Plausible, etc. **[Browse all templates ↗](/templates)**
+
+### How to deploy a ZaneOps template
+
+<Steps>
+1. In the ZaneOps dashboard go to your project and select **New > Compose Stack**
+    ![Select new compose stack](/images/new-compose-stack.png)
+2. Select **from ZaneOps template**
+    ![Create from ZaneOps](/images/create-from-zaneops-template.png)
+3. Search and select your template
+    ![Search for plausible template](/images/search-plausible-template.png)
+4. Review or modify the compose file, then click **Create** and **Deploy**
+    ![Deploy plausible](/images/deploy-plausible-template.png)
+5. Once deployed, explore your running services and follow any onboarding steps specific to the template
+    ![Plausible stack details](/images/plausible-template-stack-details.png)
+    ![Plausible onboarding](/images/plausible-template-onboarding.png)
+</Steps>
+
+## Dokploy templates (experimental)
+
+ZaneOps includes an adapter to import templates from Dokploy. 
+[Dokploy templates](https://templates.dokploy.com) are base64-encoded JSON containing a compose YAML and a TOML config.
+
+<Aside type='caution' title='Compatibility'>
+Not all Dokploy templates are compatible with ZaneOps. 
+Some may contain syntax errors or reference outdated configurations. 
+If you encounter an issue, please verify the template works on [Dokploy](https://github.com/Dokploy/dokploy) first before opening an issue on ZaneOps.
+</Aside>
+
+### How to deploy a dokploy template
+
+<Steps>
+1. In the ZaneOps dashboard go to your project and select **New > Compose Stack**
+    ![Select new compose stack](/images/new-compose-stack.png)
+2. Select **from Dokploy template**
+    ![Create from Dokploy](/images/select-dokploy-template.png)
+3. Copy and paste your template:
+
+   You can either copy the encoded base64 configuration
+    ![Copy Dokploy base64](/images/dokploy-base64-template.png)
+    ![Create Dokploy from base64](/images/dokploy-create-from-base64.png)
+   Or copy the individual compose file and config 
+    ![Copy dokploy docker-compose template](/images/dokploy-compose-template.png)
+    ![Create Dokploy from docker-compose](/images/dokploy-create-from-compose.png)
+4. Click **Create** and **Deploy**
+5. Once deployed, explore your running services and follow any onboarding steps specific to the template
+    ![WordPress stack details](/images/wordpress-template-stack-details.png)
+    ![WordPress onboarding](/images/wordpress-template-onboarding.png)
+</Steps>
+
+
+### Dokploy Template Migration
+
+ZaneOps includes an adapter to import templates from Dokploy. If you have existing Dokploy templates, here's how to migrate them.
+
+#### Dokploy Template Format
+
+Dokploy templates are base64-encoded JSON containing:
+- **compose**: Docker Compose YAML with placeholders
+- **config**: TOML with variables, domains, env, and file mounts
+
+Example Dokploy template structure (base64):
+
+```
+eyJjb21wb3NlIjogInNlcnZpY2VzOlxuICB3ZWI6XG4gICAgaW1hZ2U6IG5naW54XG4gICAgZW52aXJvbm1lbnQ6XG4gICAgICBQQVNTV09SRDogJHtQQVNTV09SRH1cbiIsICJjb25maWciOiAiW3ZhcmlhYmxlc11cbnBhc3N3b3JkID0gXCIke3Bhc3N3b3JkOjMyfVwiXG5cbltjb25maWcuZW52XVxuUEFTU1dPUkQ9JHtwYXNzd29yZH1cblxuW1tjb25maWcuZG9tYWluc11dXG5zZXJ2aWNlTmFtZSA9IFwid2ViXCJcbmhvc3QgPSBcImV4YW1wbGUuY29tXCJcbnBvcnQgPSA4MFxuIn0=
+```
+
+Which is the base64 encoding of this JSON:
+
+```json
+{
+  "compose": "services:\n  web:\n    image: nginx\n    environment:\n      PASSWORD: ${PASSWORD}\n",
+  "config": "[variables]\npassword = \"${password:32}\"\n\n[config.env]\nPASSWORD=${password}\n\n[[config.domains]]\nserviceName = \"web\"\nhost = \"example.com\"\nport = 80\n"
+}
+```
+
+Which decodes to:
+
+```yaml title="compose.yaml"
+services:
+  web:
+    image: nginx
+    environment:
+      PASSWORD: ${PASSWORD}
+```
+
+```toml title="template.toml"
+[variables]
+password = "${password:32}"
+
+[config.env]
+PASSWORD=${password}
+
+[[config.domains]]
+serviceName = "web"
+host = "example.com"
+port = 80
+```
+
+---
+
+#### Placeholder Mapping
+
+Dokploy placeholders are automatically converted to ZaneOps template expressions:
+
+| Dokploy Placeholder | ZaneOps Expression |
+| --- | --- |
+| `${domain}` | `{{ generate_domain }}` |
+| `${email}` | `{{ generate_email }}` |
+| `${username}` | `{{ generate_username }}` |
+| `${uuid}` | `{{ generate_uuid }}` |
+| `${password}`, `${hash}`, `${jwt}` | `{{ generate_password \| 32 }}` |
+| `${password:N}`, `${hash:N}`, `${jwt:N}` | `{{ generate_password \| N }}` |
+| `${base64}` | `{{ generate_base64 \| 32 }}` |
+| `${base64:N}` | `{{ generate_base64 \| N }}` |
+
+---
+
+#### Conversion Process
+
+
+
+<Steps>
+1. **Decode**: the base64 JSON is decoded into a compose YAML and a TOML config (or used as-is if provided separately)
+2. **Placeholder substitution**: Dokploy placeholders (e.g. `${domain}`, `${password:32}`) are replaced with their equivalent ZaneOps template expressions (see [Placeholder mapping](#placeholder-mapping) below)
+3. **Process variables**: Extract `[variables]` and `[[config.env]]` section into `x-zane-env`
+3. **Domain conversion**: each `[[config.domains]]` entry in the TOML config is converted to ZaneOps routing labels on the matching service
+4. **Mount conversion**: each `[[config.mounts]]` entry is converted to an inline Docker config. If no matching mount is found for a `../files/` volume path, the path is converted to a named volume instead
+6. **Clean up**: Remove `ports`, `expose`, `restart`
+5. **Standard processing**: the resulting compose file goes through the same pipeline as any other ZaneOps compose file: template expressions are evaluated, service names are hashed, networks are injected, and the stack is deployed
+</Steps>
+
+
+---
+
+#### Example Migration
+
+**Dokploy template content**:
+```yaml
+# compose.yaml
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+    volumes:
+      - ../files/nginx.conf:/etc/nginx/nginx.conf
+```
+
+```toml 
+# template.toml
+[variables]
+main_domain = "${domain}"
+db_password = "${password:32}"
+admin_email = "${email}"
+
+[[config.domains]]
+serviceName = "web"
+host = "${main_domain}"
+port = 8080
+
+[[config.env]]
+DB_PASSWORD = "${db_password}"
+ADMIN_EMAIL = "${admin_email}"
+
+[[config.mounts]]
+filePath = "nginx.conf"
+content = """
+server {
+  listen 80;
+}
+"""
+```
+
+**Resulting ZaneOps compose.yaml**:
+```yaml 
+# docker-compose.yml
+x-zane-env:
+  main_domain: "{{ generate_domain }}"
+  db_password: "{{ generate_password | 32 }}"
+  admin_email: "{{ generate_email }}"
+  DB_PASSWORD: ${db_password}
+  ADMIN_EMAIL: ${admin_email}
+
+services:
+  web:
+    image: nginx:alpine
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+    configs:
+      - source: nginx.conf
+        target: /etc/nginx/nginx.conf
+    deploy:
+      labels:
+        zane.http.routes.0.domain: "${main_domain}"
+        zane.http.routes.0.port: "8080"
+        zane.http.routes.0.base_path: "/"
+        zane.http.routes.0.strip_prefix: "false"
+
+configs:
+  nginx.conf:
+    content: |
+      server {
+        listen 80;
+      }
+```
+
+---
+
+#### Mount Processing
+
+Dokploy uses `../files/` prefix for file mounts. The adapter converts these to Docker configs.
+
+**Case 1: Directory mount**
+
+**Dokploy:**
+```yaml
+# compose.yml
+# ... rest of the file
+volumes:
+  - ../files/clickhouse_config:/etc/clickhouse-server/config.d
+
+```
+
+```toml 
+# template.toml
+[[config.mounts]]
+filePath = "clickhouse_config/logging_rules.xml"
+content = "..."
+
+[[config.mounts]]
+filePath = "clickhouse_config/network.xml"
+content = "..."
+```
+
+**ZaneOps result:**
+```yaml
+# ... rest of the file
+# docker-compose.yml
+configs:
+  - source: logging_rules.xml
+    target: /etc/clickhouse-server/config.d/logging_rules.xml
+  - source: network.xml
+    target: /etc/clickhouse-server/config.d/network.xml
+
+configs:
+  logging_rules.xml:
+    content: "..."
+  network.xml:
+    content: "..."
+```
+
+---
+
+**Case 2: File mount**
+
+**Dokploy:**
+```yaml
+# ... rest of the file
+# compose.yml
+volumes:
+  - ../files/nginx.conf:/etc/nginx/nginx.conf:ro
+```
+
+```toml
+# template.toml
+[[config.mounts]]
+filePath = "nginx.conf"
+content = "..."
+```
+
+**ZaneOps result:**
+```yaml
+# ... rest of the file
+# docker-compose.yml
+configs:
+  - source: nginx.conf
+    target: /etc/nginx/nginx.conf
+
+configs:
+  nginx.conf:
+    content: "..."
+```
+
+---
+
+**Case 3: Non-existent path (becomes volume)**
+
+**Dokploy:**
+```yaml
+# ... rest of the file
+# compose.yml
+volumes:
+  - ../files/data:/app/data
+```
+
+If no matching mount exists → converted to named volume:
+```yaml
+# ... rest of the file
+# docker-compose.yml
+volumes:
+  - data:/app/data
+
+volumes:
+  data:
+```
+
+#### Ports processing
+
+`ports` entries are removed and replaced with ZaneOps routing labels derived from the `[[config.domains]]` entries in the TOML config.
+
+**Dokploy:**
+```yaml
+# compose.yml
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+```
+
+```toml
+# template.toml
+[variables]
+main_domain = ${domain}
+
+[[config.domains]]
+serviceName = "web"
+host = "${main_domain}"
+port = 8080
+```
+
+**ZaneOps result:**
+```yaml
+# docker-compose.yml
+x-zane-env:
+  main_domain: '{{ generate_domain }}'
+
+services:
+  web:
+    image: nginx:alpine
+    deploy:
+      labels:
+        zane.http.routes.0.domain: "${main_domain}"
+        zane.http.routes.0.port: "8080"
+```
+
+#### `depends_on`
+
+The dict form of `depends_on` is converted to a plain list, since Docker Swarm only supports the list form. All `condition` values are dropped.
+
+**Dokploy:**
+```yaml
+# compose.yml
+depends_on:
+  rybbit_clickhouse:
+    condition: service_healthy
+  rybbit_postgres:
+    condition: service_started
+```
+
+**ZaneOps result:**
+```yaml
+# docker-compose.yml
+depends_on:
+  - rybbit_clickhouse
+  - rybbit_postgres
+```
+
+---
+
+#### Self-referencing variables in `config.env`
+
+If a `config.env` entry references itself (e.g. `KEY = "${KEY}"`), the adapter ignores it and keeps the original template expression from `[variables]` instead. Cross-references and new values are kept as-is.
+
+**Dokploy:**
+```toml
+# template.toml
+[variables]
+KENER_SECRET_KEY = "${password:64}"
+DB_PASSWORD = "${password:32}"
+MYSQL_PASSWORD = "${password:32}"
+
+[config.env]
+KENER_SECRET_KEY = "${KENER_SECRET_KEY}"  # self-reference — ignored
+MYSQL_PASSWORD = "${MYSQL_PASSWORD}"       # self-reference — ignored
+POSTGRES_PASSWORD = "${DB_PASSWORD}"       # cross-reference — kept
+TZ = "Etc/UTC"                             # new value — added
+```
+
+**ZaneOps result:**
+```yaml
+# docker-compose.yml
+x-zane-env:
+  KENER_SECRET_KEY: "{{ generate_password | 64 }}"
+  DB_PASSWORD: "{{ generate_password | 32 }}"
+  MYSQL_PASSWORD: "{{ generate_password | 32 }}"
+  POSTGRES_PASSWORD: "${DB_PASSWORD}"
+  TZ: "Etc/UTC"
+```
+
+---
+
+#### Static variables in `config.variables`
+
+Variables without Dokploy placeholders in `[variables]` are kept as literal values.
+
+**Dokploy:**
+```toml
+# template.toml
+[variables]
+pg_user = "authentik"
+pg_db = "authentik"
+
+[config.env]
+PG_USER = "${pg_user}"
+PG_DB = "${pg_db}"
+PG_PASS = "${password:32}"
+```
+
+**ZaneOps result:**
+```yaml
+# docker-compose.yml
+x-zane-env:
+  pg_user: "authentik"
+  pg_db: "authentik"
+  PG_USER: "${pg_user}"
+  PG_DB: "${pg_db}"
+  PG_PASS: "{{ generate_password | 32 }}"
+```
+
+---
+
+#### Empty environment variable entries
+
+Environment entries without a value (list-style passthrough) are replaced with `${KEY}` if that key exists in `x-zane-env`. Entries with no matching key are dropped.
+
+**Dokploy:**
+```yaml
+# compose.yml
+services:
+  docmost:
+    environment:
+      - APP_URL        # resolved from config.env
+      - APP_SECRET     # resolved from config.env
+      - APP_WHATEVER   # not in config.env — dropped
+      - DATABASE_URL=postgresql://...  # has value — kept as-is
+```
+
+```toml
+# template.toml
+[config.env]
+APP_URL = "http://${main_domain}:3000"
+APP_SECRET = "${app_secret}"
+```
+
+**ZaneOps result:**
+```yaml
+# docker-compose.yml
+x-zane-env:
+  APP_URL: "http://${main_domain}:3000"
+  APP_SECRET: "${app_secret}"
+
+services:
+  docmost:
+    environment:
+      APP_URL: "${APP_URL}"
+      APP_SECRET: "${APP_SECRET}"
+      DATABASE_URL: "postgresql://..."
+```
+
+---
+
+#### Variable references without curly braces
+
+`$VAR` (no braces) is normalized to `${VAR}`. `$$VAR` (shell escape) is preserved unchanged.
+
+**Dokploy:**
+```yaml
+# compose.yml
+services:
+  wordpress:
+    environment:
+      WORDPRESS_DB_NAME: $DB_NAME
+      WORDPRESS_DEBUG: ${WORDPRESS_DEBUG:-0}
+  wp_db:
+    healthcheck:
+      test: ["CMD-SHELL", "exit | mysql -u root -p$$MYSQL_ROOT_PASSWORD"]
+```
+
+**ZaneOps result:**
+```yaml
+# docker-compose.yml
+services:
+  wordpress:
+    environment:
+      WORDPRESS_DB_NAME: "${DB_NAME}"
+      WORDPRESS_DEBUG: "${WORDPRESS_DEBUG:-0}"
+  wp_db:
+    healthcheck:
+      test: ["CMD-SHELL", "exit | mysql -u root -p$$MYSQL_ROOT_PASSWORD"]
+```
+
+---
+
+#### `env_file` replacement
+
+`env_file` references are removed and replaced with inline `environment` entries from `config.env`.
+
+**Dokploy:**
+```yaml
+# compose.yml
+services:
+  plausible:
+    image: ghcr.io/plausible/community-edition:v2.1.5
+    env_file:
+      - .env
+```
+
+```toml
+# template.toml
+[config.env]
+BASE_URL = "http://${main_domain}"
+SECRET_KEY_BASE = "${secret_base}"
+TOTP_VAULT_KEY = "${totp_key}"
+```
+
+**ZaneOps result:**
+```yaml
+# docker-compose.yml
+x-zane-env:
+  main_domain: "{{ generate_domain }}"
+  secret_base: "{{ generate_password | 64 }}"
+  totp_key: "{{ generate_password | 32 }}"
+
+services:
+  plausible:
+    image: ghcr.io/plausible/community-edition:v2.1.5
+    environment:
+      BASE_URL: "http://${main_domain}"
+      SECRET_KEY_BASE: "${secret_base}"
+      TOTP_VAULT_KEY: "${totp_key}"
+```

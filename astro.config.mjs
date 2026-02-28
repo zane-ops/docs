@@ -14,9 +14,21 @@ export default defineConfig({
   adapter: node({
     mode: "standalone"
   }),
-
+  prefetch: true,
   env: {
     schema: {
+      PRIVATE_TEMPLATE_API_HOST: envField.string({
+        context: "server",
+        access: "secret",
+        url: true,
+        default: "https://templates.zaneops.dev"
+      }),
+      TEMPLATE_API_HOST: envField.string({
+        context: "client",
+        access: "public",
+        url: true,
+        default: "https://templates.zaneops.dev"
+      }),
       ASSETS_SERVER_DOMAIN: envField.string({
         context: "client",
         access: "public",
@@ -155,7 +167,7 @@ export default defineConfig({
         },
         {
           label: "Knowledge base",
-          autogenerate: { directory: "knowledge-base" }
+          autogenerate: { directory: "knowledge-base", collapsed: true }
         },
         {
           label: "Changelog",
@@ -167,6 +179,7 @@ export default defineConfig({
         },
         {
           label: "API Reference",
+          collapsed: true,
           items: [
             {
               label: "Introduction",

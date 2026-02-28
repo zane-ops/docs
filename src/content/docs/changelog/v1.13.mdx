@@ -1,0 +1,106 @@
+---
+title: ZaneOps v1.13
+description: Docker compose, Cloud waitlist, templates and more
+---
+
+import {Aside} from '@astrojs/starlight/components';
+import { ASSETS_SERVER_DOMAIN } from "astro:env/client"
+
+> Release notes: https://github.com/zane-ops/zane-ops/releases/tag/v1.13.0
+
+<span className='text-gray-600 dark:text-gray-400'>28 February 2026</span> by [**Fred KISSIE**](https://github.com/Fredkiss3)
+
+
+ZaneOps v1.13 is here with some big additions: [Docker Compose support](/knowledge-base/docker-compose), [templates](/knowledge-base/docker-compose/01-templates), shared volumes, build registries, and more.
+
+
+**To install:**
+
+```shell
+# assuming you are at /var/www/zaneops
+curl https://cdn.zaneops.dev/makefile > Makefile
+make setup
+make deploy
+```
+
+<Aside type="caution" title='Before updating'>
+This version includes changes to the Docker stack. Make sure to re-download the `Makefile` and rerun the `setup` script before deploying.
+</Aside>
+
+### ZaneOps Cloud ☁️ waitlist
+
+The waitlist for [ZaneOps Cloud](/cloud) is now open. ZaneOps Cloud is the next evolution of the platform, designed for teams and enterprise users. It will ship with:
+
+- **Multi-tenancy**: support for multiple teams with fine-grained permissions
+- **OIDC Authentication**: enterprise-grade SSO via OpenID Connect
+- **Audit logs**: full activity trail of logins, deployments, service changes, and more
+- **Custom authentication pages**: protect any service behind a login page
+- **Custom branding**: white-label your authentication pages
+- ...and more
+
+[Join the waitlist](/cloud) to be notified when the cloud version launches. [Sponsor the project](https://github.com/sponsors/zane-ops) to get **early access** when it does.
+
+<Aside type="tip" title='Open Source'>
+The self-hosted version will remain free and MIT-licensed.
+</Aside>
+
+
+### Docker Compose stacks
+
+The headline feature of v1.13 is native [Docker Compose stack support](/knowledge-base/docker-compose). You can now deploy any `docker-compose.yml` file directly on ZaneOps.
+
+Under the hood, compose files are deployed as [Docker stacks](https://docs.docker.com/reference/cli/docker/stack/), with:
+
+- blue/green deployments out of the box
+- domain assignment via service labels
+- dynamic value generation via template expressions (e.g. `{{ generate_password | 8 }}` generates a secure 8-character password)
+
+<video src={`${ASSETS_SERVER_DOMAIN}/videos/deploy-simple-nginx.mp4`} alt="Deploy simple nginx docker compose" muted controls />
+
+
+### Templates
+
+Beyond raw compose files, you can also deploy from pre-built [templates](/knowledge-base/docker-compose/01-templates). ZaneOps supports two template providers:
+
+- Our own curated templates:
+    <video src={`${ASSETS_SERVER_DOMAIN}/videos/deploy-umami-template.mp4`} alt="Deploy ZaneOps umami template" muted controls />
+
+- Dokploy templates (experimental):
+    <video src={`${ASSETS_SERVER_DOMAIN}/videos/deploy-dokploy-template.mp4`} alt="Deploy dokploy uptime-kuma template" muted controls />
+
+
+### Shared volumes
+
+You can now create volumes shared across multiple services. One service owns the volume, and others mount it as read-only. This is useful for sharing assets, media, or uploads between a backend and frontend, for example.
+
+Shared volumes are fully compatible with blue/green deployments.
+
+<video src={`${ASSETS_SERVER_DOMAIN}/videos/shared_volumes.mp4`} alt="Shared volumes across reader & writer" muted controls />
+
+
+### Docker registry credentials
+
+Deploying private images no longer requires entering credentials on every service. You can now create registry credentials once and reuse them across all your apps.
+
+<video src={`${ASSETS_SERVER_DOMAIN}/videos/shared-credentials.mp4`} alt="Shared registry credentials" muted controls />
+
+
+### Build registries
+
+In preparation for multi-server support, you can now configure a build registry to store Docker images built by ZaneOps. Choose between storing images on your server's filesystem or pushing them to an S3-compatible provider (AWS S3, MinIO, R2, etc.).
+
+<video src={`${ASSETS_SERVER_DOMAIN}/videos/build-registries.mp4`} alt="Build registries" muted controls />
+
+![S3 settings build registries](/images/build-registries-s3.webp)
+
+
+### Other changes
+
+- Environment variables are now obfuscated in build logs and hidden by default in change fields
+   ![obfuscated secrets in logs](/images/obfuscate-env-in-logs.png)
+- Git services now receive `GIT_COMMIT_SHA` as both a build arg and an environment variable
+    ![Git commit sha](/images/git-commit-sha.webp)
+- After creating an SSH key in server settings, ZaneOps now shows the exact commands to add it to your server
+    ![command after creating SSH key](/images/ssh-command-after-creation.webp)
+- ZaneOps remembers the last SSH key used in the server terminal and automatically reconnects you on your next visit
+    <video src={`${ASSETS_SERVER_DOMAIN}/videos/remember-last-ssh-on-console.mp4`} alt="Remember last ssh key" muted controls />
