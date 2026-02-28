@@ -11,27 +11,67 @@ import {Steps, Aside} from '@astrojs/starlight/components';
 ZaneOps allows you to deploy [Docker Compose Stacks](../) from preexisting templates. 
 
 There are two kinds: 
-- curated ZaneOps templates (Postgres, Redis, WordPress, and more) 
-- and Dokploy templates (experimental)
+- Curated ZaneOps templates (Postgres, Redis, WordPress, and more) 
+- Dokploy templates (experimental)
 
 <Aside>
-All compose stacks are backed by a `docker-compose.yml` file. The three creation methods differ only in how that file is initially populated. You can edit the compose file at any time after creation, regardless of how the stack was created.
+All compose stacks are backed by a `docker-compose.yml` file. The templates only fill in the initial content of the `docker-compose.yml`.
+You can edit the compose file at any time after creation, regardless of how the stack was created.
 </Aside>
 
 
 ## ZaneOps templates
 
-We have a curated list of docker-compose templates on ZaneOps, you can [Browse them](/templates).
+ZaneOps maintains a curated library of ready-to-deploy templates including Postgres, Redis, WordPress, Plausible, etc. **[Browse all templates →](/templates)**
 
-> TODO: doc 
+### How to deploy a ZaneOps template
 
-## Dokploy templates 
+<Steps>
+1. In the ZaneOps dashboard go to your project and select **New > Compose Stack**
+    ![Select new compose stack](/images/new-compose-stack.png)
+2. Select **from ZaneOps template**
+    ![Create from ZaneOps](/images/create-from-zaneops-template.png)
+3. Search and select your template
+    ![Search for plausible template](/images/search-plausible-template.png)
+4. Review or modify the compose file, then click **Create** and **Deploy**
+    ![Deploy plausible](/images/deploy-plausible-template.png)
+5. Once deployed, explore your running services and follow any onboarding steps specific to the template
+    ![Plausible stack details](/images/plausible-template-stack-details.png)
+    ![Plausible onboarding](/images/plausible-template-onboarding.png)
+</Steps>
 
-ZaneOps includes an adapter to import templates from Dokploy. Dokploy templates are base64-encoded JSON containing a compose YAML and a TOML config.
+## Dokploy templates (experimental)
 
-### How to create a dokploy template
+ZaneOps includes an adapter to import templates from Dokploy. 
+[Dokploy templates](https://templates.dokploy.com) are base64-encoded JSON containing a compose YAML and a TOML config.
 
-> TODO: doc 
+<Aside type='caution' title='Compatibility'>
+Not all Dokploy templates are compatible with ZaneOps. 
+Some may contain syntax errors or reference outdated configurations. 
+If you encounter an issue, please verify the template works on [Dokploy](https://github.com/Dokploy/dokploy) first before opening an issue on ZaneOps.
+</Aside>
+
+### How to deploy a dokploy template
+
+<Steps>
+1. In the ZaneOps dashboard go to your project and select **New > Compose Stack**
+    ![Select new compose stack](/images/new-compose-stack.png)
+2. Select **from Dokploy template**
+    ![Create from Dokploy](/images/select-dokploy-template.png)
+3. Copy and paste your template:
+
+   You can either copy the encoded base64 configuration
+    ![Copy Dokploy base64](/images/dokploy-base64-template.png)
+    ![Create Dokploy from base64](/images/dokploy-create-from-base64.png)
+   Or copy the individual compose file and config 
+    ![Copy dokploy docker-compose template](/images/dokploy-compose-template.png)
+    ![Create Dokploy from docker-compose](/images/dokploy-create-from-compose.png)
+4. Click **Create** and **Deploy**
+5. Once deployed, explore your running services and follow any onboarding steps specific to the template
+    ![WordPress stack details](/images/wordpress-template-stack-details.png)
+    ![WordPress onboarding](/images/wordpress-template-onboarding.png)
+</Steps>
+
 
 
 ### How Dokploy templates are processed
