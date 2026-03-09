@@ -1,14 +1,16 @@
 ---
+import { PlayIcon } from "@lucide/astro";
+
 type Props = {
-  srcLight: string;
-  srcDark?: string;
-  alt?: string;
+    srcLight: string;
+    srcDark?: string;
+    alt?: string;
 };
 
 const { srcLight, srcDark, alt } = Astro.props;
 ---
 
-<div class="not-prose screenshot relative breakout mx-auto">
+<div class="not-prose screenshot relative breakout mx-auto group">
     <div
         class="m-0 relative flex justify-center overflow-hidden rounded-xl shadow-sm transition-all duration-500"
         style="aspect-ratio:5/3.5;background:radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.3), transparent 50%), radial-gradient(circle at 80% 20%, rgba(199, 210, 254, 0.3), transparent 50%), radial-gradient(circle at 40% 40%, rgba(129, 140, 248, 0.2), transparent 60%), linear-gradient(135deg, #e0e7ff, #c7d2fe)"
@@ -72,4 +74,49 @@ const { srcLight, srcDark, alt } = Astro.props;
             </div>
         </div>
     </div>
+
+    <div
+        class="absolute z-40 inset-0 flex items-center justify-center group-hover:bg-neutral-950/40 rounded-xl"
+        id="player"
+    >
+        <button
+            id="play-button"
+            class="shadow-xl rounded-full px-5 py-2 bg-(--sl-color-accent) cursor-pointer flex items-center gap-1 text-black"
+        >
+            <span>Watch Tutorial</span>
+            <PlayIcon class="size-4 flex-none" />
+        </button>
+    </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const YOUTUBE_VIDEO_ID = `KEyGlfjmteo`;
+
+        const button = document.getElementById(
+            "play-button",
+        ) as HTMLButtonElement | null;
+        const player = document.getElementById(
+            "player",
+        ) as HTMLDivElement | null;
+
+        if (button && player) {
+            button.addEventListener("click", (ev) => {
+                const iframe = document.createElement("iframe");
+                iframe.src = `https://www.youtube-nocookie.com/embed/${YOUTUBE_VIDEO_ID}`;
+                iframe.title = "YouTube video player";
+                iframe.allow =
+                    "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+
+                iframe.setAttribute("frameborder", "0");
+                iframe.setAttribute(
+                    "referrerpolicy",
+                    "strict-origin-when-cross-origin",
+                );
+                iframe.setAttribute("allowfullscreen", "true");
+                player.replaceWith(iframe);
+                iframe.className = "absolute z-40 inset-0 rounded-xl size-full";
+            });
+        }
+    });
+</script>
