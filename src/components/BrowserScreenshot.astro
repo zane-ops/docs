@@ -76,12 +76,12 @@ const { srcLight, srcDark, alt } = Astro.props;
     </div>
 
     <div
-        class="absolute z-40 inset-0 flex items-center justify-center group-hover:bg-neutral-950/40 rounded-xl"
+        class="absolute z-40 inset-0 flex items-center justify-center transition-colors duration-150 group-hover:bg-neutral-950/20 rounded-xl"
         id="player"
     >
         <button
             id="play-button"
-            class="shadow-xl rounded-full px-5 py-2 bg-(--sl-color-accent) cursor-pointer flex items-center gap-1 text-black"
+            class="shadow-xl rounded-full px-5 py-2 bg-(--sl-color-accent) cursor-pointer flex items-center gap-1 text-white dark:text-black"
         >
             <span>Watch Tutorial</span>
             <PlayIcon class="size-4 flex-none" />
