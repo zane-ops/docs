@@ -10,7 +10,7 @@ import VerificationEmail from "~/emails/verification-email";
 import { sendEmail } from "~/lib/email";
 
 const signupSchema = z.object({
-  email: z.string().email("Please provide a valid email address")
+  email: z.email("Please provide a valid email address")
 });
 
 export const prerender = false;
