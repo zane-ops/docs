@@ -1,6 +1,6 @@
 ---
+import { getLiveEntry } from "astro:content";
 import { TEMPLATE_API_HOST } from "astro:env/client";
-import { PRIVATE_TEMPLATE_API_HOST } from "astro:env/server";
 import { Code } from "@astrojs/starlight/components";
 import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
 import {
@@ -11,48 +11,22 @@ import {
     LoaderIcon,
     PencilLine,
 } from "@lucide/astro";
-
 import { TemplateCard } from "~/components/templates/template-search";
-import type {
-    TemplateDetailsApiResponse,
-    TemplateSearchAPIResponse,
-} from "~/lib/types";
 
 export const prerender = false;
 
-let t0 = performance.now();
-const response = await fetch(
-    new URL(
-        `/api/templates/${Astro.params.slug}.json`,
-        PRIVATE_TEMPLATE_API_HOST,
-    ),
-);
-console.log(
-    `[${Astro.params.slug}] fetch template details: ${(performance.now() - t0).toFixed(2)}ms`,
-);
-
-if (!response.ok) {
+if (!Astro.params.slug) {
     return new Response(null, { status: 404 });
 }
-const template: TemplateDetailsApiResponse = await response.json();
 
-const templateSearchUrl = new URL("/api/search", PRIVATE_TEMPLATE_API_HOST);
-templateSearchUrl.searchParams.set("per_page", "4");
-templateSearchUrl.searchParams.set("pick_random", "true");
-templateSearchUrl.searchParams.set("exclude_ids", template.id);
+const { entry, error } = await getLiveEntry("templates", Astro.params.slug);
 
-for (const tag of template.tags) {
-    templateSearchUrl.searchParams.append("tagrs", tag);
+if (!entry) {
+    console.error(error);
+    return new Response(null, { status: 404 });
 }
 
-t0 = performance.now();
-const { hits: templateList } = await fetch(templateSearchUrl).then(
-    (r) => r.json() as Promise<TemplateSearchAPIResponse>,
-);
-console.log(
-    `[${Astro.params.slug}] fetch related templates: ${(performance.now() - t0).toFixed(2)}ms`,
-);
-
+const template = entry.data;
 const logoUrl = new URL(template.logoUrl, TEMPLATE_API_HOST);
 ---
 
@@ -200,16 +174,16 @@ const logoUrl = new URL(template.logoUrl, TEMPLATE_API_HOST);
     </section>
 
     {
-        templateList.length > 0 && (
+        template.related.length > 0 && (
             <section class="flex flex-col gap-8 border-t border-border py-8">
                 <h2>Related templates</h2>
                 <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {templateList.map(({ document }) => (
+                    {template.related.map((template) => (
                         <TemplateCard
-                            id={document.id}
-                            name={document.name}
-                            description={document.description}
-                            logoUrl={document.logoUrl}
+                            id={template.id}
+                            name={template.name}
+                            description={template.description}
+                            logoUrl={template.logoUrl}
                         />
                     ))}
                 </div>

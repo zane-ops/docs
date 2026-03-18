@@ -17,6 +17,7 @@ RUN FORCE_COLOR=true pnpm install --frozen-lockfile --prod
 FROM build-deps AS build
 COPY . .
 ARG ZANE_DOMAINS
+ARG VERIFICATION_EMAIL_FROM
 ARG DATABASE_URL
 ARG TEMPLATE_API_HOST=https://templates.zaneops.dev
 ARG PRIVATE_TEMPLATE_API_HOST=https://templates.zaneops.dev
@@ -24,6 +25,7 @@ ENV TEMPLATE_API_HOST=${TEMPLATE_API_HOST}
 ENV PRIVATE_TEMPLATE_API_HOST=${PRIVATE_TEMPLATE_API_HOST}
 ENV DATABASE_URL=${DATABASE_URL}
 ENV ZANE_DOMAINS=${ZANE_DOMAINS}
+ENV VERIFICATION_EMAIL_FROM=${VERIFICATION_EMAIL_FROM}
 RUN --mount=type=cache,target=/app/.astro FORCE_COLOR=true pnpm run build
 RUN --mount=type=cache,target=/app/.astro FORCE_COLOR=true pnpm run db:migrate
 

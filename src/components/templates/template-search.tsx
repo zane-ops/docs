@@ -350,7 +350,7 @@ export function TemplateCard({
     >
       <div className="flex flex-col items-start gap-6">
         <div className="flex justify-between gap-2 items-center w-full pr-4">
-          <div className="flex items-center gap-2  border-gray-400/30  w-full px-4">
+          <div className="flex items-center gap-2  border-gray-400/30  w-full px-4 min-w-0">
             <img
               src={logoUrl.toString()}
               alt={name}
@@ -359,7 +359,7 @@ export function TemplateCard({
             <a
               data-astro-prefetch
               href={`/templates/${id}`}
-              className="font-semibold truncate after:inset-0 after:absolute no-underline text-(--sl-color-white)"
+              className="font-semibold truncate min-w-0 shrink after:inset-0 after:absolute no-underline text-(--sl-color-white)"
             >
               {name}
             </a>

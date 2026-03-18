@@ -1,17 +1,16 @@
 import { site } from "astro:config/server";
-import { z } from "astro:content";
 import { render, toPlainText } from "@react-email/render";
 import type { APIRoute } from "astro";
+import { z } from "astro/zod";
 import { randomBytes } from "crypto";
 import { eq } from "drizzle-orm";
-
 import { db } from "~/db";
 import { verificationTokens, waitlistUsers } from "~/db/schema";
 import VerificationEmail from "~/emails/verification-email";
 import { sendEmail } from "~/lib/email";
 
 const signupSchema = z.object({
-  email: z.string().email("Please provide a valid email address")
+  email: z.email("Please provide a valid email address")
 });
 
 export const prerender = false;

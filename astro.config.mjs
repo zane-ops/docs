@@ -75,7 +75,8 @@ export default defineConfig({
       }),
       ANTHROPIC_API_KEY: envField.string({
         context: "server",
-        access: "secret"
+        access: "secret",
+        optional: true
       })
     }
   },
