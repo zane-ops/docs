@@ -27,7 +27,7 @@ ENV DATABASE_URL=${DATABASE_URL}
 ENV ZANE_DOMAINS=${ZANE_DOMAINS}
 ENV VERIFICATION_EMAIL_FROM=${VERIFICATION_EMAIL_FROM}
 RUN --mount=type=cache,target=/app/.astro FORCE_COLOR=true pnpm run build
-RUN --mount=type=cache,target=/app/.astro FORCE_COLOR=true pnpm run db:migrate
+# RUN --mount=type=cache,target=/app/.astro FORCE_COLOR=true pnpm run db:migrate
 
 
 FROM base AS runtime
