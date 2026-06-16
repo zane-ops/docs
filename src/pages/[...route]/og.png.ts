@@ -9,7 +9,7 @@ async function SVG(props: OpenGraphProps) {
   const fontFiles = await Promise.all(
     fontWeights.map((wght) =>
       fetch(
-        `https://cdn.jsdelivr.net/fontsource/fonts/geist-mono@latest/latin-${wght}-normal.woff`
+        `https://cdn.jsdelivr.net/fontsource/fonts/geist-mono@latest/latin-${wght}-normal.ttf`
       ).then((res) => res.arrayBuffer())
     )
   );
