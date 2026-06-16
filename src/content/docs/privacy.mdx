@@ -1,0 +1,152 @@
+---
+title: Privacy Policy
+description: How ZaneOps handles personal data across its website, license purchases, and optional telemetry.
+template: splash
+---
+
+# Privacy Policy
+
+**Effective date:** [DATE]
+**Last updated:** [DATE]
+
+> **Fill in before publishing:** replace `Fredhel KISSIE`, `[ADDRESS or "address available on
+> request"]`, `[privacy@zaneops.dev]`, the telemetry opt-out instruction, and confirm the
+> exact telemetry fields match what the software actually sends.
+
+This Privacy Policy explains how **Fredhel KISSIE, Entrepreneur Individuel ("EI")**, trading as
+**"ZaneOps"** ("we", "us", "our"), established in France, handles personal data. We are the
+data controller for the processing described here.
+
+Contact for any privacy question or to exercise your rights: **[privacy@zaneops.dev]**.
+
+## 1. Scope - and what this policy does *not* cover
+
+This policy covers:
+
+- the **zaneops.dev website**;
+- **license purchases** and related support;
+- the optional, opt-out **telemetry** sent by self-hosted ZaneOps instances.
+
+This policy does **not** cover the data inside your own self-hosted ZaneOps instance. ZaneOps
+runs on infrastructure you control; **you are the data controller for any data you or your
+end users place into your instance**, and we have no access to it.
+
+## 2. Website analytics
+
+Our website uses **Vince Analytics**, a privacy-friendly, open-source, **cookieless**
+analytics tool that we self-host. It does not set tracking cookies, does not build personal
+profiles, and does not track you across other websites. It records aggregate, non-identifying
+usage statistics (such as page views, referrers, and approximate country derived from
+network information) to help us understand how the site is used. We do not sell or share this
+data.
+
+## 3. License purchases
+
+When you purchase a commercial license, payment is processed by **Stripe Payments Europe**.
+Through this process we receive and store:
+
+- your email address;
+- your billing country and any details required for invoicing and VAT;
+- the license details (plan, features, dates) and transaction metadata.
+
+**Full payment card details are handled directly by Stripe and never reach our servers.** We
+use this information to issue and support your license, send transactional emails (such as
+your license key and receipts), and meet our accounting and tax obligations. Stripe acts as a
+payment processor; see Stripe's own privacy notice for how it handles your data.
+
+## 4. Telemetry from self-hosted instances
+
+Since **v1.10**, ZaneOps includes lightweight telemetry that is **enabled by default and that
+you can turn off at any time** ("opt-out"). Its purpose is to understand how ZaneOps is used
+in production so we can prioritize development.
+
+**How it works:** your instance sends a `PING` request, at most once every 30 minutes, to our
+CDN at `cdn.zaneops.dev`. The CDN runs on **Cloudflare**, and its source code is public:
+https://github.com/zane-ops/cdn
+
+**What we process and store:** the CDN reads the IP address that Cloudflare provides with the
+request and hashes it **twice** - first with SHA-256, then with HMAC-SHA-256 using a secret
+key ("pepper") held only by the CDN. We store only that resulting hash, together with a
+**timestamp** for each ping. We do **not** store raw IP addresses. From these hashes and
+timestamps we derive **aggregate statistics only** - such as the number of distinct instances
+and activity over time. The same hashed-IP recording also occurs when an instance fetches our
+install script or Makefile from the CDN.
+
+**What it never collects:** your instance configuration, ZaneOps version, projects, source
+code, environment variables, secrets, application data, or any data belonging to the services
+you deploy or to your end users.
+
+**How to opt out:** set `TELEMETRY_ENABLED=false` in your `.env` file (typically at
+`/var/www/zaneops/.env`). When disabled, no ping is sent.
+
+## 5. Communications
+
+If you email us or contact us for support, we process the contents of your message and your
+contact details to respond and keep a record of the exchange.
+
+## 6. Legal bases (GDPR)
+
+We rely on the following legal bases:
+
+- **Performance of a contract** - to deliver and support a license you have purchased.
+- **Legal obligation** - to retain invoices and accounting records as required by French law.
+- **Legitimate interests** - to operate privacy-friendly website analytics and irreversible,
+  IP-only product telemetry to improve ZaneOps, balanced against your rights (you can opt out
+  of telemetry).
+
+## 7. Sharing and processors
+
+We share personal data only with service providers that process it on our behalf, currently:
+**Stripe** (payments), **Cloudflare** (hosting our telemetry CDN and its database), and our
+**email/hosting providers**. Our website analytics run on self-hosted **Vince Analytics**. We
+do not sell your personal data.
+
+## 8. International transfers
+
+Some processors (for example Stripe and Cloudflare) may process data outside the European
+Economic Area. Where that happens, the transfer is protected by appropriate safeguards such
+as the European Commission's Standard Contractual Clauses.
+
+## 9. Retention
+
+We keep purchase and invoicing data for as long as required by French accounting law
+(generally up to 10 years). Telemetry is retained only as long as useful for analysis and
+then aggregated or deleted. Support correspondence is kept for as long as needed to assist
+you.
+
+## 10. Your rights
+
+Under the GDPR you have the right to access, rectify, erase, restrict, or object to the
+processing of your personal data, the right to data portability, and the right to withdraw
+consent where processing is based on it. To exercise any of these, contact
+**[privacy@zaneops.dev]**.
+
+You also have the right to lodge a complaint with the French supervisory authority, the
+**Commission Nationale de l'Informatique et des Libertés (CNIL)** - www.cnil.fr.
+
+## 11. Security
+
+We take reasonable technical and organizational measures to protect personal data. No system
+is perfectly secure, and we cannot guarantee absolute security.
+
+## 12. Children
+
+The Services are not directed to children under 16, and we do not knowingly collect their
+personal data.
+
+## 13. Changes to this policy
+
+We may update this policy from time to time. Material changes will be reflected in the "Last
+updated" date and, where appropriate, announced through our usual channels.
+
+## 14. Contact
+
+**Fredhel KISSIE, EI**, trading as ZaneOps, France
+Privacy contact: **[privacy@zaneops.dev]**
+[ADDRESS or "Postal address available on request."]
+
+---
+
+*This document is a starting template, not legal advice. Have it reviewed by a French DPO or
+lawyer before publishing - in particular, whether default-on (opt-out) telemetry is fine on a
+legitimate-interest basis or should instead require opt-in consent is worth confirming.*
