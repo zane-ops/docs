@@ -1,12 +1,21 @@
 ---
 import { Icon } from "@astrojs/starlight/components";
 import DefaultFooter from "@astrojs/starlight/components/Footer.astro";
+import { ReceiptText, ShieldUser } from "@lucide/astro";
 ---
 
 <DefaultFooter {...Astro.props} />
 
 <div class="custom-meta sl-flex my-3">
     <div class="flex flex-col">
+        <a href={`/terms`} class="flex gap-1">
+            <ReceiptText size="1em" />
+            Terms of Service
+        </a>
+        <a href={`/privacy`} class="flex gap-1">
+            <ShieldUser size="1em" />
+            Privacy Policy
+        </a>
         <a
             href={`https://github.com/zane-ops/zane-ops/issues/new?template=bug_report.md`}
             class="flex gap-1"

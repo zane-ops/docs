@@ -27,6 +27,18 @@
 	}
 }
 
+/* Center the content column on legal pages (terms & privacy). Scoped via the
+   `.legal-doc` marker so it never affects other splash pages (e.g. the landing page). */
+.sl-markdown-content:has(> .legal-doc) {
+	max-width: 50rem;
+	margin-inline: auto;
+}
+
+/* The hero is a sibling of .sl-markdown-content, so scope from <main>. */
+main:has(.legal-doc) .hero {
+	display: none;
+}
+
 :root[data-theme="dark"] {
 	--sl-color-accent-low: #440921;
 	--sl-color-accent: hsl(164 61% 70%);
