@@ -136,6 +136,11 @@ export default defineConfig({
             },
 
             {
+              label: "Observability",
+              slug: "observability"
+            },
+
+            {
               label: "Upgrading ZaneOps",
               slug: "upgrading-zaneops"
             },

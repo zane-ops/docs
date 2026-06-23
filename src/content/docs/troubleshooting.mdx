@@ -97,6 +97,20 @@ To check that ZaneOps started correctly:
 5. Still stuck? [create an issue](https://github.com/zane-ops/zane-ops/issues/new?template=bug_report.md)
 </Steps>
 
+### Going further with observability
+
+For deeper debugging, ZaneOps ships two optional observability stacks you can deploy on demand:
+
+- **OpenTelemetry tracing** (Grafana + Tempo): trace the HTTP requests served by ZaneOps down to the SQL and Redis queries they trigger (`make deploy-otel`).
+   <img src={`${ASSETS_SERVER_DOMAIN}/images/otel-traces-list.png`} alt="List of traced HTTP requests in Grafana Tempo" />
+
+- **Temporal UI**: inspect the background workflows behind deployments and scheduled jobs (`make deploy-temporal-ui`).
+    <img src={`${ASSETS_SERVER_DOMAIN}/images/temporal-ui-dashboard.png`} alt="Screenshot of the temporal UI dashboard" />
+
+<Aside type="tip" title="Dedicated guide">
+See [Observability](/observability/) for how to enable each stack and access the dashboards securely.
+</Aside>
+
 
 ### Something is running on either port `80` or `443`
 
