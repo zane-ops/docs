@@ -25,35 +25,35 @@ To check that ZaneOps started correctly:
 <Steps>
 1. You need to verify that all ZaneOps docker services started correctly:
    ```shell
-   docker service ls --filter label="zane.stack=true"
+   docker service ls --filter label="com.docker.stack.namespace=zane"
    ```
 
-   You should have an output like this in the terminal where `1/1` means **OK** except for `zane_temporal-admin-tools` which should be `0/1 (1/1 completed)` :
+   You should have an output like this in the terminal where `1/1` means **OK** except for `zane_zane-temporal-admin-tools` which should be `0/1 (1/1 completed)` :
    ```shell
     ID             NAME                            MODE             REPLICAS              IMAGE                                                 PORTS
-    inpyph774s3l   zane_app                        replicated       1/1                   ghcr.io/zane-ops/app:canary                           
-    otewzijsmzaj   zane_db                         replicated       1/1                   postgres:16-alpine                                    
-    adv0qcj7fqga   zane_fluentd                    replicated       1/1                   fluentd:v1.16.2-1.1                                   
-    fa7t7r508bd9   zane_loki                       replicated       1/1                   grafana/loki:3.4                                      
-    kisb92em589i   zane_pgbouncer                  replicated       1/1                   edoburu/pgbouncer:v1.23.1-p3                          
-    t432gf67whmx   zane_proxy                      replicated       1/1                   ghcr.io/zane-ops/proxy:canary                         
-    ux5vuucsm9cv   zane_temporal-admin-tools       replicated job   0/1 (1/1 completed)   temporalio/admin-tools:1.24.2-tctl-1.18.1-cli-1.0.0   
-    flwwyuihygay   zane_temporal-main-worker       replicated       1/1                   ghcr.io/zane-ops/app:canary                           
-    wldqkpahhuyr   zane_temporal-schedule-worker   replicated       1/1                   ghcr.io/zane-ops/app:canary                           
-    m8wk18qer4ys   zane_temporal-server            replicated       1/1                   temporalio/auto-setup:1.24.2                          
-    limmbrl9o0ub   zane_valkey                     replicated       1/1                   valkey/valkey:7.2.5-alpine                            
+    inpyph774s3l   zane_zane-app                        replicated       1/1                   ghcr.io/zane-ops/app:canary                           
+    otewzijsmzaj   zane_zane-db                         replicated       1/1                   postgres:16-alpine                                    
+    adv0qcj7fqga   zane_zane-fluentd                    replicated       1/1                   fluentd:v1.16.2-1.1                                   
+    fa7t7r508bd9   zane_zane-loki                       replicated       1/1                   grafana/loki:3.4                                      
+    kisb92em589i   zane_zane-pgbouncer                  replicated       1/1                   edoburu/pgbouncer:v1.23.1-p3                          
+    t432gf67whmx   zane_zane-proxy                      replicated       1/1                   ghcr.io/zane-ops/proxy:canary                         
+    ux5vuucsm9cv   zane_zane-temporal-admin-tools       replicated job   0/1 (1/1 completed)   temporalio/admin-tools:1.24.2-tctl-1.18.1-cli-1.0.0   
+    flwwyuihygay   zane_zane-temporal-main-worker       replicated       1/1                   ghcr.io/zane-ops/app:canary                           
+    wldqkpahhuyr   zane_zane-temporal-schedule-worker   replicated       1/1                   ghcr.io/zane-ops/app:canary                           
+    m8wk18qer4ys   zane_zane-temporal-server            replicated       1/1                   temporalio/auto-setup:1.24.2                          
+    limmbrl9o0ub   zane_zane-valkey                     replicated       1/1                   valkey/valkey:7.2.5-alpine                            
    ```
 2. If one of the services is not starting correctly, you can check the tasks for the service with:
 
    ```shell
-   docker service ps zane_{service} # ex: `zane_app` 
+   docker service ps zane_zane-{service} # ex: `zane_zane-app` 
    ```
 
    You should get an output similar to this where the latest task (the first task from the top) state is `Running`:
    ```shell {2} 
    ID             NAME             IMAGE                         NODE      DESIRED STATE   CURRENT STATE          ERROR                              PORTS
-   7b21smevkj6l   zane_app.1       ghcr.io/zane-ops/app:canary   ubs01     Running         Running 2 hours ago                                 
-   ppfheeofce3t    \_ zane_app.1   ghcr.io/zane-ops/app:canary   ubs01     Shutdown        Shutdown 2 hours ago                                      
+   7b21smevkj6l   zane_zane-app.1       ghcr.io/zane-ops/app:canary   ubs01     Running         Running 2 hours ago                                 
+   ppfheeofce3t    \_ zane_zane-app.1   ghcr.io/zane-ops/app:canary   ubs01     Shutdown        Shutdown 2 hours ago                                      
    ```
 
 3. If the latest task state show `Failed`, you can check the logs of the failed status: 
@@ -67,7 +67,7 @@ To check that ZaneOps started correctly:
         "Timestamp": "2025-07-16T19:31:21.277975012Z",
         "State": "failed",
         "Message": "started",
-        "Err": "No such container: zane_app.1.ypqk8horkrofmsij7r6xtn7kf",
+        "Err": "No such container: zane_zane-app.1.ypqk8horkrofmsij7r6xtn7kf",
         // ... other fields
     }
     ```
@@ -80,22 +80,36 @@ To check that ZaneOps started correctly:
 
 4. You can also see the application logs of the services using: 
    ```shell
-   docker service logs zane_{service}
+   docker service logs zane_zane-{service}
    ``` 
 
    <Aside type="caution" title="main app logs">
-    Running logs for `zane_app` might not show you any actionable logs. You can instead run: 
+    Running logs for `zane_zane-app` might not show you any actionable logs. You can instead run: 
 
     ```shell
     # to see error logs
-    docker exec -it $(docker ps -qf "name=zane_app") /bin/bash -c "cat /app/logs/daphne/stderr"
+    docker exec -it $(docker ps -qf "name=zane_zane-app") /bin/bash -c "cat /app/logs/daphne/stderr"
     # to see access logs
-    docker exec -it $(docker ps -qf "name=zane_app") /bin/bash -c "cat /app/logs/daphne/stdout"
+    docker exec -it $(docker ps -qf "name=zane_zane-app") /bin/bash -c "cat /app/logs/daphne/stdout"
     ```
    </Aside>
 
 5. Still stuck? [create an issue](https://github.com/zane-ops/zane-ops/issues/new?template=bug_report.md)
 </Steps>
+
+### Going further with observability
+
+For deeper debugging, ZaneOps ships two optional observability stacks you can deploy on demand:
+
+- **OpenTelemetry tracing** (Grafana + Tempo): trace the HTTP requests served by ZaneOps down to the SQL and Redis queries they trigger (`make deploy-otel`).
+   <img src={`/images/grafana-otel.png`} alt="List of traced HTTP requests in Grafana Tempo" />
+
+- **Temporal UI**: inspect the background workflows behind deployments and scheduled jobs (`make deploy-temporal-ui`).
+    <img src={`/images/temporal-ui-dashboard.png`} alt="Screenshot of the temporal UI dashboard" />
+
+<Aside type="tip" title="Dedicated guide">
+See [Observability](/observability/) for how to enable each stack and access the dashboards securely.
+</Aside>
 
 
 ### Something is running on either port `80` or `443`
