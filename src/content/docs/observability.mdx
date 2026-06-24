@@ -66,9 +66,8 @@ The tracing stack instruments **the HTTP requests made to ZaneOps**. For each re
 that includes the **SQL queries** and **Redis (Valkey) queries** it ran, both on their own and scoped to the
 request that triggered them. This makes it easy to spot slow endpoints, N+1 queries or unexpected cache access.
 
-<img src={`${ASSETS_SERVER_DOMAIN}/images/otel-traces-list.png`} alt="List of traced HTTP requests in Grafana Tempo" />
+<img src={`/images/grafana-otel.png`} alt="List of traced HTTP requests in Grafana Tempo" />
 
-<img src={`${ASSETS_SERVER_DOMAIN}/images/otel-trace-detail.png`} alt="A single trace showing SQL and Redis queries scoped to an HTTP request" />
 
 It is made of two services, deployed as the `zane-otel` stack on the existing `zane` overlay network:
 
@@ -87,6 +86,10 @@ meant for live debugging, not long-term archival.
 The Temporal UI lets you inspect the workflows and activities that ZaneOps runs in the background
 (deployments, scheduled jobs, cleanup tasks…). It's useful to follow a deployment step by step or to
 understand why a background task failed.
+
+<img src={`/images/temporal-ui-dashboard.png`} alt="Screenshot of the temporal UI dashboard" />
+<img src={`/images/temporal-ui-deployment.png`} alt="Screenshot of the temporal UI dashboard showing a workflow for a deployment" />
+
 
 It's a single service, deployed as the `zane-temporal` stack:
 
