@@ -1,0 +1,123 @@
+---
+title: ZaneOps v1.14
+description: Multi-user workspaces, roles & invitations, licensing, server admin and more
+sidebar:
+  order: 114
+---
+
+import {Aside} from '@astrojs/starlight/components';
+import { ASSETS_SERVER_DOMAIN } from "astro:env/client"
+
+> Release notes: https://github.com/zane-ops/zane-ops/releases/tag/v1.14.0
+
+<span className='text-gray-600 dark:text-gray-400'>31 August 2026</span> by [**Fred KISSIE**](https://github.com/Fredkiss3)
+
+
+ZaneOps v1.14 turns ZaneOps into a multi-user platform: [workspaces](/knowledge-base/workspaces), team invitations, per-role and per-project access, an optional paid license, a dedicated server admin area, a rebuilt command bar and opt-in [OpenTelemetry tracing](/observability).
+
+
+<Aside type="caution" title='Before updating'>
+This version includes changes to the Docker stack and a large database migration that backfills a workspace for your existing projects. Re-download the `Makefile` and rerun the `setup` script before deploying.
+</Aside>
+
+**To install:**
+
+```shell
+# assuming you are at /var/www/zaneops
+curl https://cdn.zaneops.dev/makefile > Makefile
+make setup
+# Optional: stop the services 
+# make stop 
+make deploy
+```
+
+
+### Multi-user & workspaces
+
+The headline feature of v1.14 is **workspaces**. Every project, git app and resource now lives inside a workspace, and you can invite other people to collaborate in it.
+
+Each member gets a role:
+
+- **Viewer**: read-only, sensitive fields (env vars, secrets) are hidden. Can be scoped to specific projects.
+- **Member**: read-write on services: edit configuration, manage environment variables, trigger deploys. Can be scoped to specific projects.
+- **Admin**: full access to the workspace: invite and remove members, change roles, delete services, manage API tokens. Cannot delete the workspace.
+- **Owner**: the workspace creator. Everything an Admin can do, plus deleting the workspace.
+
+<img className="block dark:hidden" src={`/images/workspace-team-light.png`} alt="Workspace team" />
+<img className="!hidden dark:!block" src={`/images/workspace-team-dark.png`} alt="Workspace team" />
+
+
+#### Invitations
+
+Invite people by username. If they already have an account they join immediately, otherwise they get an invitation link to create one. Invitations expire, can be revoked, and carry the role and project scope you picked.
+
+<img  src={`/images/invite-new-user.webp`} alt="Invite New user into workspace" />
+<img  src={`/images/create-new-account.png`} alt="Create New user" />
+<img  src={`/images/accept-workspace-invitation.png`} alt="Accept workspace invitation" />
+
+#### Switching workspaces
+
+If you belong to more than one workspace, a switcher lets you jump between them without logging out.
+
+<video src={`${ASSETS_SERVER_DOMAIN}/videos/context+switch-workspace.mp4`} alt="Switch between workspaces" muted controls />
+
+
+### Workspace UI
+
+The whole dashboard was reworked around workspaces, with a distinct experience per role: an owner/admin layout with team settings, invitation management and per-member permission editing, and a trimmed-down layout for members and viewers that only surfaces what they are allowed to touch.
+
+<img className="block dark:hidden" src={`/images/workspace-ui-light.png`} alt="Workspace UI settings" />
+<img className="!hidden dark:!block" src={`/images/workspace-ui-dark.png`} alt="Workspace UI settings" />
+
+
+### Licensing & paid features
+
+The self-hosted core stays free and MIT-licensed. The free tier allows **up to 3 users** (members + pending invitations) and **1 workspace**.
+
+A paid **Starter** license unlocks:
+
+- **Extra workspaces**: more than one workspace on the same instance
+- **Extra user seats**: more than 3 users
+- ...And More features coming in the next versions
+
+You install a license key from the server admin area, and it is bound to your instance.
+
+
+<img className="block dark:hidden" src={`/images/license-details-light.png`} alt="License Details" />
+<img className="!hidden dark:!block" src={`/images/license-details-dark.png`} alt="License Details" />
+
+<Aside type="tip" title='Open Source'>
+The self-hosted version remains free and MIT-licensed. Paid features are additive and gated behind an optional license.
+</Aside>
+
+
+### Server admin
+
+The instance owner now has a dedicated admin area, separate from any workspace:
+
+- **System settings**: cron schedules for docker system prune and app-data cleanup, HTTP log and build-cache retention policies, and fine-grained control over what `docker system prune` removes (images, containers, volumes, networks).
+- **Master HTTP logs**: every request that went through the ZaneOps proxy, across all projects, including ZaneOps' own traffic and the 404 catch-all, with the **country** each request came from (GeoIP).
+
+<img className="block dark:hidden" src={`/images/server-admin-users-light.png`} alt="Server admin users" />
+<img className="!hidden dark:!block" src={`/images/server-admin-users-dark.png`} alt="Server admin users" />
+
+
+### Rebuilt ⌘K command bar
+
+The command menu was rebuilt from scratch. It now combines global navigation, resource actions (deploy, restart, open logs, …) and search into a single palette.
+
+<video src={`${ASSETS_SERVER_DOMAIN}/videos/new-cmd-k.mp4`} alt="New command bar" muted controls />
+
+
+### OpenTelemetry tracing (optional)
+
+You can now export traces from the ZaneOps API via OTLP. It is enabled by default in development and opt-in in production through a dedicated stack file, with traces stored in Tempo and viewable in Grafana. See the [Observability guide](/observability) for setup.
+
+<img src={`/images/grafana-otel.png`} alt="List of traced HTTP requests in Grafana Tempo" />
+
+
+
+### Other changes
+
+- Deploys now detect stuck Docker Swarm rollouts instead of reporting them as successful
+- Fixed errors with PgBouncer and the Temporal server
