@@ -32,6 +32,7 @@ make deploy
 ```
 
 
+
 ### Multi-user & workspaces
 
 The headline feature of v1.14 is **workspaces**. Every project, git app and resource now lives inside a workspace, and you can invite other people to collaborate in it.
@@ -47,6 +48,14 @@ Each member gets a role:
 <img className="!hidden dark:!block" src={`/images/workspace-team-dark.png`} alt="Workspace team" />
 
 
+### Workspace UI
+
+The whole dashboard was reworked around workspaces, with a distinct experience per role: an owner/admin layout with team settings, invitation management and per-member permission editing, and a trimmed-down layout for members and viewers that only surfaces what they are allowed to touch.
+
+<img className="block dark:hidden" src={`/images/workspace-ui-light.png`} alt="Workspace UI settings" />
+<img className="!hidden dark:!block" src={`/images/workspace-ui-dark.png`} alt="Workspace UI settings" />
+
+
 #### Invitations
 
 Invite people by username. If they already have an account they join immediately, otherwise they get an invitation link to create one. Invitations expire, can be revoked, and carry the role and project scope you picked.
@@ -60,14 +69,6 @@ Invite people by username. If they already have an account they join immediately
 If you belong to more than one workspace, a switcher lets you jump between them without logging out.
 
 <video src={`${ASSETS_SERVER_DOMAIN}/videos/context+switch-workspace.mp4`} alt="Switch between workspaces" muted controls />
-
-
-### Workspace UI
-
-The whole dashboard was reworked around workspaces, with a distinct experience per role: an owner/admin layout with team settings, invitation management and per-member permission editing, and a trimmed-down layout for members and viewers that only surfaces what they are allowed to touch.
-
-<img className="block dark:hidden" src={`/images/workspace-ui-light.png`} alt="Workspace UI settings" />
-<img className="!hidden dark:!block" src={`/images/workspace-ui-dark.png`} alt="Workspace UI settings" />
 
 
 ### Licensing & paid features
