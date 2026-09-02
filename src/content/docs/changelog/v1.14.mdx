@@ -47,6 +47,8 @@ Each member gets a role:
 <img className="block dark:hidden" src={`/images/workspace-team-light.png`} alt="Workspace team" />
 <img className="!hidden dark:!block" src={`/images/workspace-team-dark.png`} alt="Workspace team" />
 
+See the [Workspaces & team management guide](/knowledge-base/workspaces) for the full details on roles, invitations, per-project access and switching workspaces.
+
 
 ### Workspace UI
 
@@ -101,6 +103,13 @@ The instance owner now has a dedicated admin area, separate from any workspace:
 
 <img className="block dark:hidden" src={`/images/server-admin-users-light.png`} alt="Server admin users" />
 <img className="!hidden dark:!block" src={`/images/server-admin-users-dark.png`} alt="Server admin users" />
+
+
+### GeoIP (optional)
+
+HTTP logs can now show the **country** each request comes from, as a dedicated column, in the request details and as a filter, on every HTTP logs page: services, deployments, Docker Compose stacks and the master HTTP logs in the server admin area.
+
+The lookup is done **locally** against a MaxMind `.mmdb` database that you provide: ZaneOps ships no database and never phones home, so the feature is disabled until you set `MAXMIND_DB_HOST_PATH` in your `.env`. See the [GeoIP guide](/knowledge-base/geoip) for setup.
 
 
 ### Rebuilt ⌘K command bar
