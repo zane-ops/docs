@@ -66,11 +66,11 @@ Once enabled, every **new** HTTP log gets a `request_country_code` ([ISO 3166-1 
 - as a **Country** column, and in the request details, on every HTTP logs page: services, deployments and [Docker Compose stacks](/knowledge-base/docker-compose)
 - in **Server admin > Global HTTP Logs**, the instance-wide view of everything that went through the proxy
 
-<img src={`${ASSETS_SERVER_DOMAIN}/images/PLACEHOLDER-http-log-country.png`} alt="Country of a request in the HTTP log details" />
+   <img src={`/images/http-request-logs-details-with-country.png`} alt="Country of a request in the HTTP log details" />
 
 You can also **filter by country** from the filter bar of any HTTP logs page:
 
-<img src={`${ASSETS_SERVER_DOMAIN}/images/PLACEHOLDER-http-log-country-filter.png`} alt="Filtering HTTP logs by country" />
+<img src={`/images/filter-http-logs-by-country.png`} alt="Filtering HTTP logs by country" />
 
 <Aside type="note" title="No backfill">
 The country is resolved **when the log is ingested** and stored with it. Requests logged before you enabled GeoIP keep no country, and changing the database does not rewrite existing logs.
