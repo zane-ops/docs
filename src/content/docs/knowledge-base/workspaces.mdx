@@ -33,8 +33,6 @@ Each member of a workspace has exactly one role. Roles are cumulative: every rol
 Restricting access to a subset of projects only applies to the **Viewer** role. Members, Admins and the Owner always see every project in the workspace.
 </Aside>
 
-<img src={`/images/workspace-team-roles.png`} alt="Workspace team roles" />
-
 ---
 
 ## Inviting people
@@ -43,15 +41,18 @@ Admins and the Owner can invite users from **Settings > Team**.
 
 <Steps>
 1. Go to **Settings > Team** and choose **Invite user**:
-   <img src={`${ASSETS_SERVER_DOMAIN}/images/PLACEHOLDER-team-settings.png`} alt="Team settings page" />
+   <img  src={`/images/workspace-team-dark.png`} alt="Workspace team" />
 
 2. Enter the person's **username**, pick a **role**, and (for a Viewer) select which **projects** they may access:
-   <img src={`${ASSETS_SERVER_DOMAIN}/images/PLACEHOLDER-invite-user-form.png`} alt="Invite user form" />
+   <img  src={`/images/invite-new-user.webp`} alt="Invite New user into workspace" />
 
 3. ZaneOps generates an **invitation link**. Send it to the invitee.
    - If they **already have an account** on this instance, opening the link adds them to the workspace immediately.
    - If they **don't**, the link lets them create an account and join in one step.
-   <video src={`${ASSETS_SERVER_DOMAIN}/videos/PLACEHOLDER-invite-user.mp4`} alt="Invite a user into a workspace" muted controls />
+   <img  src={`/images/user-invited.png`} alt="User invited into workspace" />
+   <img  src={`/images/create-new-account.png`} alt="Create New user" />
+   <img  src={`/images/accept-workspace-invitation.png`} alt="Accept workspace invitation" />
+
 </Steps>
 
 ### Managing invitations
@@ -62,7 +63,7 @@ From **Settings > Team > Invitations** you can:
 - **Revoke** a pending invitation
 - See which invitations have **expired** (invitations have a limited lifetime)
 
-<img src={`${ASSETS_SERVER_DOMAIN}/images/PLACEHOLDER-invitations-list.png`} alt="Pending invitations list" />
+   <img  src={`/images/workspace-pending-invitations.png`} alt="List of pending workspace invitations" />
 
 ---
 
@@ -74,11 +75,12 @@ The **Team** page lists everyone in the workspace with their role. Admins and th
 - **Edit a Viewer's project access**
 - **Remove a member** from the workspace
 
-<img src={`${ASSETS_SERVER_DOMAIN}/images/PLACEHOLDER-members-list.png`} alt="Workspace members list" />
 
 ### Leaving a workspace
 
 Any member can leave a workspace from their account menu. The **Owner cannot leave**; they must first [transfer ownership](#transferring-ownership) to another member.
+
+<img  src={`/images/workspace-settings.png`} alt="Workspace settings" />
 
 ### Transferring ownership
 
@@ -88,13 +90,16 @@ The Owner can hand the workspace over to another member from **Settings > Team**
 Ownership transfer takes effect immediately. Make sure you trust the new Owner: they can delete the workspace.
 </Aside>
 
+<img  src={`/images/transfer-workspace-ownership-dialog.png`} alt="Transfer workspace ownership" />
+
+
 ---
 
 ## Switching workspaces
 
 If you belong to more than one workspace, a **workspace switcher** appears in the top navigation. Switching changes the projects, services and settings you see; it does not log you out.
 
-<video src={`${ASSETS_SERVER_DOMAIN}/videos/PLACEHOLDER-switch-workspace.mp4`} alt="Switch between workspaces" muted controls />
+<video src={`${ASSETS_SERVER_DOMAIN}/videos/context+switch-workspace.mp4`} alt="Switch between workspaces" muted controls />
 
 ---
 
@@ -109,7 +114,9 @@ Some actions live **outside** any workspace, in the **Server admin** area, and a
 - **License**: install, view or remove the instance [license](/knowledge-base/licensing)
 - **SSH keys** and the **server terminal**
 
-<img src={`${ASSETS_SERVER_DOMAIN}/images/PLACEHOLDER-server-admin.png`} alt="Server admin area" />
+<img src={`/images/server-admin-users-dark.png`} alt="Server admin users" />
+<img src={`/images/server-admin-global-http-logs.png`} alt="Server admin Global HTTP logs" />
+
 
 {/* 
 ---

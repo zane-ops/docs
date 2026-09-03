@@ -48,7 +48,7 @@ Shared volumes are configured on the **reader**, not on the owner: you go to the
 
 <Steps>
 1. Open the reader service, go to **Settings > Shared volumes**, and fill the **Add new shared volume** form:
-   <img src={`${ASSETS_SERVER_DOMAIN}/images/PLACEHOLDER-shared-volumes-form.png`} alt="Shared volumes section in the service settings" />
+   <img src={`/images/shared-volumes-sections.png`} alt="Shared volumes section in the service settings" />
 
 2. Pick a **volume** in the dropdown. It lists every Docker volume owned by the *other* services of the current environment, with the service it belongs to.
 
@@ -57,7 +57,7 @@ Shared volumes are configured on the **reader**, not on the owner: you go to the
 3. Enter the **container path** where the volume should be mounted **in this service**, for example `/app/media`. It does not have to match the path used by the owner service.
 
 4. Like every other service change, this is added as a **pending change**. Click **Deploy now** to apply it.
-   <img src={`${ASSETS_SERVER_DOMAIN}/images/PLACEHOLDER-shared-volumes-pending-change.png`} alt="Pending shared volume change" />
+   <img src={`/images/shared-volumes-pending-change.png`} alt="Pending shared volume change" />
 </Steps>
 
 You can change the container path of an existing shared volume, or detach it, from the same page. Both are pending changes too, and take effect on the next deployment.
