@@ -1,6 +1,5 @@
 ---
 import DefaultPageFrame from "@astrojs/starlight/components/PageFrame.astro";
-import { Chat } from "./Chat";
 ---
 
 <DefaultPageFrame {...Astro.props}>
@@ -8,5 +7,3 @@ import { Chat } from "./Chat";
     <slot name="sidebar" slot="sidebar" />
     <slot />
 </DefaultPageFrame>
-
-{!import.meta.env.DEV && <Chat client:only="react" />}
