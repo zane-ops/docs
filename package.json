@@ -27,7 +27,7 @@
     "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/react-query": "^5.102.8",
-    "astro": "^6.4.8",
+    "astro": "^7.2.8",
     "drizzle-orm": "^0.45.2",
     "lucide-react": "^0.575.0",
     "nodemailer": "^7.0.13",
