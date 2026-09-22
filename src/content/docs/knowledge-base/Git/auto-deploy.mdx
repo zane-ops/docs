@@ -52,9 +52,13 @@ Automate your deployment workflow with GitHub Actions to update your application
    Navigate to **workspace settings > API tokens > new token**, give it the `deploy:write` scope and restrict it to the project this service belongs to.
    The token is only shown once, copy it before leaving the page.
 
+   ![Create API Token](/images/create-api-token.png)
+   ![API Token Created](/images/api-token-created.png)
+
    <Aside type="tip">
    Create one token per repository, so you can delete a leaked one without breaking your other pipelines. Tokens expire, so plan to replace it before the expiry date you picked.
    </Aside>
+   
 
 3. Store your secrets in GitHub:
    Navigate to **GitHub repository > settings > secrets and variables > actions** and add:
