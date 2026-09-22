@@ -81,6 +81,12 @@ export default defineConfig({
     }
   },
 
+  markdown: {
+    // `@astrojs/mdx` reads `gfm` from here, and astro no longer sets a default
+    // for it, so without this GFM tables silently render as plain text in .mdx
+    gfm: true
+  },
+
   devToolbar: {
     enabled: false
   },
@@ -194,6 +200,10 @@ export default defineConfig({
             {
               label: "Authentication",
               slug: "api-reference/authentication"
+            },
+            {
+              label: "API tokens",
+              slug: "api-reference/api-tokens"
             },
             {
               label: "OpenAPI reference ↗",

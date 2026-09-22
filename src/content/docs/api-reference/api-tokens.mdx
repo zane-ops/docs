@@ -1,0 +1,149 @@
+---
+title: API tokens
+description: "Create scoped bearer tokens to call the ZaneOps API from CI pipelines and scripts."
+---
+
+> Introduced in [**v1.15.0**](/changelog/v115)
+
+import {Aside} from '@astrojs/starlight/components';
+
+API tokens are bearer credentials you can hand to a CI pipeline, a cron job or a script, so it can call the ZaneOps API without a browser session.
+
+Compared to [session cookie authentication](/api-reference/authentication), a token is a single header: no login round-trip, and no CSRF token for `POST`, `PUT`, `PATCH` and `DELETE` requests.
+
+
+## Create a token
+
+Tokens are created from the dashboard, in **workspace settings → API tokens → New token**. You give the token a name, a role, its scopes, the projects it may reach and an expiry date.
+
+The full token is displayed **only once**, right after creation. Copy it then: ZaneOps stores only a SHA-256 hash of the secret, so a lost token cannot be recovered, only replaced.
+
+A token looks like this:
+
+```txt
+zn_tok_kR2mXq7bT4v_8cPzN1yLwQd3sVfH6jAe0BgUtMxKrYo
+```
+
+- `zn_` is a fixed prefix, so secret scanners such as GitHub push protection can catch a token that leaks into a repository.
+- `tok_kR2mXq7bT4v` is the token's public id.
+- The rest is the secret: 32 random bytes, url-safe base64.
+
+Afterwards the list page only shows a masked version (`zn_••••rYo`) so you can tell tokens apart.
+
+<Aside type="caution">
+Anyone holding the full token has whatever access it was granted. Store it in your CI's secret store, never in a repository, and create one token per consumer so you can delete a single one without breaking everything else.
+</Aside>
+
+## Authenticate a request
+
+Send the token in the `Authorization` header:
+
+```http {3}
+### Request
+GET /api/auth/me HTTP/1.1
+Authorization: Bearer zn_tok_kR2mXq7bT4v_8cPzN1yLwQd3sVfH6jAe0BgUtMxKrYo
+
+### Response
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "user": {
+    "username": "fredkiss3",
+    "first_name": "",
+    "last_name": ""
+  }
+}
+```
+
+The session cookie is ignored entirely when a bearer token is present, and the workspace is taken from the token, so there is nothing else to send.
+
+Mutative requests need no CSRF token:
+
+```shell
+curl -X POST "https://<your-domain>/api/projects" \
+  -H "Authorization: Bearer $ZANE_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"slug": "sandbox"}'
+```
+
+## What a token can do
+
+Access is decided by three things, and a request must pass all of them.
+
+### Role
+
+Every token carries one of the [workspace roles](/knowledge-base/workspaces): `Viewer`, `Member` or `Admin`. It decides how far into the API the token gets, exactly as it would for a person: a `Member` token can deploy and change services, but archiving a service stays an `Admin` action.
+
+You can never create a token with a role higher than your own, and the cap is re-checked on **every** request: if your own role is lowered later, the tokens you created are lowered with it.
+
+### Scopes
+
+Scopes say which areas of the API a token may touch. A scope never grants anything by itself — it only narrows what the role already allows. A `write` scope implies `read` on the same resource.
+
+| Scope | What it covers |
+|-------|----------------|
+| `deploy:write` | Trigger / cancel / redeploy deployments and previews |
+| `service:read` | Read service and compose-stack configuration |
+| `service:write` | Change services and compose stacks |
+| `env:read` | Read environment variables (sensitive) |
+| `env:write` | Change environment variables |
+| `logs:read` | Read runtime logs, build logs and metrics |
+| `project:read` | List and read projects and environments |
+| `project:write` | Change projects and environments |
+
+`env:read` is never implied by another scope: environment variables hold database passwords and API keys, so a token only reads them when you ask for it explicitly.
+
+<Aside type="note" title="Scope enforcement is being rolled out">
+In v1.15, scopes are recorded on the token and enforced on the [deploy webhooks](#deploy-webhooks), which require `deploy:write`. The remaining API routes are annotated progressively in the following releases, and are gated by the token's role and project access in the meantime. Grant the narrowest set of scopes anyway: they become enforced without you having to reissue anything.
+</Aside>
+
+### Project access
+
+A token can be restricted to specific projects. Leave the list empty and it reaches the whole workspace — always capped by the projects its creator can access.
+
+## What a token can never do
+
+Token management is deliberately out of reach of tokens: listing, creating, renaming and deleting tokens can only be done from a logged-in session. The same goes for invitations, roles and workspace ownership.
+
+Any route that has not been opened to tokens denies them, rather than falling back to the token's role.
+
+## Expiry, visibility and deletion
+
+- **Every token expires.** You pick 7, 30, 60, 90, 180 or 365 days at creation; the default is 30. An expired token gets a `401` and cannot be extended, create a new one.
+- **Last used** is recorded for each token (within a 5-minute granularity), so you can spot tokens nothing calls anymore.
+- **Deleting a token takes effect immediately**, there is no revoked-but-kept state.
+- **Who sees what**: you always see the tokens you created. Admins also see the tokens of members and viewers, but not those of other admins. Owners see every token in the workspace.
+- **Removing someone from the workspace deletes the tokens they created.**
+
+## Deploy webhooks
+
+The deploy webhook endpoints used to be public: anyone who knew a service's `deploy_token` could trigger a deployment. They now require an API token with the `deploy:write` scope, and the `deploy_token` in the URL is only a service identifier.
+
+```shell {2}
+curl -f -X PUT "https://<your-domain>/api/deploy-service/git/<deploy_token>/" \
+  -H "Authorization: Bearer $ZANE_API_TOKEN"
+```
+
+The token must also have access to the service's project, otherwise the request is rejected with a `403`. See [auto-deploy on Git push](/knowledge-base/git/auto-deploy) for a full GitHub Actions example.
+
+## Endpoints
+
+These endpoints require a session, they cannot be called with a token.
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/workspace/tokens` | List the tokens you are allowed to see |
+| `POST` | `/api/workspace/tokens` | Create a token, the only response containing the secret |
+| `GET` | `/api/workspace/tokens/{token_id}` | Read a single token |
+| `PATCH` | `/api/workspace/tokens/{token_id}` | Rename a token, everything else is immutable |
+| `POST` | `/api/workspace/tokens/{token_id}/revoke` | Delete a token |
+
+They are rate-limited to 120 requests per minute. Viewers cannot create tokens.
+
+## Errors
+
+| Status | When |
+|--------|------|
+| `401` | Missing, malformed, unknown or expired token, or a token whose creator has left the workspace |
+| `403` | The token is valid but lacks the role, the scope or the project access the route requires |

@@ -1,0 +1,77 @@
+---
+title: ZaneOps v1.15
+description: API Tokens
+sidebar:
+  order: 115
+---
+
+import {Aside} from '@astrojs/starlight/components';
+import { ASSETS_SERVER_DOMAIN } from "astro:env/client"
+
+
+> Release notes: [https://github.com/zane-ops/zane-ops/releases/tag/v1.15.0](https://github.com/zane-ops/zane-ops/releases/tag/v1.15.0)
+
+<span className='text-gray-600 dark:text-gray-400'>22 September 2026</span> by [**Fred KISSIE**](https://github.com/Fredkiss3)
+
+
+ZaneOps v1.15 adds **API tokens**: scoped bearer credentials you can hand to CI pipelines and scripts, so calling the API no longer means juggling a session cookie and a CSRF token. Deploy webhooks are now protected by those tokens instead of being public.
+
+
+<Aside type="caution" title='Before updating'>
+**Deploy webhooks are now authenticated.** Any existing webhook URL (GitHub Actions, GitLab CI, cron jobs, …) will start returning `401` until you add an `Authorization: Bearer` header with an API token that has the `deploy:write` scope.
+
+This version also includes changes to the Docker stack (Temporal was upgraded to `1.32.0`). Re-download the `Makefile` and rerun the `setup` script before deploying.
+</Aside>
+
+**To install:**
+
+```shell
+# assuming you are at /var/www/zaneops
+curl https://cdn.zaneops.dev/makefile > Makefile
+make setup
+# Optional: stop the services 
+# make stop 
+make deploy
+```
+
+
+### API tokens
+
+You can now create API tokens from **workspace settings → API tokens**, and call the API with a single header, no session cookie and no CSRF token:
+
+```http {3}
+### Request
+GET /api/auth/me HTTP/1.1
+Authorization: Bearer zn_tok_kR2mXq7bT4v_8cPzN1yLwQd3sVfH6jAe0BgUtMxKrYo
+```
+
+Each token belongs to a workspace and is limited by a **role**, a set of **scopes**, the **projects** it may reach and an **expiry date** (30 days by default). It can never do more than the person who created it, and the full token is shown only once, at creation.
+
+See the [API tokens guide](/api-reference/api-tokens) for scopes, limits, rotation and the token endpoints.
+
+<video src={`${ASSETS_SERVER_DOMAIN}/videos/deploy-with-api-token.mp4`} alt="New command bar" muted controls />
+
+
+### Deploy webhooks are now protected
+
+Until now, the deploy webhook endpoints were public: anyone who knew (or guessed) a service's `deploy_token` could trigger a deployment. They now require an API token with the `deploy:write` scope, and the `deploy_token` in the URL is only a service identifier:
+
+```shell {2}
+curl -X PUT "https://<your-domain>/api/deploy-service/git/<deploy_token>/" \
+  -H "Authorization: Bearer $ZANE_API_TOKEN"
+```
+
+The token must also have access to the service's project, otherwise the request is rejected. If you deploy from GitHub Actions or another CI, store the token as a secret alongside your webhook URL and [update your workflow](/knowledge-base/git/auto-deploy) accordingly.
+
+
+### More informative install script
+
+The install script now explains what it is about to do on your server and asks for confirmation before running, instead of starting right away.
+
+<img src={`/images/install-script-verbose.png`} alt="Install script verbose" />
+
+
+### Other changes
+
+- Upgraded Temporal server and admin tools to `1.32.0`
+- Bumped `gitpython` to `3.1.59` to fix a security advisory, thanks to [@katsugtgz](https://github.com/katsugtgz) for their first contribution

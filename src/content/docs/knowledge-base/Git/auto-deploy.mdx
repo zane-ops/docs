@@ -33,6 +33,12 @@ Deployments triggered by a Git push will appear with the label `git push`:
 Using the API, you can trigger a new deployment for a service without needing to create a git apps. 
 This can be used to trigger a deployment in a Continuous Integration script after a git push.
 
+The deploy webhook needs two things: the **webhook URL** of the service, and an [**API token**](/api-reference/api-tokens) with the `deploy:write` scope and access to the service's project.
+
+<Aside type="caution" title="Changed in v1.15">
+Deploy webhooks used to be public: the URL alone was enough to trigger a deployment. Since [v1.15](/changelog/v1.15) they require an `Authorization: Bearer` header, and a call without one gets a `401`. If you set up a webhook before that, create a token and add the header to your workflow.
+</Aside>
+
 #### Example usage: Github actions
 
 Automate your deployment workflow with GitHub Actions to update your application whenever changes are pushed to your repository:
@@ -41,13 +47,22 @@ Automate your deployment workflow with GitHub Actions to update your application
 1. Get your ZaneOps deployment webhook URL:
    Navigate to **service details page > settings > Deploy section > deploy webhook url**
    ![Locating the deployment webhook URL](https://assets.zaneops.dev/images/tuto-rr7-webhook-url.png)
-   
-2. Store your secrets in GitHub:
+
+2. Create an API token:
+   Navigate to **workspace settings > API tokens > new token**, give it the `deploy:write` scope and restrict it to the project this service belongs to.
+   The token is only shown once, copy it before leaving the page.
+
+   <Aside type="tip">
+   Create one token per repository, so you can delete a leaked one without breaking your other pipelines. Tokens expire, so plan to replace it before the expiry date you picked.
+   </Aside>
+
+3. Store your secrets in GitHub:
    Navigate to **GitHub repository > settings > secrets and variables > actions** and add:
    - `DEPLOY_WEBHOOK_URL`: Your ZaneOps webhook URL
+   - `DEPLOY_API_TOKEN`: The API token you just created
    ![Adding repository secrets](https://assets.zaneops.dev/images/tuto-rr7-secrets.png)
    
-3. Create a GitHub Actions workflow file in your repository:
+4. Create a GitHub Actions workflow file in your repository:
     ```yaml
     # .github/workflows/ci.yaml
     name: Deploy
@@ -62,7 +77,7 @@ Automate your deployment workflow with GitHub Actions to update your application
             - name: Checkout
               uses: actions/checkout@v4
             - name: Deploy to ZaneOps
-              run: curl -f -o /dev/null -X PUT "${{ secrets.DEPLOY_WEBHOOK_URL }}" 
+              run: curl -f -o /dev/null -X PUT "${{ secrets.DEPLOY_WEBHOOK_URL }}" -H "Authorization: Bearer ${{ secrets.DEPLOY_API_TOKEN }}"
     ```
 5. With this workflow in place, changes pushed to your main branch will automatically trigger a new deployment, 
    it will show in the list with the label `API` :
@@ -72,5 +87,5 @@ Automate your deployment workflow with GitHub Actions to update your application
 </Steps>
 
 <Aside type="note" title="API reference">
-More information in the API documentation for the [deployment endpoint](/api-reference/openapi/#tag/deploy-service/put/api/deploy-service/git/{deploy_token}/).
+More information in the API documentation for the [deployment endpoint](/api-reference/openapi/#tag/deploy-service/put/api/deploy-service/git/{deploy_token}/), and in the [API tokens guide](/api-reference/api-tokens).
 </Aside>
